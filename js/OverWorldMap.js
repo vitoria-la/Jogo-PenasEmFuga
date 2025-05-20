@@ -52,11 +52,11 @@ class OverworldMap {
 }
 
 window.OverworldMap = {
-    Galinheiro: {
-        lowerSrc: "/assets/img/galinheiro.png",
-        upperSrc: "",
-        gameObjects: {
-            hero: new Person({
+    Galinheiro: { // mapa
+        lowerSrc: "/assets/img/galinheiro.png", // layer de base do mapa (chão do mapa)
+        upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
+        gameObjects: { // define os personagens/objetos que o mapa vai ter
+            hero: new Person({ // personagem principal
                 isPlayerControlled: true,
                 x: utils.withGrid(5),
                 y: utils.withGrid(6),
@@ -68,6 +68,7 @@ window.OverworldMap = {
             })
         },
         walls: {
+            //define as coordenadas das colisoes do mapa
             //"16,16": true
             [utils.asGridCoord(2,14)]: true,
             [utils.asGridCoord(3,14)]: true,
