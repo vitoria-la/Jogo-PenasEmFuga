@@ -6,11 +6,11 @@ class Overworld {
         this.map = null;
     }
 
-    startGameLoop() {
+    startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
         const step = () => {
 
             //Clear off the canvas
-            this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+            this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height); // Limpa todo o canvas para desenhar o próximo
 
             //Estibiliza a camera no personagem
             const cameraPerson = this.map.gameObjects.hero;
@@ -42,14 +42,14 @@ class Overworld {
     }
 
     init() {
-        this.map = new OverworldMap(window.OverworldMap.Galinheiro);
+        this.map = new OverworldMap(window.OverworldMap.Galinheiro); 
         this.map.mountObjects();
 
-        this.directionInput = new DirectionInput();
+        this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
         this.directionInput.init();
         //this.directionInput.direction;
 
-        this.startGameLoop();
+        this.startGameLoop(); // inicia o loop principal do jogo
         
     }
 }

@@ -1,20 +1,20 @@
-class OverworldMap {
+class OverworldMap { // representa um mapa específico no jogo, incluindo seus objetos, colisões e camadas visuais
     constructor(config){
-        this.gameObjects = config.gameObjects;
-        this.walls = config.walls || {};
+        this.gameObjects = config.gameObjects; // Armazena um objeto contendo todos os GameObjects que pertencem a este mapa
+        this.walls = config.walls || {}; // Armazena um objeto que representa as áreas de colisão ("paredes") no mapa. As chaves são coordenadas no formato "x,y", e o valor true indica que há uma parede. O padrão é um objeto vazio
         
         this.lowerImage = new Image();
-        this.lowerImage.src = config.lowerSrc;
+        this.lowerImage.src = config.lowerSrc; // cria a camada inferior do mapa
 
         this.upperImage = new Image();
-        this.upperImage.src = config.upperSrc;
+        this.upperImage.src = config.upperSrc; // cria a camada superior do mapa
     }
 
     drawLowerImage(ctx, cameraPerson){
         ctx.drawImage(
             this.lowerImage,
             utils.withGrid(22.5) - cameraPerson.x,
-            utils.withGrid(13) - cameraPerson.y
+            utils.withGrid(13) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
     drawUpperImage(ctx, cameraPerson){
@@ -25,12 +25,12 @@ class OverworldMap {
         )
     }
 
-    isSpaceTaken(currentX, currentY, direction){
+    isSpaceTaken(currentX, currentY, direction){ // Verifica se uma determinada posição no mapa, após um movimento em uma certa direção, está ocupada por uma "parede"
         const {x,y} = utils.nextPosition(currentX, currentY, direction);
         return this.walls[`${x},${y}`] || false;
     }
 
-    mountObjects() {
+    mountObjects() { 
         Object.values(this.gameObjects).forEach(o => {
 
             //Determina se o objeto realmente poderia ser montado
@@ -38,13 +38,13 @@ class OverworldMap {
         })
     }
 
-    addWall(x,y){
+    addWall(x,y){ // Adiciona uma parede (uma área de colisão) nas coordenadas (x,y)
         this.walls[`${x},${y}`] = true;
     }
-    removeWall(x,y){
+    removeWall(x,y){ // Remove uma parede das coordenadas (x,y)
         delete this.walls[`${x},${y}`]
     }
-    moveWall(wasX, wasY, direction){
+    moveWall(wasX, wasY, direction){ // Move uma parede de uma posição anterior (wasX, wasY) para a próxima posição calculada com base na direction. Útil para objetos que se movem e precisam atualizar suas colisões
         this.removeWall(wasX,wasY);
         const {x,y} = utils.nextPosition(wasX,wasY,direction);
         this.addWall(x,y);
