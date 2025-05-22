@@ -1,4 +1,4 @@
-class Sprite {
+class Sprite { //animações
     constructor (config) {
 
         // Definir a imagem
@@ -11,7 +11,7 @@ class Sprite {
         // Sombras
         this.shadow = new Image();
         this.useShadow = true; //config.useShadow || false
-        if(this.useShadow){
+        if(this.useShadow){ // se useShadow for true, apresenta o png da sombra
             this.shadow.src = "/assets/img/sombra.png"; //colocar aqui a imagem da sombra
         }
         this.shadow.onload = () => {
@@ -33,15 +33,15 @@ class Sprite {
         //config.currentAnimation || "idle-down";
         this.currentAnimationFrame = 0;
 
-        this.animationFrameLimit = config.animationFrameLimit || 10;
-        this.animationFrameProgress = this.animationFrameLimit;
+        this.animationFrameLimit = config.animationFrameLimit || 10; // Define quantos ticks cada frame da animação deve durar
+        this.animationFrameProgress = this.animationFrameLimit; // contador
 
 
         //Referencia aos objetos do jogo
         this.gameObject = config.gameObject;
     }
 
-    get frame(){
+    get frame(){ // retorna o frame atual da animação 
         return this.animations[this.currentAnimation][this.currentAnimationFrame];
     }
 
@@ -53,37 +53,41 @@ class Sprite {
         }
     }
 
-    updateAnimationProgress() { 
-        //Downtick frame progresso 
+    updateAnimationProgress() { // responsável por avançar a animação frame a frame. 
+        // Downtick frame progresso 
         if(this.animationFrameProgress > 0){
             this.animationFrameProgress -= 1;
             return;
         }
 
-        //resetar o contador
+        // resetar o contador
         this.animationFrameProgress = this.animationFrameLimit;
         this.currentAnimationFrame += 1;
 
-        if(this.frame === undefined){
+        if(this.frame === undefined){ 
             this.currentAnimationFrame = 0;
         }
+        // Se o currentAnimationFrame ultrapassar o número de frames na animação, ele é resetado para 0, fazendo a animação repetir
     }
 
     draw(ctx, cameraPerson){
         const x = this.gameObject.x - 8 + utils.withGrid(22.5) - cameraPerson.x;
         const y = this.gameObject.y - 18 + utils.withGrid(13) - cameraPerson.y;
+        // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject
 
-        this.isShadowLoaded && ctx.drawImage(this.shadow, x, y);
+        this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas
 
-        const[frameX, frameY] = this.frame; 
+        const[frameX, frameY] = this.frame; // Obtém as coordenadas (x,y) do frame atual da animação
 
         this.isLoaded && ctx.drawImage(this.image,
             frameX * 32, frameY * 32,
             32,32,
+            // especificam a parte da imagem original a ser cortada (um frame de 32x32 pixels dentro da spritesheet)
             x,y,
             32,32
+            // especificam onde e com que tamanho o frame cortado será desenhado no canvas.
         )
 
-        this.updateAnimationProgress();
+        this.updateAnimationProgress(); // Chama o método para avançar o progresso da animação, garantindo que o próximo frame seja preparado para o próximo ciclo de desenho
     }
 }
