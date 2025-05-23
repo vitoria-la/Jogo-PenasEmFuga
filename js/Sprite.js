@@ -12,7 +12,7 @@ class Sprite { //animações
         this.shadow = new Image();
         this.useShadow = true; //config.useShadow || false
         if(this.useShadow){ // se useShadow for true, apresenta o png da sombra
-            this.shadow.src = "/assets/img/sombra.png"; //colocar aqui a imagem da sombra
+            this.shadow.src = "./assets/img/sombra.png"; //colocar aqui a imagem da sombra
         }
         this.shadow.onload = () => {
             this.isShadowLoaded = true;
