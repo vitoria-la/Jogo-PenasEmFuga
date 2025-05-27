@@ -34,6 +34,4 @@ class DirectionInput {
             }
         })
     }
-}	
-
-// testando a branch
+}

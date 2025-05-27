@@ -61,5 +61,3 @@ class Person extends GameObject {
         
     }
 }
-
-// apenas testando o git
