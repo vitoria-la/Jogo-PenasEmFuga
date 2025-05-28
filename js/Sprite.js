@@ -12,7 +12,7 @@ class Sprite { //animações
         this.shadow = new Image();
         this.useShadow = true; //config.useShadow || false
         if(this.useShadow){ // se useShadow for true, apresenta o png da sombra
-            this.shadow.src = "./assets/img/sombra.png"; //colocar aqui a imagem da sombra
+            this.shadow.src = "./assets/img/sombraPinguim.png"; //colocar aqui a imagem da sombra
         }
         this.shadow.onload = () => {
             this.isShadowLoaded = true;
@@ -20,14 +20,14 @@ class Sprite { //animações
 
         //Configura Animação e o Estado inicial
         this.animations = config.animations || {
-            "idle-right" : [ [0,0] ],
+            "idle-right" : [ [0,3] ],
             "idle-up"    : [ [1,1] ],
             "idle-down"  : [ [1,2] ],
-            "idle-left"  : [ [1,3] ],
-            "walk-right" : [ [0,0],[1,0],[2,0],[3,0], ],
+            "idle-left"  : [ [1,0] ],
+            "walk-right" : [ [0,3],[1,3],[2,3],[3,3], ],
             "walk-up"    : [ [0,1],[1,1],[2,1],[3,1], ],
             "walk-down"  : [ [0,2],[1,2],[2,2],[3,2], ],
-            "walk-left"  : [ [0,3],[1,3],[2,3],[3,3], ]
+            "walk-left"  : [ [0,0],[1,0],[2,0],[3,0], ]
         }
         this.currentAnimation = "walk-up"
         //config.currentAnimation || "idle-down";
