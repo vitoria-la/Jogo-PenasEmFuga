@@ -13,8 +13,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     drawLowerImage(ctx, cameraPerson){
         ctx.drawImage(
             this.lowerImage,
-            utils.withGrid(22.5) - cameraPerson.x,
-            utils.withGrid(13) - cameraPerson.y // são deslocamentos para centralizar a câmera
+            utils.withGrid(-20) - cameraPerson.x,
+            utils.withGrid(3) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
     drawUpperImage(ctx, cameraPerson){
@@ -58,7 +58,7 @@ window.OverworldMap = {
         gameObjects: { // define os personagens/objetos que o mapa vai ter
             hero: new Person({ // personagem principal
                 isPlayerControlled: true,
-                x: utils.withGrid(5),
+                x: utils.withGrid(4),
                 y: utils.withGrid(6),
             }),
             npc1: new Person({
