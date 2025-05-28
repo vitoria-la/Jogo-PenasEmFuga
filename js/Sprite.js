@@ -20,7 +20,7 @@ class Sprite { //animações
 
         //Configura Animação e o Estado inicial
         this.animations = config.animations || {
-            "idle-right" : [ [0,3] ],
+            "idle-right" : [ [1,3] ],
             "idle-up"    : [ [1,1] ],
             "idle-down"  : [ [1,2] ],
             "idle-left"  : [ [1,0] ],
