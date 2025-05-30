@@ -64,7 +64,7 @@ window.OverworldMap = {
             npc1: new Person({
                 x: utils.withGrid(6),
                 y: utils.withGrid(10),
-                src: "./assets/img/White_chiken.png",
+                src: "./assets/img/galinhaBranca.png",
             })
         },
         walls: {
