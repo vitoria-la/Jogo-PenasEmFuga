@@ -44,7 +44,7 @@ class Overworld {
     }
 
     init() {
-        this.map = new OverworldMap(window.OverworldMap.Galinheiro); 
+        this.map = new OverworldMap(window.OverworldMaps.Galinheiro); 
         this.map.mountObjects();
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem

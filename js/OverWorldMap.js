@@ -14,15 +14,15 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     drawLowerImage(ctx, cameraPerson){
         ctx.drawImage(
             this.lowerImage,
-            utils.withGrid(-20) - cameraPerson.x,
-            utils.withGrid(3) - cameraPerson.y // são deslocamentos para centralizar a câmera
+            utils.withGrid(10.5) - cameraPerson.x,
+            utils.withGrid(6) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
     drawUpperImage(ctx, cameraPerson){
         ctx.drawImage(
             this.upperImage,
-            utils.withGrid(22.5) - cameraPerson.x,
-            utils.withGrid(13) - cameraPerson.y
+            utils.withGrid(10.5) - cameraPerson.x,
+            utils.withGrid(6) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
 
@@ -69,19 +69,19 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     }
 }
 
-window.OverworldMap = {
+window.OverworldMaps = {
     Galinheiro: { // mapa
         lowerSrc: "./assets/img/galinheiroMapa.png", // layer de base do mapa (chão do mapa)
         upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
         gameObjects: { // define os personagens/objetos que o mapa vai ter
             hero: new Person({ // personagem principal
                 isPlayerControlled: true,
-                x: utils.withGrid(4),
-                y: utils.withGrid(6),
+                x: utils.withGrid(43),
+                y: utils.withGrid(15),
             }),
             galinhaBranca: new Person({
-                x: utils.withGrid(6),
-                y: utils.withGrid(10),
+                x: utils.withGrid(47),
+                y: utils.withGrid(21),
                 src: "./assets/img/galinhaBranca.png",
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
                     {type: "walk", direction: "left",time: 800},  
@@ -95,8 +95,8 @@ window.OverworldMap = {
                 ]
             }),
             galinhaMarrom: new Person({
-                x: utils.withGrid(8),
-                y: utils.withGrid(4),
+                x: utils.withGrid(37),
+                y: utils.withGrid(21),
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
                     {type: "walk", direction: "left",time: 800},  
@@ -117,13 +117,7 @@ window.OverworldMap = {
         walls: {
             //define as coordenadas das colisoes do mapa
             //"16,16": true
-            [utils.asGridCoord(2,14)]: true,
-            [utils.asGridCoord(3,14)]: true,
-            [utils.asGridCoord(4,14)]: true,
-            [utils.asGridCoord(2,15)]: true,
-            [utils.asGridCoord(3,15)]: true,
-            [utils.asGridCoord(4,15)]: true,
-            
+            [utils.asGridCoord(46,29)] : true
         }
     }
 }
