@@ -8,6 +8,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc; // cria a camada superior do mapa
+        this.isCutscenePlaying = false; // Para saber se está rodando alguma cutscene. 
     }
 
     drawLowerImage(ctx, cameraPerson){
@@ -31,11 +32,28 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     }
 
     mountObjects() { 
-        Object.values(this.gameObjects).forEach(o => {
-
+        Object.keys(this.gameObjects).forEach(key => {
+            let object = this.gameObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
+            object.id = key;
             //Determina se o objeto realmente poderia ser montado
-            o.mount(this)
+            object.mount(this)
         })
+    }
+
+    async startCutscene(events) { // método para começar uma cutscene
+        this.isCutscenePlaying = true;
+
+        // começa um loop de eventos assíncronos
+        // espera cada um
+        for (let i = 0; i<events.length; i++) {
+            const eventHandler = new  OverworldEvent({
+                event: events[i],
+                map: this,
+            })
+            await eventHandler.init();
+        }
+
+        this.isCutscenePlaying = false; // ao acabar, atualiza a variável para false
     }
 
     addWall(x,y){ // Adiciona uma parede (uma área de colisão) nas coordenadas (x,y)
@@ -61,10 +79,39 @@ window.OverworldMap = {
                 x: utils.withGrid(4),
                 y: utils.withGrid(6),
             }),
-            npc1: new Person({
+            galinhaBranca: new Person({
                 x: utils.withGrid(6),
                 y: utils.withGrid(10),
                 src: "./assets/img/galinhaBranca.png",
+                behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
+                    {type: "walk", direction: "left",time: 800},  
+                    {type: "walk", direction: "left",time: 800},
+                    {type: "walk", direction: "left",time: 800},
+                    {type: "stand", direction: "down", time: 300},  // o time é para quanto tempo vai passar até a próxima animação
+                    {type: "walk", direction: "right", time: 800},
+                    {type: "walk", direction: "right", time: 800},
+                    {type: "walk", direction: "right", time: 800},
+                    {type: "stand", direction: "down", time: 300}
+                ]
+            }),
+            galinhaMarrom: new Person({
+                x: utils.withGrid(8),
+                y: utils.withGrid(4),
+                src: "./assets/img/galinhaMarrom.png",
+                behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
+                    {type: "walk", direction: "left",time: 800},  
+                    {type: "walk", direction: "left",time: 800},
+                    {type: "walk", direction: "left",time: 800}, 
+                    {type: "walk", direction: "down",time: 800},  
+                    {type: "walk", direction: "down",time: 800},
+                    {type: "walk", direction: "down",time: 800},
+                    {type: "walk", direction: "right",time: 800},
+                    {type: "walk", direction: "right",time: 800},
+                    {type: "walk", direction: "right",time: 800},
+                    {type: "walk", direction: "up",time: 800},
+                    {type: "walk", direction: "up",time: 800},
+                    {type: "walk", direction: "up",time: 800},
+                ]
             })
         },
         walls: {

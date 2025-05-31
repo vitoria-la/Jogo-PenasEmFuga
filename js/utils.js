@@ -24,5 +24,12 @@ const utils = {
         }
         // Dependendo da direction ("left", "right", "up", "down"), ajusta x ou y subtraindo ou adicionando size
         return {x,y};
+    },
+
+    emitEvent(name, detail) { // serve para criar um evento personalizado
+        const event = new CustomEvent(name, { // Cria um evento para saber se acabou o movimento; CustomEvent é algo nativo do browser
+            detail
+        });
+        document.dispatchEvent(event);
     }
 }
