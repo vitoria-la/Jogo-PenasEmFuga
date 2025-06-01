@@ -1,7 +1,7 @@
 class Person extends GameObject {
     constructor(config){
         super(config);
-        this.movingProgressRemaining = 16; // controla o progresso de um movimento em pixels
+        this.movingProgressRemaining = 0; // controla o progresso de um movimento em pixels
 
         this.direction = "down"; // Define a direção inicial do personagem
 
@@ -21,7 +21,8 @@ class Person extends GameObject {
         } else {
 
             //Caso: 
-            if(this.isPlayerControlled && state.arrow){ // Se o personagem é controlado pelo jogador e há uma entrada de direção (state.arrow), ele inicia um comportamento de "caminhada"
+            if(!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow){ // Se o personagem é controlado pelo jogador e há uma entrada de direção (state.arrow), ele inicia um comportamento de "caminhada"
+                // ele só consegue andar caso não tenha uma cutscene acontecendo
                 this.startBehavior(state, {
                     type: "walk",
                     direction: state.arrow
@@ -36,11 +37,25 @@ class Person extends GameObject {
         this.direction = behavior.direction;
         if(behavior.type === "walk"){
             if(state.map.isSpaceTaken(this.x, this.y, this.direction)){ // Verifica se o próximo espaço na direção do movimento está ocupado por uma "parede". Se sim, o movimento é abortado
+
+                behavior.retry && setTimeout(() => { // se for um NPC que foi interrompido, espera 10 milissegundos e tenta andar de novo
+                    this.startBehavior(state, behavior); // tenta andar de novo
+                }, 10)
+                
                 return;
             }
             // Pronto para andar
             state.map.moveWall(this.x,this.y,this.direction);
             this.movingProgressRemaining = 16;
+            this.updateSprite(state); // para animar os NPCs
+        }
+
+        if (behavior.type === "stand") { // se o tipo de animação for ficar parado
+            setTimeout(() => { 
+                utils.emitEvent("PersonStandComplete", {
+                    whoId: this.id // quando der o tempo, emite que foi completado esse comportamento e quem completou
+                })
+            }, behavior.time) // espera pelo tempo especificado para esse comportamento
         }
     }
 
@@ -48,6 +63,13 @@ class Person extends GameObject {
         const [property,change] = this.directionUpdate[this.direction];
         this[property] += change;
         this.movingProgressRemaining -= 1;
+
+        if (this.movingProgressRemaining === 0) { // foi terminado o movimento de andar
+            utils.emitEvent("PersonWalkingComplete", { // emite um sinal que foi terminado a animação de andar
+                whoId: this.id  // manda quem terminou de andar
+            })
+            // a estrutura do método emitEvent está na classe utils
+        }
     }
 
     updateSprite(){
@@ -61,5 +83,3 @@ class Person extends GameObject {
         
     }
 }
-
-// apenas testando o git

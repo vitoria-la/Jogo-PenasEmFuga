@@ -12,7 +12,7 @@ class Sprite { //animações
         this.shadow = new Image();
         this.useShadow = true; //config.useShadow || false
         if(this.useShadow){ // se useShadow for true, apresenta o png da sombra
-            this.shadow.src = "/assets/img/sombra.png"; //colocar aqui a imagem da sombra
+            this.shadow.src = "./assets/img/sombraPinguim.png"; //colocar aqui a imagem da sombra
         }
         this.shadow.onload = () => {
             this.isShadowLoaded = true;
@@ -20,14 +20,14 @@ class Sprite { //animações
 
         //Configura Animação e o Estado inicial
         this.animations = config.animations || {
-            "idle-right" : [ [0,0] ],
-            "idle-up"    : [ [0,1] ],
-            "idle-down"  : [ [0,2] ],
-            "idle-left"  : [ [0,3] ],
-            "walk-right" : [ [1,0],[0,0],[3,0],[0,0], ],
-            "walk-up"    : [ [1,1],[0,1],[3,1],[0,1], ],
-            "walk-down"  : [ [1,2],[0,2],[3,2],[0,2], ],
-            "walk-left"  : [ [1,3],[0,3],[3,3],[0,3], ]
+            "idle-right" : [ [1,3] ],
+            "idle-up"    : [ [1,1] ],
+            "idle-down"  : [ [1,2] ],
+            "idle-left"  : [ [1,0] ],
+            "walk-right" : [ [0,3],[1,3],[2,3],[3,3], ],
+            "walk-up"    : [ [0,1],[1,1],[2,1],[3,1], ],
+            "walk-down"  : [ [0,2],[1,2],[2,2],[3,2], ],
+            "walk-left"  : [ [0,0],[1,0],[2,0],[3,0], ]
         }
         this.currentAnimation = "walk-up"
         //config.currentAnimation || "idle-down";
@@ -71,8 +71,8 @@ class Sprite { //animações
     }
 
     draw(ctx, cameraPerson){
-        const x = this.gameObject.x - 8 + utils.withGrid(22.5) - cameraPerson.x;
-        const y = this.gameObject.y - 18 + utils.withGrid(13) - cameraPerson.y;
+        const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
+        const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
         // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject
 
         this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas

@@ -17,7 +17,7 @@ body {
     margin-top: 80px;
     outline: 1px  solid #fff; 
     
-    transform: scale(2) translateY(20%);
+    transform: scale(5) translateY(35%) translateX(22%);
 }
 
 .game-container canvas {
