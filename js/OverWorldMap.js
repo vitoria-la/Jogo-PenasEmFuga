@@ -15,7 +15,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         ctx.drawImage(
             this.lowerImage,
             utils.withGrid(10.5) - cameraPerson.x,
-            utils.withGrid(5.8) - cameraPerson.y // são deslocamentos para centralizar a câmera
+            utils.withGrid(6) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
     drawUpperImage(ctx, cameraPerson){
@@ -76,12 +76,12 @@ window.OverworldMaps = {
         gameObjects: { // define os personagens/objetos que o mapa vai ter
             hero: new Person({ // personagem principal
                 isPlayerControlled: true,
-                x: utils.withGrid(45),
-                y: utils.withGrid(15),
+                x: utils.withGrid(7),
+                y: utils.withGrid(16),
             }),
             galinhaBranca: new Person({
-                x: utils.withGrid(47),
-                y: utils.withGrid(21),
+                x: utils.withGrid(45),
+                y: utils.withGrid(19),
                 src: "./assets/img/galinhaBranca.png",
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
                     {type: "walk", direction: "left",time: 800},  
@@ -95,8 +95,8 @@ window.OverworldMaps = {
                 ]
             }),
             galinhaMarrom: new Person({
-                x: utils.withGrid(37),
-                y: utils.withGrid(21),
+                x: utils.withGrid(50),
+                y: utils.withGrid(18),
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -114,8 +114,8 @@ window.OverworldMaps = {
                 ]
             }),
             Paova: new Person({
-                x: utils.withGrid(-14),
-                y: utils.withGrid(-5),
+                x: utils.withGrid(28),
+                y: utils.withGrid(6),
                 src: "./assets/img/galinhaPaova.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "up", time: 1500},
@@ -138,8 +138,8 @@ window.OverworldMaps = {
                 ]
             }),
             Clotilde: new Person({
-                x: utils.withGrid(-31),
-                y: utils.withGrid(4),
+                x: utils.withGrid(10),
+                y: utils.withGrid(14),
                 src: "./assets/img/galinhaClotilde.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "up", time: 4300},
@@ -176,8 +176,8 @@ window.OverworldMaps = {
                 ]
             }),
             Bernadette: new Person({
-                x: utils.withGrid(0),
-                y: utils.withGrid(20),
+                x: utils.withGrid(42),
+                y: utils.withGrid(30),
                 src: "./assets/img/galinhaBernadette.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "left", time: 10000},
@@ -393,8 +393,8 @@ window.OverworldMaps = {
             [utils.asGridCoord(56,12)] : true,
             [utils.asGridCoord(55,12)] : true,
             [utils.asGridCoord(54,12)] : true,
-            [utils.asGridCoord(53,12)] : true, // coordenada da porta
-            [utils.asGridCoord(52,12)] : true, // coordenada da porta
+            //[utils.asGridCoord(53,12)] : true, // coordenada da porta
+            //[utils.asGridCoord(52,12)] : true, // coordenada da porta
             [utils.asGridCoord(51,12)] : true,
             [utils.asGridCoord(50,12)] : true,
             [utils.asGridCoord(49,12)] : true,
@@ -621,8 +621,8 @@ window.OverworldMaps = {
             [utils.asGridCoord(17,12)] : true,
             [utils.asGridCoord(18,12)] : true,
             [utils.asGridCoord(19,12)] : true,
-            [utils.asGridCoord(20,12)] : true, // colisao da porta
-            [utils.asGridCoord(21,12)] : true, // colisao da porta
+            //[utils.asGridCoord(20,12)] : true, // colisao da porta
+            //[utils.asGridCoord(21,12)] : true, // colisao da porta
             [utils.asGridCoord(22,12)] : true,
             [utils.asGridCoord(23,12)] : true,
             [utils.asGridCoord(24,12)] : true,
@@ -667,8 +667,8 @@ window.OverworldMaps = {
 
             [utils.asGridCoord(18,11)] : true,
             [utils.asGridCoord(19,11)] : true,
-            [utils.asGridCoord(20,11)] : true,
-            [utils.asGridCoord(21,11)] : true,
+            //[utils.asGridCoord(20,11)] : true,
+            //[utils.asGridCoord(21,11)] : true,
             [utils.asGridCoord(22,11)] : true,
             [utils.asGridCoord(23,11)] : true,
             [utils.asGridCoord(24,11)] : true,
