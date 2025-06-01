@@ -21,8 +21,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     drawUpperImage(ctx, cameraPerson){
         ctx.drawImage(
             this.upperImage,
-            utils.withGrid(22.5) - cameraPerson.x,
-            utils.withGrid(13) - cameraPerson.y
+            utils.withGrid(-20) - cameraPerson.x,
+            utils.withGrid(3) - cameraPerson.y
         )
     }
 
@@ -263,12 +263,33 @@ window.OverworldMap = {
         walls: {
             //define as coordenadas das colisoes do mapa
             //"16,16": true
-            [utils.asGridCoord(2,14)]: true,
-            [utils.asGridCoord(3,14)]: true,
-            [utils.asGridCoord(4,14)]: true,
-            [utils.asGridCoord(2,15)]: true,
-            [utils.asGridCoord(3,15)]: true,
-            [utils.asGridCoord(4,15)]: true,
+                       [utils.asGridCoord(-3,6)]: true,
+            [utils.asGridCoord(-3,5)]: true,
+            [utils.asGridCoord(-3,4)]: true,
+            [utils.asGridCoord(-3,3)]: true,
+            [utils.asGridCoord(-3,2)]: true,
+            [utils.asGridCoord(-2,2)]: true,
+            [utils.asGridCoord(-1,2)]: true,
+            [utils.asGridCoord(0,2)]: true,
+            [utils.asGridCoord(1,2)]: true,
+            [utils.asGridCoord(2,2)]: true,
+            [utils.asGridCoord(3,2)]: true,
+            [utils.asGridCoord(4,2)]: true,
+            [utils.asGridCoord(5,2)]: true,
+            [utils.asGridCoord(6,2)]: true,
+            [utils.asGridCoord(7,2)]: true,
+            [utils.asGridCoord(8,2)]: true,
+            [utils.asGridCoord(9,2)]: true,
+            [utils.asGridCoord(10,2)]: true,
+            [utils.asGridCoord(11,2)]: true,
+            [utils.asGridCoord(12,2)]: true,
+            [utils.asGridCoord(13,2)]: true,
+            [utils.asGridCoord(14,2)]: true,
+            [utils.asGridCoord(15,2)]: true,
+            [utils.asGridCoord(16,2)]: true,
+            [utils.asGridCoord(17,2)]: true,
+            [utils.asGridCoord(18,2)]: true,
+            [utils.asGridCoord(18,3)]: true,
             
         }
     }
