@@ -1,0 +1,53 @@
+#titlescreen{
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    z-index: 10;
+    
+}
+
+#Telainicial{
+    position: absolute;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 1;
+}
+
+.wrapper{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;;
+}
+#start-button{
+    position: static;
+    width: 200px;
+    height: 50px;
+    top: 70%;
+    left: 50%;
+}
+
+#credits-button{
+    position: static;
+    width: 200px;
+    height: 50px;
+    top: 80%;
+    left: 50%;
+}
+
+#settings-button{
+    position: static;
+    width: 200px;
+    height: 50px;
+    top: 90%;
+    left: 50%;
+}
