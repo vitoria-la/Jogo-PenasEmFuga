@@ -27,7 +27,9 @@ class Overworld {
             this.map.drawLowerImage(this.ctx, cameraPerson);
 
             //Desenha os objetos do jogo
-            Object.values(this.map.gameObjects).forEach(object => {
+            Object.values(this.map.gameObjects).sort((a, b) => {
+                return a.y - b.y; // os personagens que estão mais ao norte vão renderizar primeiro
+            }).forEach(object => {
                 object.sprite.draw(this.ctx, cameraPerson);
             })
 
@@ -42,7 +44,7 @@ class Overworld {
     }
 
     init() {
-        this.map = new OverworldMap(window.OverworldMap.Galinheiro); 
+        this.map = new OverworldMap(window.OverworldMaps.Galinheiro); 
         this.map.mountObjects();
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
@@ -50,6 +52,18 @@ class Overworld {
         //this.directionInput.direction;
 
         this.startGameLoop(); // inicia o loop principal do jogo
+
+        // 
+        // this.map.startCutscene([
+        //      {who: "galinhaBranca", type: "walk", direction: "right"},  
+        //      {who: "galinhaBranca", type: "walk", direction: "right"},
+        //      {who: "galinhaBranca", type: "walk", direction: "right"},
+        //      {who: "galinhaBranca", type: "walk", direction: "right"},
+        //      {who: "galinhaBranca", type: "walk", direction: "left"},  
+        //      {who: "galinhaBranca", type: "walk", direction: "left"},
+        //      {who: "galinhaBranca", type: "walk", direction: "left"}, 
+        //      {who: "galinhaBranca", type: "walk", direction: "left"}, 
+        // ])
         
     }
 }
