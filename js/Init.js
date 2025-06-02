@@ -2,10 +2,7 @@
     //Invoked Function Expression (IIFE) para evitar conflitos de escopo
     
     function start(){
-        document.getElementById("start-button").style.display = "none"; // Remove o botão de início do jogo
-        document.getElementById("credits-button").style.display = "none";
-        document.getElementById("settings-button").style.display = "none";
-        
+        document.getElementById("titlescreen").style.display = "none"; // Remove toda a tela do título do jogo
         const overworld = new Overworld({
             element: document.querySelector(".game-container")
         });
