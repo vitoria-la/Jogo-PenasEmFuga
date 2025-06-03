@@ -12,6 +12,12 @@ class GameObject {
         }); 
         this.behaviorLoop = config.behaviorLoop || [];  // é um array que vai ser usado para definir os comportamentos normais dos NPCs
         this.behaviorLoopIndex = 0; // serve para saber qual comportamento está acontecendo
+        
+        // Flag para controlar se o behaviorLoop está ativo
+        this.behaviorLoopActive = false;
+        
+        // Armazena o estado atual da animação
+        this.currentAnimationState = null;
     }
 
     mount(map){ // metodo responsável por montar o objeto no mapa
@@ -33,26 +39,53 @@ class GameObject {
 
         // se estiver rodando uma cutscene ou o NPC não tiver uma animação, termina por aqui mesmo
         if (map.isCutscenePlaying || this.behaviorLoop.length === 0) {
+            // Marca que o behaviorLoop não está ativo no momento
+            this.behaviorLoopActive = false;
             return;
             // Sempre que tiver uma cutscene, é importante dar prioridade a ela
         }
+        this.behaviorLoopIndex += 1; // ao acabar essa etapa de animação, ele atualiza para a próxima
+        if (this.behaviorLoopIndex === this.behaviorLoop.length) {
+            this.behaviorLoopIndex = 0; // se chegar ao final, ele coloca o index na primeira etapa da animação para começar de novo
+        }
+        // Marca que o behaviorLoop está ativo
+        this.behaviorLoopActive = true;
 
         // arrumando para começar a animação
         let eventConfig = this.behaviorLoop[this.behaviorLoopIndex]; // armazena em eventConfig o comportamento atual do array 
         eventConfig.who = this.id; // eventConfig.who recebe quem está fazendo esse comportamento
+        
+        // Salva o estado atual da animação
+        this.currentAnimationState = {
+            type: eventConfig.type,
+            direction: eventConfig.direction,
+            index: this.behaviorLoopIndex
+        };
 
         const eventHandler = new OverworldEvent({map, event: eventConfig});  // os eventos no geral vão acontecer na classe OverworldEvent, como comportamentos, mensagens, múscia, etc
         await eventHandler.init();  // precisamos esperar acabar a animação para contiuar
         // init é um método da classe OverworldEvent
 
-        // arrumando para começar a próxima etapa na animação
-        this.behaviorLoopIndex += 1; // ao acabar essa etapa de animação, ele atualiza para a próxima
-        if (this.behaviorLoopIndex === this.behaviorLoop.length) {
-            this.behaviorLoopIndex = 0; // se chegar ao final, ele coloca o index na primeira etapa da animação para começar de novo
-        }
+        // Se o behaviorLoop foi interrompido por uma cutscene, não avança para o próximo
+        if (!map.isCutscenePlaying) {
+            // arrumando para começar a próxima etapa na animação
+            this.behaviorLoopIndex += 1; // ao acabar essa etapa de animação, ele atualiza para a próxima
+            if (this.behaviorLoopIndex === this.behaviorLoop.length) {
+                this.behaviorLoopIndex = 0; // se chegar ao final, ele coloca o index na primeira etapa da animação para começar de novo
+            }
 
-        // começa de novo
-        this.doBehaviorEvent(map);
+            // começa de novo
+            this.doBehaviorEvent(map);
+        }
     } 
 
+    // Método para retomar o behaviorLoop após uma cutscene
+    resumeBehaviorLoop(map) {
+        // Só retoma se não estiver ativo e tiver comportamentos definidos
+        if (!this.behaviorLoopActive && this.behaviorLoop.length > 0 && this.isMounted) {
+            setTimeout(() => {
+                this.doBehaviorEvent(map);
+            }, 10);
+        }
+    }
 }

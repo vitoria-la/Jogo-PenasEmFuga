@@ -4,6 +4,9 @@ class Overworld {
         this.canvas = this.element.querySelector(".game-canvas");
         this.ctx = this.canvas.getContext("2d");
         this.map = null;
+        
+        // Inicializa o gerenciador de diálogos
+        this.dialogManager = null;
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -43,13 +46,31 @@ class Overworld {
         step();
     }
 
+    // Configura o listener para a tecla E (interação com NPCs)
+    bindActionInput() {
+        new KeypressListener("KeyE", () => {
+            // Verifica se o jogador está próximo a um NPC e inicia o diálogo
+            const hero = this.map.gameObjects.hero;
+            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
+                hero.startDialog(this.map);
+            }
+        });
+    }
+
     init() {
         this.map = new OverworldMap(window.OverworldMaps.Galinheiro); 
+        
+        // Inicializa o gerenciador de diálogos e o associa ao mapa
+        this.dialogManager = new DialogManager();
+        this.map.dialogManager = this.dialogManager;
+        
         this.map.mountObjects();
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
         this.directionInput.init();
-        //this.directionInput.direction;
+        
+        // Configura o listener para a tecla E
+        this.bindActionInput();
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
