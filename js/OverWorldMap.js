@@ -54,6 +54,9 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         }
 
         this.isCutscenePlaying = false; // ao acabar, atualiza a variável para false
+
+        // Resetando os NPCs para voltarem aos seus comportamentos normais (OUTRO JEITO DE RESETAR OS COMPORTAMENTOS CASO O ATUAL NÃO FUNCIONE CORRETAMENTE)
+        //Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
     }
 
     addWall(x,y){ // Adiciona uma parede (uma área de colisão) nas coordenadas (x,y)

@@ -12,6 +12,7 @@ class GameObject {
         }); 
         this.behaviorLoop = config.behaviorLoop || [];  // é um array que vai ser usado para definir os comportamentos normais dos NPCs
         this.behaviorLoopIndex = 0; // serve para saber qual comportamento está acontecendo
+        this.retryTimeout = null; // Serve para um NPC retomar o seu comportamento após algo
     }
 
     mount(map){ // metodo responsável por montar o objeto no mapa
@@ -31,10 +32,19 @@ class GameObject {
 
     async doBehaviorEvent(map) { // Configuração e preparação para rodar os comportamentos
 
-        // se estiver rodando uma cutscene ou o NPC não tiver uma animação, termina por aqui mesmo
-        if (map.isCutscenePlaying || this.behaviorLoop.length === 0) {
+        // se o NPC não tiver uma animação (ou estiver em uma animação de ficar parado), termina por aqui mesmo
+        if (this.behaviorLoop.length === 0 || this.isStanding) {
             return;
-            // Sempre que tiver uma cutscene, é importante dar prioridade a ela
+        }
+        // Se estiver em uma cutscene, para as animações e espera um tempo para ver se ela já terminou
+        if (map.isCutscenePlaying) {
+            if (this.retryTimeout) { // Se já tiver um tempo, limpa ele!
+                clearTimeout(this.retryTimeout);
+            }
+            this.retryTimeout = setTimeout(() => {
+                this.doBehaviorEvent(map);
+            }, 1000);
+            return;
         }
 
         // arrumando para começar a animação
