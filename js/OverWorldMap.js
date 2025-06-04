@@ -96,7 +96,7 @@ window.OverworldMaps = {
             }),
             galinhaMarrom: new Person({
                 x: utils.withGrid(8),
-                y: utils.withGrid(4),
+                y: utils.withGrid(5),
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -115,19 +115,19 @@ window.OverworldMaps = {
             }),
             Paova: new Person({
                 x: utils.withGrid(-14),
-                y: utils.withGrid(-5),
+                y: utils.withGrid(-4),
                 src: "./assets/img/galinhaPaova.png",
                 behaviorLoop: [ 
-                    {type: "stand", direction: "up", time: 1500},
+                    {type: "stand", direction: "up", time: 1500}, // Vê o que tem na geladeira
                     {type: "walk", direction: "left"},
                     {type: "walk", direction: "left"},   
-                    {type: "stand", direction: "up", time: 1100},
+                    {type: "stand", direction: "up", time: 1100}, // Mexe no fogão
                     {type: "walk", direction: "left"},
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},
-                    {type: "stand", direction: "up", time: 1700},
+                    {type: "stand", direction: "up", time: 1700}, // Olha as panelas na bancada
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
@@ -138,11 +138,11 @@ window.OverworldMaps = {
                 ]
             }),
             Clotilde: new Person({
-                x: utils.withGrid(-31),
+                x: utils.withGrid(-32),
                 y: utils.withGrid(4),
                 src: "./assets/img/galinhaClotilde.png",
                 behaviorLoop: [ 
-                    {type: "stand", direction: "up", time: 4300},
+                    {type: "stand", direction: "up", time: 9300}, // Está passando roupa
                     {type: "walk", direction: "left"},
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},
@@ -150,15 +150,13 @@ window.OverworldMaps = {
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},
-                    {type: "walk", direction: "up"},
-                    {type: "stand", direction: "up", time: 1700},
+                    {type: "stand", direction: "up", time: 3200}, // Vai observar seus filhotes
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
-                    {type: "stand", direction: "left", time: 1300},
+                    {type: "stand", direction: "left", time: 1700}, // Para para tomar um chá
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
-                    {type: "walk", direction: "down"},
-                    {type: "stand", direction: "left", time: 1100},
+                    {type: "stand", direction: "left", time: 1300}, // Adimira as roupas no varal
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "up"},
@@ -166,11 +164,9 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
-                    {type: "walk", direction: "up"},
-                    {type: "stand", direction: "up", time: 1700},
+                    {type: "stand", direction: "up", time: 1700}, // Olha o quadro dos filhos 
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"},
-                    {type: "walk", direction: "down"},
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
                 ]
@@ -180,7 +176,7 @@ window.OverworldMaps = {
                 y: utils.withGrid(20),
                 src: "./assets/img/galinhaBernadette.png",
                 behaviorLoop: [ 
-                    {type: "stand", direction: "left", time: 10000},
+                    {type: "stand", direction: "left", time: 10000}, // Descansa no sofá
                     {type: "walk", direction: "left"}, 
                     {type: "walk", direction: "left"},
                     {type: "walk", direction: "up"},
@@ -199,19 +195,20 @@ window.OverworldMaps = {
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"}, 
-                    {type: "stand", direction: "up", time: 2800},
+                    {type: "stand", direction: "up", time: 2800},  // Olha o netos da direita
                     {type: "walk", direction: "left"},
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},
-                    {type: "stand", direction: "up", time: 3500},
+                    {type: "stand", direction: "up", time: 3500}, // Olha os netos que estão no meio
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},   
                     {type: "walk", direction: "left"},
-                    {type: "stand", direction: "up", time: 3000},
+                    {type: "stand", direction: "up", time: 3000}, // Olha os netos que estão na esquerda
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
@@ -228,7 +225,7 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
-                    {type: "stand", direction: "up", time: 2800},
+                    {type: "stand", direction: "up", time: 2800}, // Olha o neto da direita de novo
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "right"},  
@@ -249,6 +246,7 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"},
                 ]
             }),
             galinhaSegurancaMarrom: new Person({
@@ -258,7 +256,43 @@ window.OverworldMaps = {
                 behaviorLoop: [  
                    {type: "stand", direction: "left", time: 2800},
                 ]
+            }),
+             galinhaGalinacia: new Person({
+                x: utils.withGrid(12),
+                y: utils.withGrid(-2),
+                src: "./assets/img/galinhaGalinacia.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "left", time: 5200}, // Descansa na poltrona
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                    {type: "stand", direction: "up", time: 1800}, // Olha as tarefas do dia
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "stand", direction: "left", time: 2100},  // Olha a galinha no escorregador
+                    {type: "stand", direction: "right", time: 1700}, // Dá uma olhada na galinha da balcada
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"}, 
+                ]
+            }),
+            galinhaPenosa: new Person({
+                x: utils.withGrid(1),
+                y: utils.withGrid(4),
+                src: "./assets/img/galinhaPenosa.png",
+                behaviorLoop: [ 
+                    //{type: "stand", direction: "bottom", time: 5200}, 
+                ]
             })
+
         },
         walls: {
             //define as coordenadas das colisoes do mapa
