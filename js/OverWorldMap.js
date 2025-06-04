@@ -14,15 +14,15 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     drawLowerImage(ctx, cameraPerson){
         ctx.drawImage(
             this.lowerImage,
-            utils.withGrid(10.5) - cameraPerson.x,
-            utils.withGrid(6) - cameraPerson.y // são deslocamentos para centralizar a câmera
+            utils.withGrid(-20) - cameraPerson.x,
+            utils.withGrid(3) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
     drawUpperImage(ctx, cameraPerson){
         ctx.drawImage(
             this.upperImage,
-            utils.withGrid(10.5) - cameraPerson.x,
-            utils.withGrid(6) - cameraPerson.y // são deslocamentos para centralizar a câmera
+            utils.withGrid(-20) - cameraPerson.x,
+            utils.withGrid(3) - cameraPerson.y // são deslocamentos para centralizar a câmera
         )
     }
 
@@ -76,12 +76,12 @@ window.OverworldMaps = {
         gameObjects: { // define os personagens/objetos que o mapa vai ter
             hero: new Person({ // personagem principal
                 isPlayerControlled: true,
-                x: utils.withGrid(7),
-                y: utils.withGrid(16),
+                x: utils.withGrid(4),
+                y: utils.withGrid(6),
             }),
             galinhaBranca: new Person({
-                x: utils.withGrid(45),
-                y: utils.withGrid(19),
+                x: utils.withGrid(6),
+                y: utils.withGrid(10),
                 src: "./assets/img/galinhaBranca.png",
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
                     {type: "walk", direction: "left",time: 800},  
@@ -95,8 +95,8 @@ window.OverworldMaps = {
                 ]
             }),
             galinhaMarrom: new Person({
-                x: utils.withGrid(50),
-                y: utils.withGrid(18),
+                x: utils.withGrid(8),
+                y: utils.withGrid(4),
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -114,8 +114,8 @@ window.OverworldMaps = {
                 ]
             }),
             Paova: new Person({
-                x: utils.withGrid(28),
-                y: utils.withGrid(6),
+                x: utils.withGrid(-14),
+                y: utils.withGrid(-5),
                 src: "./assets/img/galinhaPaova.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "up", time: 1500},
@@ -138,8 +138,8 @@ window.OverworldMaps = {
                 ]
             }),
             Clotilde: new Person({
-                x: utils.withGrid(10),
-                y: utils.withGrid(14),
+                x: utils.withGrid(-31),
+                y: utils.withGrid(4),
                 src: "./assets/img/galinhaClotilde.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "up", time: 4300},
@@ -176,8 +176,8 @@ window.OverworldMaps = {
                 ]
             }),
             Bernadette: new Person({
-                x: utils.withGrid(42),
-                y: utils.withGrid(30),
+                x: utils.withGrid(0),
+                y: utils.withGrid(20),
                 src: "./assets/img/galinhaBernadette.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "left", time: 10000},
