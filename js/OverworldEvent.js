@@ -48,6 +48,11 @@ class OverworldEvent {
         document.addEventListener("PersonWalkingComplete", completeHandler) // está escutando para saber se o movimento foi finalizado
     }
 
+    changeMap(resolve) {
+        this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
+        resolve();
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação

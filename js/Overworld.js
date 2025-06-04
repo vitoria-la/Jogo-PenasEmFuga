@@ -43,13 +43,29 @@ class Overworld {
         step();
     }
 
-    init() {
-        this.map = new OverworldMap(window.OverworldMaps.Galinheiro); 
+    bindHeroPositionCheck() {
+        document.addEventListener("PersonWalkingComplete", e => {
+            if (e.detail.whoId === "hero") {
+                // Quer dizer que a posição do pinguim mudou
+                this.map.checkForFootstepCutscene();
+            }
+        })
+    }
+
+    startMap(mapConfig) {
+        this.map = new OverworldMap(mapConfig); 
+        this.map.overworld = this;
         this.map.mountObjects();
+    }
+
+    init() {
+        this.startMap(window.OverworldMaps.Galinheiro);
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
         this.directionInput.init();
         //this.directionInput.direction;
+
+        this.bindHeroPositionCheck();
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
