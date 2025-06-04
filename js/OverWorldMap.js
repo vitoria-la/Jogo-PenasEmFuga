@@ -1,6 +1,8 @@
 class OverworldMap { // representa um mapa específico no jogo, incluindo seus objetos, colisões e camadas visuais
     constructor(config){
+        this.overworld = null;
         this.gameObjects = config.gameObjects; // Armazena um objeto contendo todos os GameObjects que pertencem a este mapa
+        this.cutsceneSpaces = config.cutsceneSpaces || {};
         this.walls = config.walls || {}; // Armazena um objeto que representa as áreas de colisão ("paredes") no mapa. As chaves são coordenadas no formato "x,y", e o valor true indica que há uma parede. O padrão é um objeto vazio
         
         this.lowerImage = new Image();
@@ -57,6 +59,18 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
         // Resetando os NPCs para voltarem aos seus comportamentos normais (OUTRO JEITO DE RESETAR OS COMPORTAMENTOS CASO O ATUAL NÃO FUNCIONE CORRETAMENTE)
         //Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
+    }
+
+    checkForFootstepCutscene() {
+        const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
+        const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
+        console.log("testando");
+
+        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando denhuma cutscene e o player estiver no lugar que inicia uma
+            this.startCutscene(match[0].events);
+            console.log("testando o checkForFootstepCutscene ");
+        }
+
     }
 
     addWall(x,y){ // Adiciona uma parede (uma área de colisão) nas coordenadas (x,y)
@@ -824,6 +838,41 @@ window.OverworldMaps = {
 
             //------------------------------------------//
             
+        },
+        // Espaços em que acontece cutscenes
+        cutsceneSpaces: {
+            [utils.asGridCoord(18,8)] : [
+                {
+                    events: [
+                        {type: "changeMap", map: "Fazenda"},
+                    ]
+                }
+            ]
         }
-    }
+    },
+    // Mapa da parte da fazenda
+    Fazenda: { // mapa
+        lowerSrc: "./assets/img/fazendaMapa.png", // layer de base do mapa (chão do mapa)
+        upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
+        gameObjects: { // define os personagens/objetos que o mapa vai ter
+            hero: new Person({ // personagem principal
+                isPlayerControlled: true,
+                x: utils.withGrid(3),
+                y: utils.withGrid(5),
+            })
+        },
+        walls: {
+            //define as coordenadas das colisoes do mapa
+        },
+        // Espaços em que acontece cutscenes
+        cutsceneSpaces: {
+            [utils.asGridCoord(19,8)] : [
+                {
+                    events: [
+                        {type: "changeMap", map: "Galinheiro"},
+                    ]
+                }
+            ]
+        }
+    } 
 }
