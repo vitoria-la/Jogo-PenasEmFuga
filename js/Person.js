@@ -5,6 +5,8 @@ class Person extends GameObject {
 
         this.direction = "down"; // Define a direção inicial do personagem
 
+        this.isStanding = false; // Para saber se um NPC está no meio de uma animação de ficar parado
+
         this.isPlayerControlled = config.isPlayerControlled || false; // indica se este personagem é controlado pelo jogador
 
         this.directionUpdate = {
@@ -51,10 +53,12 @@ class Person extends GameObject {
         }
 
         if (behavior.type === "stand") { // se o tipo de animação for ficar parado
+            this.isStanding = true;
             setTimeout(() => { 
                 utils.emitEvent("PersonStandComplete", {
                     whoId: this.id // quando der o tempo, emite que foi completado esse comportamento e quem completou
                 })
+                this.isStanding = false;
             }, behavior.time) // espera pelo tempo especificado para esse comportamento
         }
     }
