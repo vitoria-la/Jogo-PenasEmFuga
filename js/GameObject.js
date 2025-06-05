@@ -18,7 +18,7 @@ class GameObject {
     mount(map){ // metodo responsável por montar o objeto no mapa
         //console.log("mouting")
         this.isMounted = true; // altera o estado para true, indicando que o objeto está ativo no mapa
-        map.addWall(this.x,this.y); // metodo que pode criar uma parede, impedindo que outros objetos passem por ele
+        // map.addWall(this.x,this.y); // metodo que pode criar uma parede, impedindo que outros objetos passem por ele
         
         // se tiver um comportamento, ele vai começar depois de um delay 
         setTimeout( () => {
