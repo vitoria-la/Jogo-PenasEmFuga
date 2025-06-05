@@ -88,14 +88,14 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         //Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
     }
 
-    checkForFootstepCutscene() {
+    checkForFootstepCutscene() { // Método que percebe se o pinguim entrou na coordenada que inicia alguma cutscene
         const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
         const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
-        console.log("testando");
+        //console.log("testando");
 
-        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando denhuma cutscene e o player estiver no lugar que inicia uma
+        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando nenhuma cutscene e o player estiver no lugar que inicia uma
             this.startCutscene(match[0].events);
-            console.log("testando o checkForFootstepCutscene ");
+            //console.log("testando o checkForFootstepCutscene ");
         }
 
     }
