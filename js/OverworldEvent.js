@@ -48,14 +48,19 @@ class OverworldEvent {
         document.addEventListener("PersonWalkingComplete", completeHandler) // está escutando para saber se o movimento foi finalizado
     }
 
-    changeMap(resolve) {
+    changeMap(resolve) { // Método para mudar de mapa
 
+        // Desativa os objetos 
         Object.values(this.map.gameObjects).forEach(obj => {
             obj.isMounted = false;
         })
 
-        this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
-        resolve();
+        const sceneTransition = new SceneTransition(); // sceneTransition é uma instância da classe SceneTransition
+        sceneTransition.init(document.querySelector(".game-container"), () => { // Começa a transição de mapa
+            this.map.overworld.startMap(window.OverworldMaps[this.event.map]); // Muda de mapa
+            resolve();
+            sceneTransition.fadeOut(); // Tira a cor sólida da tela e mostra o novo mapa
+        });
     }
 
     init() {
