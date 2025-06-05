@@ -84,7 +84,7 @@ class TextMessage {
     
     // Calcula a posição relativa à câmera
     const x = this.npc.x - cameraPerson.x + utils.withGrid(10.5);
-    const y = this.npc.y - cameraPerson.y + utils.withGrid(6) - 40; // Posiciona acima do NPC
+    const y = this.npc.y - cameraPerson.y + utils.withGrid(4) - 40; // Posiciona acima do NPC
     
     box.style.transform = `translate(${x}px, ${y}px)`;
   }

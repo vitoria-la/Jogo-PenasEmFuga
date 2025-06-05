@@ -112,7 +112,7 @@ class Person extends GameObject {
         
     }
     
-    // Verifica se o jogador está próximo a algum NPC para mostrar o botão de interação
+    // Verifica se o jogador está próximo a algum NPC para mostrar botão de interação
     checkForNpcInteraction(state) {
         // Obtém todos os NPCs do mapa
         const npcs = Object.values(state.map.gameObjects).filter(obj => 
@@ -156,13 +156,12 @@ class Person extends GameObject {
         // Posiciona o botão centralizado acima do NPC
         const cameraPerson = map.gameObjects.hero;
         
-        // Ajuste para garantir que o botão fique acima do sprite do NPC
-        // Centraliza horizontalmente e posiciona acima do sprite com deslocamento maior
+        // Centraliza horizontalmente e posiciona acima do sprite do NPC
         const x = npc.x - cameraPerson.x + utils.withGrid(10.5);
         
-        // Aumenta o deslocamento vertical para garantir que fique acima do sprite
-        // O valor -1.5 posiciona o botão mais acima do que antes
-        const y = npc.y - utils.withGrid(30) - cameraPerson.y + utils.withGrid(6);
+        // Posiciona o botão exatamente acima do sprite do NPC
+        // Usa um deslocamento vertical menor para garantir que fique logo acima da cabeça do NPC
+        const y = npc.y - utils.withGrid(1) - cameraPerson.y + utils.withGrid(6);
         
         this.interactionButton.style.transform = `translate(${x}px, ${y}px)`;
         this.interactionButton.style.display = "block";
@@ -182,6 +181,11 @@ class Person extends GameObject {
     // Inicia um diálogo com o NPC atual
     startDialog(map) {
         if (this.currentInteractingNpc && !map.isCutscenePlaying) {
+            // Verifica se o DialogManager existe
+            if (!map.dialogManager) {
+                map.dialogManager = new DialogManager();
+            }
+            
             // Inicia o diálogo usando o DialogManager
             map.dialogManager.startDialog(this.currentInteractingNpc.id, map);
             

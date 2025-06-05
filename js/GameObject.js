@@ -13,6 +13,12 @@ class GameObject {
         this.behaviorLoop = config.behaviorLoop || [];  // é um array que vai ser usado para definir os comportamentos normais dos NPCs
         this.behaviorLoopIndex = 0; // serve para saber qual comportamento está acontecendo
         this.retryTimeout = null; // Serve para um NPC retomar o seu comportamento após algo
+        
+        // Flag para controlar se o behaviorLoop está ativo
+        this.behaviorLoopActive = true;
+        
+        // Armazena o estado atual da animação
+        this.currentAnimationState = null;
     }
 
     mount(map){ // metodo responsável por montar o objeto no mapa
@@ -41,15 +47,29 @@ class GameObject {
             if (this.retryTimeout) { // Se já tiver um tempo, limpa ele!
                 clearTimeout(this.retryTimeout);
             }
+            
+            // Marca que o behaviorLoop não está ativo durante a cutscene
+            this.behaviorLoopActive = false;
+            
             this.retryTimeout = setTimeout(() => {
                 this.doBehaviorEvent(map);
             }, 1000);
             return;
         }
 
+        // Marca que o behaviorLoop está ativo
+        this.behaviorLoopActive = true;
+
         // arrumando para começar a animação
         let eventConfig = this.behaviorLoop[this.behaviorLoopIndex]; // armazena em eventConfig o comportamento atual do array 
         eventConfig.who = this.id; // eventConfig.who recebe quem está fazendo esse comportamento
+
+        // Salva o estado atual da animação
+        this.currentAnimationState = {
+            type: eventConfig.type,
+            direction: eventConfig.direction,
+            index: this.behaviorLoopIndex
+        };
 
         const eventHandler = new OverworldEvent({map, event: eventConfig});  // os eventos no geral vão acontecer na classe OverworldEvent, como comportamentos, mensagens, múscia, etc
         await eventHandler.init();  // precisamos esperar acabar a animação para contiuar
@@ -63,6 +83,41 @@ class GameObject {
 
         // começa de novo
         this.doBehaviorEvent(map);
-    } 
-
+    }
+    
+    // Método para retomar o behaviorLoop após uma cutscene
+    resumeBehaviorLoop(map) {
+        // Só retoma se não estiver ativo e tiver comportamentos definidos
+        if (!this.behaviorLoopActive && this.behaviorLoop.length > 0 && this.isMounted) {
+            // Limpa qualquer timeout existente
+            if (this.retryTimeout) {
+                clearTimeout(this.retryTimeout);
+                this.retryTimeout = null;
+            }
+            
+            // Força a flag para true para garantir que o loop seja reiniciado
+            this.behaviorLoopActive = true;
+            
+            // Inicia o behaviorLoop imediatamente
+            this.doBehaviorEvent(map);
+        }
+    }
+    
+    // Método para forçar a retomada do behaviorLoop
+    forceBehaviorLoop(map) {
+        // Força a retomada do behaviorLoop independentemente do estado atual
+        if (this.behaviorLoop.length > 0 && this.isMounted) {
+            // Limpa qualquer timeout existente
+            if (this.retryTimeout) {
+                clearTimeout(this.retryTimeout);
+                this.retryTimeout = null;
+            }
+            
+            // Força a flag para true para garantir que o loop seja reiniciado
+            this.behaviorLoopActive = true;
+            
+            // Inicia o behaviorLoop imediatamente
+            this.doBehaviorEvent(map);
+        }
+    }
 }
