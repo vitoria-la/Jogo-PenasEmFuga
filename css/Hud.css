@@ -1,0 +1,30 @@
+
+.hotbar-container {
+  position: absolute;
+  /* "um pequeno espaço entre elas no eixo x" - aqui posicionamos o contêiner no eixo X */
+  left: 51%; /* Ajuste este valor para o espaço desejado da borda esquerda */
+  
+  /* Para centralizar o grupo de hotbars verticalmente na tela (opcional) */
+  top: 72%;
+  transform: translateX(-50%); /* Técnica para centralização vertical exata */
+
+  /* Usar Flexbox para alinhar as hotbars internas verticalmente */
+  display: flex;
+  flex-direction: row; /* Alinha os itens filhos (as hotbars) em uma coluna */
+  
+  /* Espaço ENTRE as hotbars na coluna vertical */
+  gap: 8px; /* Ajuste este valor para o espaço vertical desejado entre cada hotbar */
+}
+
+.hotbar {
+  /* Removemos position, left, bottom, transform daqui, 
+     pois o .hotbar-container agora controla o posicionamento do grupo. */
+  
+  width: 20px;   /* Mantenha a largura da sua imagem/hotbar */
+  height: 20px;   /* Mantenha a altura da sua imagem/hotbar */
+  background-image: url('../assets/img/hotBar.png'); /* Caminho para sua imagem */
+  image-rendering: pixelated; /* Se for estilo pixel art */
+
+  /* Opcional: adicione uma borda para ver claramente cada hotbar durante o desenvolvimento */
+  /* border: 1px solid yellow; */
+}

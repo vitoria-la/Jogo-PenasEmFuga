@@ -59,6 +59,10 @@ class Overworld {
     }
 
     init() {
+
+        this.hud = new Hud();
+        this.hud.init(document.querySelector(".game-container"));
+
         this.startMap(window.OverworldMaps.Galinheiro);
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
