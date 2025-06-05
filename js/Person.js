@@ -5,6 +5,10 @@ class Person extends GameObject {
 
         this.direction = "down"; // Define a direção inicial do personagem
 
+        this.isStanding = false; // Para saber se um NPC está no meio de uma animação de ficar parado
+
+        this.intentPosition = null; // Ou é nulo ou é uma coordenada [x,y] e trata-se da intenção que um NPC tem de se mover
+
         this.isPlayerControlled = config.isPlayerControlled || false; // indica se este personagem é controlado pelo jogador
 
         this.directionUpdate = {
@@ -42,6 +46,11 @@ class Person extends GameObject {
     }
 
     startBehavior(state, behavior){
+
+        if (!this.isMounted) {
+            return;
+        }
+
         //define a direção do personagem para qualquer ele esteja
         this.direction = behavior.direction;
         if(behavior.type === "walk"){
@@ -54,16 +63,26 @@ class Person extends GameObject {
                 return;
             }
             // Pronto para andar
-            state.map.moveWall(this.x,this.y,this.direction);
+            // state.map.moveWall(this.x,this.y,this.direction);
             this.movingProgressRemaining = 16;
+
+            //Adiciona a  intenção da próxima posição
+            const intentPosition = utils.nextPosition(this.x, this.y, this.direction);
+            this.intentPosition = [
+                intentPosition.x,
+                intentPosition.y,
+            ]
+
             this.updateSprite(state); // para animar os NPCs
         }
 
         if (behavior.type === "stand") { // se o tipo de animação for ficar parado
+            this.isStanding = true;
             setTimeout(() => { 
                 utils.emitEvent("PersonStandComplete", {
                     whoId: this.id // quando der o tempo, emite que foi completado esse comportamento e quem completou
                 })
+                this.isStanding = false;
             }, behavior.time) // espera pelo tempo especificado para esse comportamento
         }
     }
@@ -74,6 +93,7 @@ class Person extends GameObject {
         this.movingProgressRemaining -= 1;
 
         if (this.movingProgressRemaining === 0) { // foi terminado o movimento de andar
+            this.intentPosition = null; // Tira o que seria a próxima posição
             utils.emitEvent("PersonWalkingComplete", { // emite um sinal que foi terminado a animação de andar
                 whoId: this.id  // manda quem terminou de andar
             })

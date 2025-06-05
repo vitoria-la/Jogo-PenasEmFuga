@@ -4,9 +4,6 @@ class Overworld {
         this.canvas = this.element.querySelector(".game-canvas");
         this.ctx = this.canvas.getContext("2d");
         this.map = null;
-        
-        // Inicializa o gerenciador de diálogos
-        this.dialogManager = null;
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -46,31 +43,29 @@ class Overworld {
         step();
     }
 
-    // Configura o listener para a tecla E (interação com NPCs)
-    bindActionInput() {
-        new KeypressListener("KeyE", () => {
-            // Verifica se o jogador está próximo a um NPC e inicia o diálogo
-            const hero = this.map.gameObjects.hero;
-            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
-                hero.startDialog(this.map);
+    bindHeroPositionCheck() {
+        document.addEventListener("PersonWalkingComplete", e => {
+            if (e.detail.whoId === "hero") {
+                // Quer dizer que a posição do pinguim mudou
+                this.map.checkForFootstepCutscene();
             }
-        });
+        })
+    }
+
+    startMap(mapConfig) {
+        this.map = new OverworldMap(mapConfig); 
+        this.map.overworld = this;
+        this.map.mountObjects();
     }
 
     init() {
-        this.map = new OverworldMap(window.OverworldMaps.Galinheiro); 
-        
-        // Inicializa o gerenciador de diálogos e o associa ao mapa
-        this.dialogManager = new DialogManager();
-        this.map.dialogManager = this.dialogManager;
-        
-        this.map.mountObjects();
+        this.startMap(window.OverworldMaps.Galinheiro);
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
         this.directionInput.init();
-        
-        // Configura o listener para a tecla E
-        this.bindActionInput();
+        //this.directionInput.direction;
+
+        this.bindHeroPositionCheck();
 
         this.startGameLoop(); // inicia o loop principal do jogo
 

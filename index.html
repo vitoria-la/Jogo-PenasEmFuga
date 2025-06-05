@@ -6,23 +6,24 @@
     <title>Penas em Fuga!</title>
     <link rel="icon" href="assets\img\favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
-<<<<<<< Updated upstream
-=======
     <link rel="stylesheet" href="css/titlescreen.css">
-    <link rel="stylesheet" href="css/dialog.css">
->>>>>>> Stashed changes
+    <link rel="stylesheet" href="css/SceneTransition.css">
 </head>
 <body>
-
     <div class="game-container">
+        <div id="titlescreen">
+            <img src="assets/img/Telainicial.png" id="Telainicial">
+            <div class="wrapper">
+                <button id="start-button">Jogar</button>
+                <button id="credits-button">Créditos</button>
+                <button id="settings-button">Configurações</button>
+            </div>
+        </div>
         <canvas class="game-canvas" width="704" height="436"></canvas>
     </div>
     
     <script src="js/utils.js"></script>
     <script src="js/DirectionInput.js"></script>
-    <script src="js/KeypressListener.js"></script>
-    <script src="js/TextMessage.js"></script>
-    <script src="js/DialogManager.js"></script>
     <script src="js/Overworld.js"></script>
     <script src="js/GameObject.js"></script>
     <script src="js/Person.js"></script>
@@ -30,5 +31,6 @@
     <script src="js/OverWorldMap.js"></script>
     <script src="js/OverWorldEvent.js"></script>
     <script src="js/Init.js"></script>
+    <script src="js/SceneTransition.js"></script>
 </body>
 </html>
