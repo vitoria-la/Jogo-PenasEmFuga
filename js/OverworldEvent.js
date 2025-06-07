@@ -63,6 +63,30 @@ class OverworldEvent {
         });
     }
 
+    foundFrog(resolve) {  // Evento caso o player tenha achado um sapo (galinha da montanha)
+        const who = this.event.who; // pega o objeto do NPC
+        //console.log(who);
+        Object.values(this.map.gameObjects).forEach(obj => { // Passa por todos os objetos do mapa
+            if (obj.id === who) { //  Se achar o sapo dentre os objetos
+                switch (obj.id) { // Muda o local dos sapos para o pet shop
+                    case "frog1":
+                        obj.x = utils.withGrid(6);
+                        obj.y = utils.withGrid(-5);
+                        break;
+                    case "frog2":
+                        obj.x = utils.withGrid(4);
+                        obj.y = utils.withGrid(-1);
+                        break;
+                    case "frog3":
+                        obj.x = utils.withGrid(12);
+                        obj.y = utils.withGrid(-4);
+                        break;
+                }
+            }
+        })
+        resolve(); // Resolve o evento
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação
