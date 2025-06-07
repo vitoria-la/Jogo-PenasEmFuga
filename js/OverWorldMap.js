@@ -55,9 +55,11 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             let object = this.configObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
             object.id = key;
 
-            let instance;
+            let instance; // Cria uma instância de acordo com o tipo de objeto
             if (object.type === "Person") {
                 instance = new Person(object);
+            } else if (object.type === "Frog") {
+                instance = new Frog(object);
             }
 
             this.gameObjects[key] = instance;
@@ -100,17 +102,6 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
     }
 
-    // addWall(x,y){ // Adiciona uma parede (uma área de colisão) nas coordenadas (x,y)
-    //     this.walls[`${x},${y}`] = true;
-    // }
-    // removeWall(x,y){ // Remove uma parede das coordenadas (x,y)
-    //     delete this.walls[`${x},${y}`]
-    // }
-    // moveWall(wasX, wasY, direction){ // Move uma parede de uma posição anterior (wasX, wasY) para a próxima posição calculada com base na direction. Útil para objetos que se movem e precisam atualizar suas colisões
-    //     this.removeWall(wasX,wasY);
-    //     const {x,y} = utils.nextPosition(wasX,wasY,direction);
-    //     this.addWall(x,y);
-    // }
 }
 
 window.OverworldMaps = {
@@ -344,7 +335,37 @@ window.OverworldMaps = {
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
-            }
+            },
+            frog1: {  // Sapo da sala de costura
+                type: "Person",
+                x: utils.withGrid(-28),
+                y: utils.withGrid(9),
+                isFrog: true,
+                src: "./assets/img/frogSprite.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "up", time: 3000}
+                ]
+            },
+            frog2: {  // Sapo perto da saída
+                type: "Person",
+                x: utils.withGrid(17),
+                y: utils.withGrid(13),
+                isFrog: true,
+                src: "./assets/img/frogSprite.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "right", time: 3000}
+                ]
+            },
+            frog3: {  // Sapo da sala
+                type: "Person",
+                x: utils.withGrid(-1),
+                y: utils.withGrid(23),
+                isFrog: true,
+                src: "./assets/img/frogSprite.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "left", time: 3000}
+                ]
+            },
 
         },
         walls: {
@@ -853,7 +874,7 @@ window.OverworldMaps = {
             [utils.asGridCoord(-4,21)] : true,
             [utils.asGridCoord(-3,21)] : true,
 
-            [utils.asGridCoord(0,20)] : true,
+            //[utils.asGridCoord(0,20)] : true, // Para que a Bernadette possa sentar no sofá
             [utils.asGridCoord(0,21)] : true,
             [utils.asGridCoord(0,22)] : true,
             [utils.asGridCoord(1,20)] : true,
@@ -878,12 +899,17 @@ window.OverworldMaps = {
         // Espaços em que acontece cutscenes
         cutsceneSpaces: {
             [utils.asGridCoord(18,8)] : [
-                {
-                    events: [
-                        {type: "changeMap", map: "Fazenda"},
-                    ]
-                }
-            ]
+                {events: [{type: "changeMap", map: "Fazenda"},]}
+            ],
+            [utils.asGridCoord(-28,8)] : [ // Espaço acima do sapo da sala de costura
+                {events: [{type: "foundFrog", who: "frog1", x: -28, y: 9},]}
+            ],
+            [utils.asGridCoord(16,13)] : [ // Espaço ao lado do sapo perto da saída
+                {events: [{type: "foundFrog", who: "frog2", x: 17, y: 13},]}
+            ],
+            [utils.asGridCoord(-1,22)] : [ // Espaço acima do sapo da sala
+                {events: [{type: "foundFrog", who: "frog3", x: -1, y: 23},]}
+            ],
         }
     },
     // Mapa da parte da fazenda
