@@ -71,8 +71,8 @@ class Sprite { //animações
     }
 
     draw(ctx, cameraPerson){
-        const x = this.gameObject.x - (-9) + utils.withGrid(21) - cameraPerson.x;
-        const y = this.gameObject.y - 32 + utils.withGrid(14) - cameraPerson.y;
+        const x = this.gameObject.x - (-9) + utils.withGrid(8) - cameraPerson.x;
+        const y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
         // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject
 
         this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas

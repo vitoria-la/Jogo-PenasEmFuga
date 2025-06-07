@@ -9,7 +9,7 @@ body {
     overflow: hidden;
 }
 
-.game-container {
+/* .game-container {
     position: relative;
     width: 704px;
     height: 436px;
@@ -18,8 +18,26 @@ body {
     outline: 1px  solid #fff; 
     
     transform: scale(5);
+} */
+
+.game-container {
+  position: relative;
+  width: 100vw;  /* Ocupa 100% da largura da tela */
+  height: 100vh; /* Ocupa 100% da altura da tela */
+  margin: 0;       /* Remove todas as margens */
+  outline: none;   /* Remove o outline */
+
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;
 }
 
 .game-container canvas {
+    /* Faz o elemento canvas tentar ocupar todo o espaço do .game-container */
+    width: 100%;
+    height: 100%;
+    
     image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    Image-rendering: -webkit-crisp-edges;
 }

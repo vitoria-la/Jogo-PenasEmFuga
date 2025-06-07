@@ -1,20 +1,21 @@
 class Hud {
-    constructor() {
-        this.hotbarContainerElement = [];
-        this.task = null;
-    }
+  constructor() {
+    this.hotbarContainerElement = [];
+    this.taskListIconElement = null;
+    this.taskListPanelElement = null;
+  }
 
-    update() {
-        // Aqui você pode atualizar os itens da hotbar futuramente
-    }
+  update() {
 
-    createElement() {
-        this.hotbarElement = document.createElement("div");
-        this.hotbarElement.classList.add("hotbar");
-    }
+  }
 
-    init(gameContainerElement) {
-        // Cria o contêiner principal que vai segurar todas as hotbars
+  createElement() {
+    this.hotbarElement = document.createElement("div");
+    this.hotbarElement.classList.add("hotbar");
+  }
+
+  init(gameContainerElement) {
+    // Cria o contêiner principal que vai segurar todas as hotbars
     this.hotbarContainerElement = document.createElement("div");
     this.hotbarContainerElement.classList.add("hotbar-container");
 
@@ -33,7 +34,49 @@ class Hud {
     } else {
       // Fallback se o gameContainerElement não for passado corretamente
       document.body.appendChild(this.hotbarContainerElement);
-      console.warn("HUD container foi adicionado ao body. Verifique se gameContainerElement está sendo passado para Hud.init().");
+      console.warn("HUD container foi adicionado ao body.");
     }
+
+    this.taskListIconElement = document.createElement("div");
+    this.taskListIconElement.classList.add("task-list-icon");
+    if (gameContainerElement) {
+      gameContainerElement.appendChild(this.taskListIconElement);
+    } else {
+      document.body.appendChild(this.taskListIconElement);
+      console.warn("Ícone da lista de tarefas foi adicionado ao body.");
+    }
+
+    this.taskListPanelElement = document.createElement("div");
+    this.taskListPanelElement.classList.add("task-list-panel");
+
+    this.taskListPanelElement.innerHTML = `
+            <h3>Minhas tarefas</h3>
+            <ul>
+              <li>Encontrar item X</li>
+              <li>Falar com galinha Y</li>
+              <li>Plantar trigo</li>
+              <li>Colher milho</li>
+            </ul>
+            <button class="task-list-close-button">Fechar</button>
+    `;
+    
+    if(gameContainerElement){
+      gameContainerElement.appendChild(this.taskListPanelElement);
+    } else {
+      document.body.appendChild(this.taskListPanelElement);
+      console.warn("Painel da lista de tarefa foi adicionado ao body.");
+    }
+
+    this.taskListIconElement.addEventListener('click', () => {
+      this.taskListPanelElement.classList.toggle('visible');
+    });
+
+    const closeButton = this.taskListPanelElement.querySelector('.task-list-close-button');
+      if(closeButton){
+        closeButton.addEventListener('click', () => {
+        this.taskListPanelElement.classList.remove('visible');
+      })
+    }
+
   }
 }

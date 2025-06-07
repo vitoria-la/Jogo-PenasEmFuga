@@ -1,30 +1,100 @@
+/* Em Hud.css - VERSÃO RESPONSIVA */
 
+/* --- Contêiner da Hotbar --- */
 .hotbar-container {
   position: absolute;
-  /* "um pequeno espaço entre elas no eixo x" - aqui posicionamos o contêiner no eixo X */
-  left: 51%; /* Ajuste este valor para o espaço desejado da borda esquerda */
-  
-  /* Para centralizar o grupo de hotbars verticalmente na tela (opcional) */
-  top: 72%;
-  transform: translateX(-50%); /* Técnica para centralização vertical exata */
+  bottom: 2vh; /* Distância da borda inferior baseada na ALTURA da tela */
+  left: 50%;
+  transform: translateX(-50%);
 
-  /* Usar Flexbox para alinhar as hotbars internas verticalmente */
   display: flex;
-  flex-direction: row; /* Alinha os itens filhos (as hotbars) em uma coluna */
-  
-  /* Espaço ENTRE as hotbars na coluna vertical */
-  gap: 8px; /* Ajuste este valor para o espaço vertical desejado entre cada hotbar */
+  flex-direction: row;
+  gap: 1vw; /* Espaçamento baseado na LARGURA da tela */
 }
 
+/* --- Hotbar Individual --- */
 .hotbar {
-  /* Removemos position, left, bottom, transform daqui, 
-     pois o .hotbar-container agora controla o posicionamento do grupo. */
+  /* O tamanho de cada slot da hotbar será 4% da altura da tela, mas no mínimo 20px e no máximo 50px */
+  width: clamp(20px, 4vh, 50px);
+  height: clamp(20px, 4vh, 50px);
   
-  width: 20px;   /* Mantenha a largura da sua imagem/hotbar */
-  height: 20px;   /* Mantenha a altura da sua imagem/hotbar */
-  background-image: url('../assets/img/hotBar.png'); /* Caminho para sua imagem */
-  image-rendering: pixelated; /* Se for estilo pixel art */
+  background-image: url('../assets/img/hotBar.png');
+  image-rendering: pixelated;
+  background-size: cover;
+}
 
-  /* Opcional: adicione uma borda para ver claramente cada hotbar durante o desenvolvimento */
-  /* border: 1px solid yellow; */
+/* --- Ícone da Lista de Tarefas --- */
+.task-list-icon {
+  position: absolute;
+  top: 2vh;   /* Distância do topo baseada na ALTURA da tela */
+  right: 1.5vw; /* Distância da direita baseada na LARGURA da tela */
+  
+  /* Tamanho similar ao da hotbar para consistência */
+  width: clamp(25px, 4.5vh, 55px);
+  height: clamp(25px, 4.5vh, 55px);
+  
+  background-image: url('../assets/img/hotBar.png'); /* Lembre-se de usar um ícone dedicado */
+  background-size: contain;
+  image-rendering: pixelated;
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939; /* Borda também responsiva */
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* --- Painel da Lista de Tarefas --- */
+.task-list-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* O painel terá 25% da largura da tela, mas no mínimo 250px e no máximo 400px */
+  width: clamp(250px, 25vw, 400px);
+  height: auto; /* A altura se ajusta ao conteúdo */
+  max-height: 80vh; /* Para não estourar a altura da tela */
+
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border: clamp(2px, 0.5vh, 4px) solid #4A4A4A;
+  border-radius: clamp(5px, 1vh, 12px);
+  padding: clamp(10px, 2vw, 20px); /* Padding responsivo */
+  
+  display: none;
+  z-index: 1001;
+  color: #333;
+}
+
+.task-list-panel.visible {
+  display: block;
+}
+
+/* --- Fontes e Elementos Internos do Painel --- */
+.task-list-panel h3 {
+  text-align: center;
+  color: #2c3e50;
+  border-bottom: 1px solid #ddd;
+  /* A fonte será 2% da largura da tela, mas no mínimo 14px e no máximo 22px */
+  font-size: clamp(14px, 2vw, 22px);
+  margin: 0 0 1vh 0;
+  padding-bottom: 1vh;
+}
+
+.task-list-panel li {
+  border-left: clamp(3px, 0.5vw, 5px) solid #00fa21;
+  font-size: clamp(12px, 1.5vw, 18px); /* Fonte dos itens também responsiva */
+  padding: 1vh 1vw;
+  margin-top: 1vh;
+  background-color: #fff;
+}
+
+.task-list-panel .task-list-close-button {
+  display: block;
+  margin: 2vh auto 0;
+  padding: 1vh 2vw;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(12px, 1.5vw, 18px);
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 5px;
 }
