@@ -338,8 +338,8 @@ window.OverworldMaps = {
             },
             frog1: {  // Sapo da sala de costura
                 type: "Person",
-                x: utils.withGrid(-28),
-                y: utils.withGrid(9),
+                x: utils.withGrid(-15),
+                y: utils.withGrid(18),
                 isFrog: true,
                 src: "./assets/img/frogSprite.png",
                 behaviorLoop: [ 
@@ -348,8 +348,8 @@ window.OverworldMaps = {
             },
             frog2: {  // Sapo perto da saída
                 type: "Person",
-                x: utils.withGrid(17),
-                y: utils.withGrid(13),
+                x: utils.withGrid(30),
+                y: utils.withGrid(22),
                 isFrog: true,
                 src: "./assets/img/frogSprite.png",
                 behaviorLoop: [ 
@@ -358,8 +358,8 @@ window.OverworldMaps = {
             },
             frog3: {  // Sapo da sala
                 type: "Person",
-                x: utils.withGrid(-1),
-                y: utils.withGrid(23),
+                x: utils.withGrid(12),
+                y: utils.withGrid(32),
                 isFrog: true,
                 src: "./assets/img/frogSprite.png",
                 behaviorLoop: [ 

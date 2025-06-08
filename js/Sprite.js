@@ -76,8 +76,8 @@ class Sprite { //animações
         
         // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject
         if (this.isFrog) { // Se for o sapo, ele, por ser 16x16, é calculado diferente
-            x = this.gameObject.x - (-16) + utils.withGrid(21) - cameraPerson.x;
-            y = this.gameObject.y - 16 + utils.withGrid(14) - cameraPerson.y;
+            x = this.gameObject.x - (-16) + utils.withGrid(8) - cameraPerson.x;
+            y = this.gameObject.y - 16 + utils.withGrid(5) - cameraPerson.y;
         } else {
             x = this.gameObject.x - (-9) + utils.withGrid(8) - cameraPerson.x;
             y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
