@@ -1,0 +1,183 @@
+/* --- Contêiner da Hotbar --- */
+.hotbar-container {
+  position: absolute;
+  bottom: 2vh; /* Distância da borda inferior baseada na ALTURA da tela */
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  flex-direction: row;
+  gap: 1vw; /* Espaçamento baseado na LARGURA da tela */
+}
+
+/* --- Hotbar Individual --- */
+.hotbar {
+  /* O tamanho de cada slot da hotbar será 4% da altura da tela, mas no mínimo 20px e no máximo 50px */
+  width: clamp(20px, 4vh, 50px);
+  height: clamp(20px, 4vh, 50px);
+  
+  background-image: url('../assets/img/hotBar.png');
+  image-rendering: pixelated;
+  background-size: cover;
+}
+
+/* --- Ícone da Lista de Tarefas --- */
+.task-list-icon {
+  position: absolute;
+  top: 2vh;   /* Distância do topo baseada na ALTURA da tela */
+  right: 1.5vw; /* Distância da direita baseada na LARGURA da tela */
+  
+  /* Tamanho similar ao da hotbar para consistência */
+  width: clamp(25px, 4.5vh, 55px);
+  height: clamp(25px, 4.5vh, 55px);
+  
+  background-image: url('../assets/img/hotBar.png'); /* Lembre-se de usar um ícone dedicado */
+  background-size: contain;
+  image-rendering: pixelated;
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939; /* Borda também responsiva */
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* --- Painel da Lista de Tarefas --- */
+.task-list-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* O painel terá 25% da largura da tela, mas no mínimo 250px e no máximo 400px */
+  width: clamp(250px, 25vw, 400px);
+  height: auto; /* A altura se ajusta ao conteúdo */
+  max-height: 80vh; /* Para não estourar a altura da tela */
+
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border: clamp(2px, 0.5vh, 4px) solid #4A4A4A;
+  border-radius: clamp(5px, 1vh, 12px);
+  padding: clamp(10px, 2vw, 20px); /* Padding responsivo */
+  
+  display: none;
+  z-index: 1001;
+  color: #333;
+}
+
+.task-list-panel.visible {
+  display: block;
+}
+
+/* --- Fontes e Elementos Internos do Painel --- */
+.task-list-panel h3 {
+  text-align: center;
+  color: #2c3e50;
+  border-bottom: 1px solid #ddd;
+  /* A fonte será 2% da largura da tela, mas no mínimo 14px e no máximo 22px */
+  font-size: clamp(14px, 2vw, 22px);
+  margin: 0 0 1vh 0;
+  padding-bottom: 1vh;
+}
+
+.task-list-panel li {
+  border-left: clamp(3px, 0.5vw, 5px) solid #00fa21;
+  font-size: clamp(12px, 1.5vw, 18px); /* Fonte dos itens também responsiva */
+  padding: 1vh 1vw;
+  margin-top: 1vh;
+  background-color: #fff;
+}
+
+.task-list-panel .task-list-close-button {
+  display: block;
+  margin: 2vh auto 0;
+  padding: 1vh 2vw;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(12px, 1.5vw, 18px);
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 5px;
+}
+
+/* --- Contêiner do Medidor de Moedas --- */
+.coin-container {
+  position: absolute;
+  top: 2vh;    /* Alinha no topo, com a mesma distância do ícone de tarefas */
+  left: 1.5vw; /* Alinha na esquerda */
+  
+  display: flex;
+  align-items: center; /* Alinha o ícone e o texto verticalmente */
+  
+  background-color: rgba(0, 0, 0, 0.4); /* Fundo semi-transparente opcional */
+  padding: clamp(4px, 0.8vh, 8px);
+  border-radius: clamp(5px, 1vh, 12px);
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
+  z-index: 1000;
+}
+
+/* --- Ícone da Moeda --- */
+.coin-icon {
+  /* Tamanho similar aos outros ícones para consistência */
+  width: clamp(25px, 4.5vh, 55px);
+  height: clamp(25px, 4.5vh, 55px);
+  
+  background-image: url('../assets/img/hotBar.png'); /* Usando hotBar.png como solicitado */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+/* --- Texto da Contagem de Moedas --- */
+.coin-text {
+  /* A fonte será responsiva, mas nunca menor que 14px ou maior que 24px */
+  font-size: clamp(14px, 3vh, 24px);
+  
+  color: #FFD700; /* Cor de ouro para as moedas */
+  font-weight: bold;
+  font-family: monospace; /* Uma fonte que combina com estilo de jogo */
+  
+  margin-left: 0.8vw; /* Espaço entre o ícone e o texto */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Sombra para legibilidade */
+}
+
+/* --- Contêiner do Medidor de Nível --- */
+.level-container {
+  position: absolute;
+  top: 25vh;   /* Posiciona abaixo do medidor de moedas (que está em 2vh) */
+  left: 1.5vw; /* Alinha na mesma coluna do medidor de moedas */
+  
+  display: flex;
+  align-items: center;
+  
+  /* Estilos visuais similares ao de moedas */
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: clamp(4px, 0.8vh, 8px);
+  border-radius: clamp(5px, 1vh, 12px);
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
+  z-index: 1000;
+}
+
+/* --- Ícone de Nível --- */
+.level-icon {
+  /* Reutiliza o mesmo tamanho do ícone de moeda para consistência */
+  width: clamp(25px, 4.5vh, 55px);
+  height: clamp(25px, 4.5vh, 55px);
+  
+  /* Usando hotBar.png como solicitado */
+  background-image: url('../assets/img/hotBar.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+/* --- Texto da Contagem de Nível --- */
+.level-text {
+  font-size: clamp(14px, 3vh, 24px);
+  
+  color: #a0d2eb; /* Um azul claro para diferenciar do ouro das moedas */
+  font-weight: bold;
+  font-family: monospace;
+  
+  margin-left: 0.8vw;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
