@@ -82,6 +82,9 @@ class OverworldEvent {
                         obj.y = utils.withGrid(5);
                         break;
                 }
+                utils.emitEvent("FrogWasFound", { // emite um sinal que foi encontrado um sapo!
+                    whoId: obj.id  // manda quem foi achado
+                })
             }
         })
         resolve(); // Resolve o evento
