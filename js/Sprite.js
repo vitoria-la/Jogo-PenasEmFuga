@@ -79,14 +79,13 @@ class Sprite { //animações
             x = this.gameObject.x - (-16) + utils.withGrid(21) - cameraPerson.x;
             y = this.gameObject.y - 16 + utils.withGrid(14) - cameraPerson.y;
         } else {
-            x = this.gameObject.x - (-9) + utils.withGrid(21) - cameraPerson.x;
-            y = this.gameObject.y - 32 + utils.withGrid(14) - cameraPerson.y;
+            x = this.gameObject.x - (-9) + utils.withGrid(8) - cameraPerson.x;
+            y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
         }
 
         if (!this.isFrog) { // Se não for um sapo, pode colocar a sombra
             this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas
         }
-        
 
         const[frameX, frameY] = this.frame; // Obtém as coordenadas (x,y) do frame atual da animação
 

@@ -59,6 +59,10 @@ class Overworld {
     }
 
     init() {
+
+        this.hud = new Hud();
+        this.hud.init(document.querySelector(".game-container"));
+
         this.startMap(window.OverworldMaps.Galinheiro);
 
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
@@ -69,17 +73,21 @@ class Overworld {
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
-        // 
-        // this.map.startCutscene([
-        //      {who: "galinhaBranca", type: "walk", direction: "right"},  
-        //      {who: "galinhaBranca", type: "walk", direction: "right"},
-        //      {who: "galinhaBranca", type: "walk", direction: "right"},
-        //      {who: "galinhaBranca", type: "walk", direction: "right"},
-        //      {who: "galinhaBranca", type: "walk", direction: "left"},  
-        //      {who: "galinhaBranca", type: "walk", direction: "left"},
-        //      {who: "galinhaBranca", type: "walk", direction: "left"}, 
-        //      {who: "galinhaBranca", type: "walk", direction: "left"}, 
-        // ])
+        // --- EXEMPLO: Simulação de ganho de moedas a cada 1 segundo ---
+        // (Remova isso depois e chame 'this.hud.updateCoins' quando o jogador realmente ganhar moedas)
+        this.coins = 0;
+        setInterval(() => {
+            this.coins += 1; // Adiciona 1 moeda
+            this.hud.updateCoins(this.coins); // Atualiza a HUD
+            console.log("Moedas atualizadas:", this.coins);
+        }, 1000); // A cada 1 segundos
+
+        this.level = 0;
+        setInterval(() => {
+            this.level += 1; // Sobe de nível
+            this.hud.updateLevel(this.level); // Atualiza a HUD
+            console.log("Subiu de nível! Nível atual:", this.level);
+        }, 5000); // A cada 5 segundos
         
     }
 }

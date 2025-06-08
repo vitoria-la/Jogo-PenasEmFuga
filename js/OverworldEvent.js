@@ -70,16 +70,16 @@ class OverworldEvent {
             if (obj.id === who) { //  Se achar o sapo dentre os objetos
                 switch (obj.id) { // Muda o local dos sapos para o pet shop
                     case "frog1":
-                        obj.x = utils.withGrid(6);
-                        obj.y = utils.withGrid(-5);
+                        obj.x = utils.withGrid(19);
+                        obj.y = utils.withGrid(4);
                         break;
                     case "frog2":
-                        obj.x = utils.withGrid(4);
-                        obj.y = utils.withGrid(-1);
+                        obj.x = utils.withGrid(17);
+                        obj.y = utils.withGrid(8);
                         break;
                     case "frog3":
-                        obj.x = utils.withGrid(12);
-                        obj.y = utils.withGrid(-4);
+                        obj.x = utils.withGrid(25);
+                        obj.y = utils.withGrid(5);
                         break;
                 }
             }
