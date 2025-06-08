@@ -1,5 +1,5 @@
 class OverworldMap { // representa um mapa específico no jogo, incluindo seus objetos, colisões e camadas visuais
-    constructor(config){
+    constructor(config, state = {}){
         this.overworld = null;
         this.gameObjects = {}; // Armazena um objeto contendo todos os GameObjects que pertencem a este mapa
         this.cutsceneSpaces = config.cutsceneSpaces || {};
@@ -12,6 +12,10 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc; // cria a camada superior do mapa
         this.isCutscenePlaying = false; // Para saber se está rodando alguma cutscene. 
+        this.foundFrog1 = state.foundFrog1 || false; // Para saber se foi encontrado os sapos. Caso não tenha valor, é falso
+        this.foundFrog2 = state.foundFrog2 || false;
+        this.foundFrog3 = state.foundFrog3 || false;
+        this.name = config.name; // Serve para saber em qual mapa se está
     }
 
     drawLowerImage(ctx, cameraPerson){
@@ -58,12 +62,27 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             let instance; // Cria uma instância de acordo com o tipo de objeto
             if (object.type === "Person") {
                 instance = new Person(object);
-            } else if (object.type === "Frog") {
-                instance = new Frog(object);
             }
 
             this.gameObjects[key] = instance;
             this.gameObjects[key].id = key;
+
+            if (this.foundFrog1 && key === "frog1") { // Se o sapo 1 foi encontrado, e ele for o objeto da vez
+                // Montar ele lá no pet-shop
+                this.gameObjects[key].x = utils.withGrid(19);
+                this.gameObjects[key].y = utils.withGrid(4);
+            }
+            if (this.foundFrog2 && key === "frog2") { // Se o sapo 2 foi encontrado, e ele for o objeto da vez
+                // Montar ele lá no pet-shop
+                this.gameObjects[key].x = utils.withGrid(17);
+                this.gameObjects[key].y = utils.withGrid(8);
+            }
+            if (this.foundFrog3 && key === "frog3") { // Se o sapo 3 foi encontrado, e ele for o objeto da vez
+                // Montar ele lá no pet-shop
+                this.gameObjects[key].x = utils.withGrid(25);
+                this.gameObjects[key].y = utils.withGrid(5);
+            }
+            
             instance.mount(this);
 
             //Determina se o objeto realmente poderia ser montado
@@ -106,6 +125,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
 window.OverworldMaps = {
     Galinheiro: { // mapa
+        name: "Galinheiro",
         lowerSrc: "./assets/img/galinheiroMapa.png", // layer de base do mapa (chão do mapa)
         upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
         configObjects: { // define os personagens/objetos que o mapa vai ter
@@ -914,6 +934,7 @@ window.OverworldMaps = {
     },
     // Mapa da parte da fazenda
     Fazenda: { // mapa
+        name: "Fazenda",
         lowerSrc: "./assets/img/fazendaMapa.png", // layer de base do mapa (chão do mapa)
         upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
         configObjects: { // define os personagens/objetos que o mapa vai ter

@@ -4,6 +4,7 @@ class Overworld {
         this.canvas = this.element.querySelector(".game-canvas");
         this.ctx = this.canvas.getContext("2d");
         this.map = null;
+        this.foundFrog2 = config.foundFrog2 || false;
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -52,9 +53,29 @@ class Overworld {
         })
     }
 
+    frogsFoundCheck() { // Serve para ver se foi encontrado um sapo
+        document.addEventListener("FrogWasFound", e => {
+            if (e.detail.whoId === "frog1" && this.map.name === "Galinheiro") {
+                this.foundFrog1 = true;
+            }
+            if (e.detail.whoId === "frog2" && this.map.name === "Galinheiro") {
+                this.foundFrog2 = true;
+            }
+            if (e.detail.whoId === "frog3" && this.map.name === "Galinheiro") {
+                this.foundFrog3 = true;
+            }
+        })
+    }
+
     startMap(mapConfig) {
-        this.map = new OverworldMap(mapConfig); 
+        this.frogsFoundCheck(); // Ve se os sapos já foram encontrados
+        this.map = new OverworldMap(mapConfig, { // Passa os valores de foundFrog
+            foundFrog1: this.foundFrog1,
+            foundFrog2: this.foundFrog2,
+            foundFrog3: this.foundFrog3,
+        });
         this.map.overworld = this;
+        
         this.map.mountObjects();
     }
 
