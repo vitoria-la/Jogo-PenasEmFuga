@@ -3,6 +3,10 @@ class Hud {
     this.hotbarContainerElement = [];
     this.taskListIconElement = null;
     this.taskListPanelElement = null;
+    this.coinContainerElement = null;
+    this.coinTextElement = null;
+    this.levelContainerElement = null;
+    this.levelTextElement = null;
   }
 
   update() {
@@ -78,5 +82,54 @@ class Hud {
       })
     }
 
+    // Medidor de moedas
+    this.coinContainerElement = document.createElement("div");
+    this.coinContainerElement.classList.add("coin-container");
+
+    //cria o ícone da moeda
+    const coinIcon = document.createElement("div");
+    coinIcon.classList.add("coin-icon");
+
+    // Cria o texto para contagem das moedas
+    this.coinTextElement = document.createElement("div");
+    this.coinTextElement.classList.add("coin-text");
+    this.coinTextElement.innerText = "0"; // Valor inicial
+
+    // Adiciona o ícone e o texto ao contêiner de moedas
+    this.coinContainerElement.appendChild(coinIcon);
+    this.coinContainerElement.appendChild(this.coinTextElement);
+    
+    // Adiciona o contêiner de moedas ao contêiner principal do jogo
+    gameContainerElement.appendChild(this.coinContainerElement);
+
+    // --- CRIAÇÃO DO MEDIDOR DE NÍVEL ---
+    this.levelContainerElement = document.createElement("div");
+    this.levelContainerElement.classList.add("level-container");
+    
+    // Cria o ícone do nível (reutilizando a classe do ícone de moeda para estilo)
+    const levelIcon = document.createElement("div");
+    levelIcon.classList.add("level-icon");
+
+    // Cria o texto para a contagem de nível
+    this.levelTextElement = document.createElement("div");
+    this.levelTextElement.classList.add("level-text");
+    this.levelTextElement.innerText = "1"; // Nível inicial
+
+    // Adiciona o ícone e o texto ao contêiner de nível
+    this.levelContainerElement.appendChild(levelIcon);
+    this.levelContainerElement.appendChild(this.levelTextElement);
+    
+    // Adiciona o contêiner de nível ao contêiner principal do jogo
+    gameContainerElement.appendChild(this.levelContainerElement);
+
   }
+
+  updateCoins(count){
+    this.coinTextElement.innerHTML = count;
+  }
+
+  updateLevel(count) {
+    this.levelTextElement.innerText = count;
+  }
+
 }

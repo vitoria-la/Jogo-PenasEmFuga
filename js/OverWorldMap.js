@@ -1,9 +1,10 @@
 class OverworldMap { // representa um mapa específico no jogo, incluindo seus objetos, colisões e camadas visuais
     constructor(config){
         this.overworld = null;
-        this.gameObjects = config.gameObjects; // Armazena um objeto contendo todos os GameObjects que pertencem a este mapa
+        this.gameObjects = {}; // Armazena um objeto contendo todos os GameObjects que pertencem a este mapa
         this.cutsceneSpaces = config.cutsceneSpaces || {};
         this.walls = config.walls || {}; // Armazena um objeto que representa as áreas de colisão ("paredes") no mapa. As chaves são coordenadas no formato "x,y", e o valor true indica que há uma parede. O padrão é um objeto vazio
+        this.configObjects = config.configObjects;
         
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc; // cria a camada inferior do mapa
@@ -30,15 +31,41 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
     isSpaceTaken(currentX, currentY, direction){ // Verifica se uma determinada posição no mapa, após um movimento em uma certa direção, está ocupada por uma "parede"
         const {x,y} = utils.nextPosition(currentX, currentY, direction);
-        return this.walls[`${x},${y}`] || false;
+
+        if (this.walls[`${x},${y}`]) {
+            return true;
+        }
+
+        // Ver se tem algum objeto do jogo, tipo uma galinha, nessa opção
+        return Object.values(this.gameObjects).find(obj => {
+            if (obj.x === x && obj.y === y) { // Se as coordenadas desse objeto forem as mesmas do pinguim
+                return true; 
+            } else {
+                if (obj.intentPosition && obj.intentPosition[0] === x && obj.intentPosition[1] === y) {
+                    return true;
+                }
+            }
+        })
+
+        //return this.walls[`${x},${y}`] || false;
     }
 
     mountObjects() { 
-        Object.keys(this.gameObjects).forEach(key => {
-            let object = this.gameObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
+        Object.keys(this.configObjects).forEach(key => {
+            let object = this.configObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
             object.id = key;
+
+            let instance; // Cria uma instância de acordo com o tipo de objeto
+            if (object.type === "Person") {
+                instance = new Person(object);
+            }
+
+            this.gameObjects[key] = instance;
+            this.gameObjects[key].id = key;
+            instance.mount(this);
+
             //Determina se o objeto realmente poderia ser montado
-            object.mount(this)
+            //object.mount(this)
         })
     }
 
@@ -61,42 +88,33 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         //Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
     }
 
-    checkForFootstepCutscene() {
+    checkForFootstepCutscene() { // Método que percebe se o pinguim entrou na coordenada que inicia alguma cutscene
         const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
         const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
-        console.log("testando");
+        //console.log("testando");
 
-        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando denhuma cutscene e o player estiver no lugar que inicia uma
+        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando nenhuma cutscene e o player estiver no lugar que inicia uma
             this.startCutscene(match[0].events);
-            console.log("testando o checkForFootstepCutscene ");
+            //console.log("testando o checkForFootstepCutscene ");
         }
 
     }
 
-    addWall(x,y){ // Adiciona uma parede (uma área de colisão) nas coordenadas (x,y)
-        this.walls[`${x},${y}`] = true;
-    }
-    removeWall(x,y){ // Remove uma parede das coordenadas (x,y)
-        delete this.walls[`${x},${y}`]
-    }
-    moveWall(wasX, wasY, direction){ // Move uma parede de uma posição anterior (wasX, wasY) para a próxima posição calculada com base na direction. Útil para objetos que se movem e precisam atualizar suas colisões
-        this.removeWall(wasX,wasY);
-        const {x,y} = utils.nextPosition(wasX,wasY,direction);
-        this.addWall(x,y);
-    }
 }
 
 window.OverworldMaps = {
     Galinheiro: { // mapa
         lowerSrc: "./assets/img/galinheiroMapa.png", // layer de base do mapa (chão do mapa)
         upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
-        gameObjects: { // define os personagens/objetos que o mapa vai ter
-            hero: new Person({ // personagem principal
+        configObjects: { // define os personagens/objetos que o mapa vai ter
+            hero: { // personagem principal
+                type: "Person",
                 isPlayerControlled: true,
                 x: utils.withGrid(16),
                 y: utils.withGrid(14),
-            }),
-            galinhaBranca: new Person({
+            },
+            galinhaBranca: {
+                type: "Person",
                 x: utils.withGrid(19),
                 y: utils.withGrid(19),
                 src: "./assets/img/galinhaBranca.png",
@@ -110,8 +128,9 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right", time: 800},
                     {type: "stand", direction: "down", time: 300}
                 ]
-            }),
-            galinhaMarrom: new Person({
+            },
+            galinhaMarrom: {
+                type: "Person",
                 x: utils.withGrid(21),
                 y: utils.withGrid(14),
                 src: "./assets/img/galinhaMarrom.png",
@@ -129,8 +148,9 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                 ]
-            }),
-            Paova: new Person({
+            },
+            Paova: {
+                type: "Person",
                 x: utils.withGrid(-1),
                 y: utils.withGrid(5),
                 src: "./assets/img/galinhaPaova.png",
@@ -153,8 +173,9 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},
                     {type: "walk", direction: "right"}, 
                 ]
-            }),
-            Clotilde: new Person({
+            },
+            Clotilde: {
+                type: "Person",
                 x: utils.withGrid(-19),
                 y: utils.withGrid(13),
                 src: "./assets/img/galinhaClotilde.png",
@@ -187,8 +208,9 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
                 ]
-            }),
-            Bernadette: new Person({
+            },
+            Bernadette: {
+                type: "Person",
                 x: utils.withGrid(13),
                 y: utils.withGrid(29),
                 src: "./assets/img/galinhaBernadette.png",
@@ -265,16 +287,18 @@ window.OverworldMaps = {
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "right"},
                 ]
-            }),
-            galinhaSegurancaMarrom: new Person({
+            },
+            galinhaSegurancaMarrom: {
+                type: "Person",
                 x: utils.withGrid(30),
                 y: utils.withGrid(16),
                 src: "./assets/img/galinhaSegurancaMarrom.png",
                 behaviorLoop: [  
                    {type: "stand", direction: "left", time: 2800},
                 ]
-            }),
-             galinhaGalinacia: new Person({
+            },
+             galinhaGalinacia: {
+                type: "Person",
                 x: utils.withGrid(25),
                 y: utils.withGrid(7),
                 src: "./assets/img/galinhaGalinacia.png",
@@ -300,15 +324,46 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
                 ]
-            }),
-            galinhaPenosa: new Person({
+            },
+            galinhaPenosa: {
+                type: "Person",
                 x: utils.withGrid(14),
                 y: utils.withGrid(13),
                 src: "./assets/img/galinhaPenosa.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
-            })
+            },
+            frog1: {  // Sapo da sala de costura
+                type: "Person",
+                x: utils.withGrid(-28),
+                y: utils.withGrid(9),
+                isFrog: true,
+                src: "./assets/img/frogSprite.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "up", time: 3000}
+                ]
+            },
+            frog2: {  // Sapo perto da saída
+                type: "Person",
+                x: utils.withGrid(17),
+                y: utils.withGrid(13),
+                isFrog: true,
+                src: "./assets/img/frogSprite.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "right", time: 3000}
+                ]
+            },
+            frog3: {  // Sapo da sala
+                type: "Person",
+                x: utils.withGrid(-1),
+                y: utils.withGrid(23),
+                isFrog: true,
+                src: "./assets/img/frogSprite.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "left", time: 3000}
+                ]
+            },
 
         },
         walls: {
@@ -842,24 +897,50 @@ window.OverworldMaps = {
         // Espaços em que acontece cutscenes
         cutsceneSpaces: {
             [utils.asGridCoord(31,17)] : [
-                {
-                    events: [
-                        {type: "changeMap", map: "Fazenda"},
-                    ]
-                }
-            ]
+                {events: [{type: "changeMap", map: "Fazenda"},]}
+            ],
+            [utils.asGridCoord(-15,17)] : [ // Espaço acima do sapo da sala de costura
+                {events: [{type: "foundFrog", who: "frog1", x: -15, y: 17},]}
+            ],
+            [utils.asGridCoord(29,22)] : [ // Espaço ao lado do sapo perto da saída
+                {events: [{type: "foundFrog", who: "frog2", x: 29, y: 22},]}
+            ],
+            [utils.asGridCoord(12,31)] : [ // Espaço acima do sapo da sala
+                {events: [{type: "foundFrog", who: "frog3", x: 12, y: 31},]}
+            ],
         }
     },
     // Mapa da parte da fazenda
     Fazenda: { // mapa
         lowerSrc: "./assets/img/fazendaMapa.png", // layer de base do mapa (chão do mapa)
         upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
-        gameObjects: { // define os personagens/objetos que o mapa vai ter
-            hero: new Person({ // personagem principal
+        configObjects: { // define os personagens/objetos que o mapa vai ter
+            hero: ({ // personagem principal
+                type: "Person",
                 isPlayerControlled: true,
                 x: utils.withGrid(16),
                 y: utils.withGrid(14),
-            })
+            }),
+            galinhaMarrom: {
+                type: "Person",
+                x: utils.withGrid(21),
+                y: utils.withGrid(14),
+                src: "./assets/img/galinhaMarrom.png",
+                behaviorLoop: [
+                    {type: "walk", direction: "left"},  
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"}, 
+                    {type: "walk", direction: "down"},  
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                ]
+            }
         },
         walls: {
             //define as coordenadas das colisoes do mapa

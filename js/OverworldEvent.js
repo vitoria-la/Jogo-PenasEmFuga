@@ -48,9 +48,43 @@ class OverworldEvent {
         document.addEventListener("PersonWalkingComplete", completeHandler) // está escutando para saber se o movimento foi finalizado
     }
 
-    changeMap(resolve) {
-        this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
-        resolve();
+    changeMap(resolve) { // Método para mudar de mapa
+
+        // Desativa os objetos 
+        Object.values(this.map.gameObjects).forEach(obj => {
+            obj.isMounted = false;
+        })
+
+        const sceneTransition = new SceneTransition(); // sceneTransition é uma instância da classe SceneTransition
+        sceneTransition.init(document.querySelector(".game-container"), () => { // Começa a transição de mapa
+            this.map.overworld.startMap(window.OverworldMaps[this.event.map]); // Muda de mapa
+            resolve();
+            sceneTransition.fadeOut(); // Tira a cor sólida da tela e mostra o novo mapa
+        });
+    }
+
+    foundFrog(resolve) {  // Evento caso o player tenha achado um sapo (galinha da montanha)
+        const who = this.event.who; // pega o objeto do NPC
+        //console.log(who);
+        Object.values(this.map.gameObjects).forEach(obj => { // Passa por todos os objetos do mapa
+            if (obj.id === who) { //  Se achar o sapo dentre os objetos
+                switch (obj.id) { // Muda o local dos sapos para o pet shop
+                    case "frog1":
+                        obj.x = utils.withGrid(19);
+                        obj.y = utils.withGrid(4);
+                        break;
+                    case "frog2":
+                        obj.x = utils.withGrid(17);
+                        obj.y = utils.withGrid(8);
+                        break;
+                    case "frog3":
+                        obj.x = utils.withGrid(25);
+                        obj.y = utils.withGrid(5);
+                        break;
+                }
+            }
+        })
+        resolve(); // Resolve o evento
     }
 
     init() {

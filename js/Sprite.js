@@ -29,13 +29,14 @@ class Sprite { //animações
             "walk-down"  : [ [0,2],[1,2],[2,2],[3,2], ],
             "walk-left"  : [ [0,0],[1,0],[2,0],[3,0], ]
         }
-        this.currentAnimation = "walk-up"
+        this.currentAnimation = config.currentAnimation || "walk-up";
         //config.currentAnimation || "idle-down";
         this.currentAnimationFrame = 0;
 
         this.animationFrameLimit = config.animationFrameLimit || 10; // Define quantos ticks cada frame da animação deve durar
         this.animationFrameProgress = this.animationFrameLimit; // contador
 
+        this.isFrog = config.isFrog || false;
 
         //Referencia aos objetos do jogo
         this.gameObject = config.gameObject;
@@ -71,22 +72,41 @@ class Sprite { //animações
     }
 
     draw(ctx, cameraPerson){
-        const x = this.gameObject.x - (-9) + utils.withGrid(8) - cameraPerson.x;
-        const y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
+        let x, y;
+        
         // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject
+        if (this.isFrog) { // Se for o sapo, ele, por ser 16x16, é calculado diferente
+            x = this.gameObject.x - (-16) + utils.withGrid(21) - cameraPerson.x;
+            y = this.gameObject.y - 16 + utils.withGrid(14) - cameraPerson.y;
+        } else {
+            x = this.gameObject.x - (-9) + utils.withGrid(8) - cameraPerson.x;
+            y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
+        }
 
-        this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas
+        if (!this.isFrog) { // Se não for um sapo, pode colocar a sombra
+            this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas
+        }
 
         const[frameX, frameY] = this.frame; // Obtém as coordenadas (x,y) do frame atual da animação
 
-        this.isLoaded && ctx.drawImage(this.image,
-            frameX * 32, frameY * 32,
-            32,32,
-            // especificam a parte da imagem original a ser cortada (um frame de 32x32 pixels dentro da spritesheet)
-            x,y,
-            32,32
-            // especificam onde e com que tamanho o frame cortado será desenhado no canvas.
-        )
+        if (this.isFrog) { // Se for o sapo, é 16x16
+            this.isLoaded && ctx.drawImage(this.image,
+                frameX * 16, frameY * 16,
+                16,16,
+                x,y,
+                16,16
+                // especificam onde e com que tamanho o frame cortado será desenhado no canvas.
+            )
+        } else {
+            this.isLoaded && ctx.drawImage(this.image,
+                frameX * 32, frameY * 32,
+                32,32,
+                // especificam a parte da imagem original a ser cortada (um frame de 32x32 pixels dentro da spritesheet)
+                x,y,
+                32,32
+                // especificam onde e com que tamanho o frame cortado será desenhado no canvas.
+            )
+        }
 
         this.updateAnimationProgress(); // Chama o método para avançar o progresso da animação, garantindo que o próximo frame seja preparado para o próximo ciclo de desenho
     }

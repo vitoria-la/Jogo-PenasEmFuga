@@ -1,5 +1,3 @@
-/* Em Hud.css - VERSÃO RESPONSIVA */
-
 /* --- Contêiner da Hotbar --- */
 .hotbar-container {
   position: absolute;
@@ -97,4 +95,89 @@
   background-color: #e74c3c;
   color: white;
   border-radius: 5px;
+}
+
+/* --- Contêiner do Medidor de Moedas --- */
+.coin-container {
+  position: absolute;
+  top: 2vh;    /* Alinha no topo, com a mesma distância do ícone de tarefas */
+  left: 1.5vw; /* Alinha na esquerda */
+  
+  display: flex;
+  align-items: center; /* Alinha o ícone e o texto verticalmente */
+  
+  background-color: rgba(0, 0, 0, 0.4); /* Fundo semi-transparente opcional */
+  padding: clamp(4px, 0.8vh, 8px);
+  border-radius: clamp(5px, 1vh, 12px);
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
+  z-index: 1000;
+}
+
+/* --- Ícone da Moeda --- */
+.coin-icon {
+  /* Tamanho similar aos outros ícones para consistência */
+  width: clamp(25px, 4.5vh, 55px);
+  height: clamp(25px, 4.5vh, 55px);
+  
+  background-image: url('../assets/img/hotBar.png'); /* Usando hotBar.png como solicitado */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+/* --- Texto da Contagem de Moedas --- */
+.coin-text {
+  /* A fonte será responsiva, mas nunca menor que 14px ou maior que 24px */
+  font-size: clamp(14px, 3vh, 24px);
+  
+  color: #FFD700; /* Cor de ouro para as moedas */
+  font-weight: bold;
+  font-family: monospace; /* Uma fonte que combina com estilo de jogo */
+  
+  margin-left: 0.8vw; /* Espaço entre o ícone e o texto */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Sombra para legibilidade */
+}
+
+/* --- Contêiner do Medidor de Nível --- */
+.level-container {
+  position: absolute;
+  top: 25vh;   /* Posiciona abaixo do medidor de moedas (que está em 2vh) */
+  left: 1.5vw; /* Alinha na mesma coluna do medidor de moedas */
+  
+  display: flex;
+  align-items: center;
+  
+  /* Estilos visuais similares ao de moedas */
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: clamp(4px, 0.8vh, 8px);
+  border-radius: clamp(5px, 1vh, 12px);
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
+  z-index: 1000;
+}
+
+/* --- Ícone de Nível --- */
+.level-icon {
+  /* Reutiliza o mesmo tamanho do ícone de moeda para consistência */
+  width: clamp(25px, 4.5vh, 55px);
+  height: clamp(25px, 4.5vh, 55px);
+  
+  /* Usando hotBar.png como solicitado */
+  background-image: url('../assets/img/hotBar.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+/* --- Texto da Contagem de Nível --- */
+.level-text {
+  font-size: clamp(14px, 3vh, 24px);
+  
+  color: #a0d2eb; /* Um azul claro para diferenciar do ouro das moedas */
+  font-weight: bold;
+  font-family: monospace;
+  
+  margin-left: 0.8vw;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 }
