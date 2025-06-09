@@ -90,9 +90,11 @@ class Overworld {
         this.directionInput.init();
         //this.directionInput.direction;
 
-        this.bindHeroPositionCheck();
+        this.bindHeroPositionCheck(); // Vincula o evento de verificação de posição do herói para verificar se o personagem mudou de posição
 
         this.startGameLoop(); // inicia o loop principal do jogo
+
+        
 
         // --- EXEMPLO: Simulação de ganho de moedas a cada 1 segundo ---
         // (Remova isso depois e chame 'this.hud.updateCoins' quando o jogador realmente ganhar moedas)
