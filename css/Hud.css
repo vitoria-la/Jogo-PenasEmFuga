@@ -13,8 +13,8 @@
 /* --- Hotbar Individual --- */
 .hotbar {
   /* O tamanho de cada slot da hotbar será 4% da altura da tela, mas no mínimo 20px e no máximo 50px */
-  width: clamp(20px, 4vh, 50px);
-  height: clamp(20px, 4vh, 50px);
+  width: clamp(100px, 4vh, 50px);
+  height: clamp(100px, 4vh, 50px);
   
   background-image: url('../assets/img/hotBar.png');
   image-rendering: pixelated;
@@ -28,10 +28,10 @@
   right: 1.5vw; /* Distância da direita baseada na LARGURA da tela */
   
   /* Tamanho similar ao da hotbar para consistência */
-  width: clamp(25px, 4.5vh, 55px);
-  height: clamp(25px, 4.5vh, 55px);
+  width: clamp(100px, 4.5vh, 55px);
+  height: clamp(100px, 4.5vh, 55px);
   
-  background-image: url('../assets/img/hotBar.png'); /* Lembre-se de usar um ícone dedicado */
+  background-image: url('../assets/img/Task-icon.png'); /* Lembre-se de usar um ícone dedicado */
   background-size: contain;
   image-rendering: pixelated;
   border: clamp(1px, 0.3vh, 3px) solid #3f3939; /* Borda também responsiva */
@@ -116,10 +116,10 @@
 /* --- Ícone da Moeda --- */
 .coin-icon {
   /* Tamanho similar aos outros ícones para consistência */
-  width: clamp(25px, 4.5vh, 55px);
-  height: clamp(25px, 4.5vh, 55px);
+  width: clamp(100px, 4.5vh, 55px);
+  height: clamp(100px, 4.5vh, 55px);
   
-  background-image: url('../assets/img/hotBar.png'); /* Usando hotBar.png como solicitado */
+  background-image: url('../assets/img/coin-icon.png'); /* Usando hotBar.png como solicitado */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -159,11 +159,11 @@
 /* --- Ícone de Nível --- */
 .level-icon {
   /* Reutiliza o mesmo tamanho do ícone de moeda para consistência */
-  width: clamp(25px, 4.5vh, 55px);
-  height: clamp(25px, 4.5vh, 55px);
+  width: clamp(100px, 4.5vh, 55px);
+  height: clamp(100px, 4.5vh, 55px);
   
   /* Usando hotBar.png como solicitado */
-  background-image: url('../assets/img/hotBar.png');
+  background-image: url('../assets/img/Level-icon.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
