@@ -8,7 +8,7 @@ class GameObject {
         this.sprite = new Sprite({
             gameObject: this, // herda todas as propriedades de GameObject
             src: config.src || "./assets/img/pinguim-spriteSheet.png", // Define o caminho da imagem. Se não tiver é usada a do caminho fornecido (no caso o personagem principal)
-
+            isFrog: config.isFrog || false, // Para saber se é um sapo ou não. Caso não seja definido, ele assume que é falso
         }); 
         this.behaviorLoop = config.behaviorLoop || [];  // é um array que vai ser usado para definir os comportamentos normais dos NPCs
         this.behaviorLoopIndex = 0; // serve para saber qual comportamento está acontecendo
@@ -24,7 +24,6 @@ class GameObject {
     mount(map){ // metodo responsável por montar o objeto no mapa
         //console.log("mouting")
         this.isMounted = true; // altera o estado para true, indicando que o objeto está ativo no mapa
-        // map.addWall(this.x,this.y); // metodo que pode criar uma parede, impedindo que outros objetos passem por ele
         
         // se tiver um comportamento, ele vai começar depois de um delay 
         setTimeout( () => {
