@@ -5,8 +5,8 @@
   position: absolute;
   background: #000000;
   color: white;
-  font-size: 10px;
-  padding: 4px 6px;
+  font-size: 28px;
+  padding: 6px 6px;
   border-radius: 100%;
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
@@ -39,9 +39,9 @@
 .text-message-name {
   background: #000000;
   color: white;
-  font-size: 12px;
+  font-size: 18px;
   font-weight: bold;
-  padding: 4px 8px;
+  padding: 8px 8px;
   border: 2px solid #333333;
   display: inline-block;
   margin-bottom: -2px; /* Para sobrepor a borda com a caixa de diálogo */
@@ -54,7 +54,7 @@
 /* Seção do diálogo - retângulo cinza */
 .text-message-dialog-section {
   position: relative;
-  width: 250px; /* Aumentado para corresponder à imagem de referência */
+  width: 450px; /* Aumentado para corresponder à imagem de referência */
   background: rgba(70, 70, 70, 0.9);
   padding: 8px;
   border: 2px solid #333333;
@@ -62,7 +62,7 @@
 
 .text-message-content {
   margin: 0;
-  font-size: 12px;
+  font-size: 18px;
   line-height: 1.4;
   word-wrap: break-word;
   overflow-wrap: break-word;
