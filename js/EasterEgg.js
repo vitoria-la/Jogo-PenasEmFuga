@@ -7,7 +7,10 @@ class EasterEgg extends GameObject {
         this.src = config.src;
 
         this.gifs = {
-            "pintinhos": "./assets/img/easterEggs/gifs/testeEasterEgg.gif",
+            "pintinhos": "./assets/img/easterEggs/gifs/pintinhosG.gif",
+            "galinhaDosOvosDourados": "./assets/img/easterEggs/gifs/galinhaDosOvosDouradosG.gif",
+            "frog2": "./assets/img/easterEggs/gifs/sapoG.gif",
+            "bolaPixar": "./assets/img/easterEggs/gifs/bolaPixarG.gif",
         }
 
     }

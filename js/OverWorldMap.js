@@ -400,6 +400,16 @@ window.OverworldMaps = {
                 y: utils.withGrid(12),
                 src: "./assets/img/easterEggs/sprites/pintinhosEasterEgg.png",
             },
+            bolaPixar: {
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "BolaPixar",
+                description: "Estranhamente familiar",
+                mapName: "Galinheiro",
+                x: utils.withGrid(11),
+                y: utils.withGrid(13),
+                src: "./assets/img/easterEggs/sprites/bolaPixar.png",
+            },
 
         },
         walls: {
@@ -946,6 +956,9 @@ window.OverworldMaps = {
             ],
             [utils.asGridCoord(-4,13)] : [ // Achou os pintinhos fingindo ser adultos
                 {events: [{type: "foundEasterEgg", who: "pintinhos"},]}
+            ],
+            [utils.asGridCoord(11,14)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "bolaPixar"},]}
             ],
         }
     },
