@@ -398,7 +398,7 @@ window.OverworldMaps = {
                 mapName: "Galinheiro",
                 x: utils.withGrid(-4),
                 y: utils.withGrid(12),
-                src: "./assets/img/easterEgg/sprites/pintinhosEasterEgg.png",
+                src: "./assets/img/easterEggs/sprites/pintinhosEasterEgg.png",
             },
 
         },

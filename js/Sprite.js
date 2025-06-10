@@ -99,6 +99,7 @@ class Sprite { //animações
                 // especificam onde e com que tamanho o frame cortado será desenhado no canvas.
             )
         } else if (this.isEasterEgg) { // Se for um easter egg, ele não é animado
+            console.log("uai");
             this.isLoaded && ctx.drawImage(this.image, x, y, 32, 32);
         } else {
             this.isLoaded && ctx.drawImage(this.image,
