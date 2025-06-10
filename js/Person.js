@@ -157,11 +157,11 @@ class Person extends GameObject {
         const cameraPerson = map.gameObjects.hero;
         
         // Centraliza horizontalmente e posiciona acima do sprite do NPC
-        const x = npc.x - cameraPerson.x + utils.withGrid(10.5);
+        const x = npc.x - cameraPerson.x + utils.withGrid(1);
         
         // Posiciona o botão exatamente acima do sprite do NPC
         // Usa um deslocamento vertical menor para garantir que fique logo acima da cabeça do NPC
-        const y = npc.y - utils.withGrid(1) - cameraPerson.y + utils.withGrid(6);
+        const y = npc.y - utils.withGrid(15) - cameraPerson.y + utils.withGrid(0);
         
         this.interactionButton.style.transform = `translate(${x}px, ${y}px)`;
         this.interactionButton.style.display = "block";

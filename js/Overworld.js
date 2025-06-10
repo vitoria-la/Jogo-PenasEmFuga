@@ -67,6 +67,16 @@ class Overworld {
         })
     }
 
+    bindActionInput() {
+        new KeypressListener("KeyE", () => {
+            // Verifica se o jogador está próximo a um NPC e inicia o diálogo
+            const hero = this.map.gameObjects.hero;
+            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
+                hero.startDialog(this.map);
+            }
+        });
+    }
+
     startMap(mapConfig) {
         this.frogsFoundCheck(); // Ve se os sapos já foram encontrados
         this.map = new OverworldMap(mapConfig, { // Passa os valores de foundFrog
@@ -91,6 +101,7 @@ class Overworld {
         //this.directionInput.direction;
 
         this.bindHeroPositionCheck();
+        this.bindActionInput();
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
