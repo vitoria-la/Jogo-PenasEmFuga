@@ -1,6 +1,7 @@
 class Hud {
   constructor() {
-    this.hotbarContainerElement = [];
+    //this.hotbarContainerElement = [];
+    this.hotbarSlots = [];
     this.taskListIconElement = null;
     this.taskListPanelElement = null;
     this.coinContainerElement = null;
@@ -30,7 +31,10 @@ class Hud {
       // Você pode adicionar um ID ou data-attribute se precisar diferenciar no futuro
       // singleHotbar.id = `hotbar-item-${i + 1}`;
       this.hotbarContainerElement.appendChild(singleHotbar); // Adiciona a hotbar ao contêiner
+
+      this.hotbarSlots.push(singleHotbar);
     }
+    gameContainerElement.appendChild(this.hotbarContainerElement);
 
     // Adiciona o contêiner principal (com todas as hotbars dentro) ao contêiner do jogo
     if (gameContainerElement) {
@@ -132,4 +136,32 @@ class Hud {
     this.levelTextElement.innerText = count;
   }
 
+  updateHotbarSlot(slotIndex, item) {
+    const slotElement = this.hotbarSlots[slotIndex];
+    if (!slotElement) {
+      return; // Sai se o slot não existir
+    }
+
+    // Limpa o conteúdo anterior do slot
+    slotElement.innerHTML = "";
+
+    // Se não houver item, o slot fica vazio
+    if (!item) {
+      return;
+    }
+
+    // Cria e adiciona a imagem do item
+    const itemImage = document.createElement("img");
+    itemImage.src = item.src;
+    itemImage.alt = item.name || "Item";
+    slotElement.appendChild(itemImage);
+
+    // Cria e adiciona o texto da quantidade, se a quantidade for maior que 1
+    if (item.quantity > 1) {
+      const quantityText = document.createElement("span");
+      quantityText.classList.add("item-quantity");
+      quantityText.innerText = item.quantity;
+      slotElement.appendChild(quantityText);
+    }
+  }
 }

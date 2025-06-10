@@ -104,6 +104,14 @@ class OverworldEvent {
         resolve(); // Resolve o evento
     }
 
+    addItemToPlayer(resolve) {
+        // this.map.overworld é a referência para a instância principal da classe Overworld
+        this.map.overworld.addItemToHotbar(this.event.item);
+        
+        // Resolve o evento para que a cutscene possa continuar, se houver mais eventos. 
+        resolve();
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação
