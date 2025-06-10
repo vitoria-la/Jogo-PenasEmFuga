@@ -5,6 +5,7 @@ class Overworld {
         this.ctx = this.canvas.getContext("2d");
         this.map = null;
         this.foundFrog2 = config.foundFrog2 || false;
+        this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -77,12 +78,22 @@ class Overworld {
         });
     }
 
+    easterEggsFoundCheck() { // Método que vê se algum easter-egg foi encontrado
+        document.addEventListener("EasterEggWasFound", e => {
+            if (!this.easterEggsFound.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
+                this.easterEggsFound.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
+            }
+        })
+    }
+
     startMap(mapConfig) {
         this.frogsFoundCheck(); // Ve se os sapos já foram encontrados
+        this.easterEggsFoundCheck();
         this.map = new OverworldMap(mapConfig, { // Passa os valores de foundFrog
             foundFrog1: this.foundFrog1,
             foundFrog2: this.foundFrog2,
             foundFrog3: this.foundFrog3,
+            easterEggsFound: this.easterEggsFound, // Passa a lista de easter-eggs encontrados
         });
         this.map.overworld = this;
         

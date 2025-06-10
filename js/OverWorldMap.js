@@ -15,6 +15,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.foundFrog1 = state.foundFrog1 || false; // Para saber se foi encontrado os sapos. Caso não tenha valor, é falso
         this.foundFrog2 = state.foundFrog2 || false;
         this.foundFrog3 = state.foundFrog3 || false;
+        this.easterEggsFound = state.easterEggsFound || [];
         this.name = config.name; // Serve para saber em qual mapa se está
     }
 
@@ -62,6 +63,9 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             let instance; // Cria uma instância de acordo com o tipo de objeto
             if (object.type === "Person") {
                 instance = new Person(object);
+            } else if (object.type === "EasterEgg") {
+                instance = new EasterEgg(object);
+                
             }
 
             this.gameObjects[key] = instance;
@@ -385,6 +389,16 @@ window.OverworldMaps = {
                 behaviorLoop: [ 
                     {type: "stand", direction: "left", time: 3000}
                 ]
+            },
+            pintinhos: {
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Pintinhos",
+                description: "Ou será uma galinha adulta!?",
+                mapName: "Galinheiro",
+                x: utils.withGrid(-4),
+                y: utils.withGrid(12),
+                src: "./assets/img/easterEgg/sprites/pintinhosEasterEgg.png",
             },
 
         },
@@ -929,6 +943,9 @@ window.OverworldMaps = {
             ],
             [utils.asGridCoord(12,31)] : [ // Espaço acima do sapo da sala
                 {events: [{type: "foundFrog", who: "frog3", x: 12, y: 31},]}
+            ],
+            [utils.asGridCoord(-4,13)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "pintinhos"},]}
             ],
         }
     },
