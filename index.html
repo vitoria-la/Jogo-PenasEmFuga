@@ -17,11 +17,12 @@
 </head>
 <body>
     <div class="game-container">
+        <audio src="./assets/audio/songs/musicaFundo1.ogg" id="homeSong" autoplay="autoplay"></audio>
         <div id="titlescreen">
             <span class="title">PENAS EM FUGA!</span>
             <img src="assets/img/Telainicial.png" id="Telainicial">
             <div class="wrapper">
-                <button id="start-button">Jogar</button>
+                <button id="start-button" onclick="document.getElementById('homeSong').pause()">Jogar</button>
                 <button id="credits-button">Créditos</button>
                 <button id="settings-button">Configurações</button>
             </div>
@@ -44,5 +45,10 @@
     <script src="js/DialogManager.js"></script>
     <script src="js/TextMessage.js"></script>
     <script src="js/EasterEgg.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.spatial.min.js"></script>
+    <script src="js/Audio.js"></script>
 </body>
 </html>

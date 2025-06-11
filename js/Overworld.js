@@ -136,9 +136,10 @@ class Overworld {
     }
 
     init() {
-
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
+        this.soundtrack = new Audio();
+        this.soundtrack.startSoundtrack();
 
         this.startMap(window.OverworldMaps.Galinheiro);
 
