@@ -131,13 +131,13 @@ window.OverworldMaps = {
     Galinheiro: { // mapa
         name: "Galinheiro",
         lowerSrc: "./assets/img/galinheiroMapa.png", // layer de base do mapa (chão do mapa)
-        upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
+        upperSrc: "./assets/img/galinheiroMapaUpper.png", // layer superior do mapa (se precisa de algo acima do player)
         configObjects: { // define os personagens/objetos que o mapa vai ter
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(16),
-                y: utils.withGrid(14),
+                x: utils.withGrid(17),
+                y: utils.withGrid(4),
             },
             galinhaBranca: {
                 type: "Person",
@@ -906,9 +906,21 @@ window.OverworldMaps = {
 
             [utils.asGridCoord(15,4)] : true,
             [utils.asGridCoord(16,4)] : true,
+            [utils.asGridCoord(17,4)] : true,
+            [utils.asGridCoord(20,4)] : true,
+            [utils.asGridCoord(21,4)] : true,
+            [utils.asGridCoord(22,4)] : true,
             [utils.asGridCoord(24,4)] : true,
             [utils.asGridCoord(25,4)] : true,
             [utils.asGridCoord(26,4)] : true,
+
+            [utils.asGridCoord(17,5)] : true,
+            [utils.asGridCoord(16,5)] : true,
+            [utils.asGridCoord(15,5)] : true,
+
+            [utils.asGridCoord(15,8)] : true,
+            [utils.asGridCoord(26,8)] : true,
+            [utils.asGridCoord(26,6)] : true,
 
             //------------------------------------------//
 

@@ -6,6 +6,41 @@ class Overworld {
         this.map = null;
         this.foundFrog2 = config.foundFrog2 || false;
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
+        this.playerHotbar = [
+            null, null, null, null, null, null // 6 slots, todos vazios (null)
+        ];
+    }
+
+    addItemToHotbar(itemToAdd) {
+        let added = false;
+        // 1. Tenta empilhar com um item existente
+        for (let i = 0; i < this.playerHotbar.length; i++) {
+            const slot = this.playerHotbar[i];
+            if (slot && slot.id === itemToAdd.id) {
+                slot.quantity += itemToAdd.quantity;
+                added = true;
+                break;
+            }
+        }
+        // 2. Se não empilhou, procura um slot vazio
+        if (!added) {
+            for (let i = 0; i < this.playerHotbar.length; i++) {
+                if (this.playerHotbar[i] === null) {
+                    this.playerHotbar[i] = itemToAdd;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        if (added) {
+            // 3. Sincroniza a HUD com o novo estado do inventário
+            this.playerHotbar.forEach((item, i) => {
+                this.hud.updateHotbarSlot(i, item);
+            });
+        } else {
+            console.log("Hotbar cheia! Não foi possível adicionar o item.");
+        }
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -131,6 +166,29 @@ class Overworld {
             this.hud.updateLevel(this.level); // Atualiza a HUD
             console.log("Subiu de nível! Nível atual:", this.level);
         }, 5000); // A cada 5 segundos
+
+        // --- EXEMPLO: Simulação de pegar itens com quantidade ---
+
+        // Simula pegar 1 trigo após 2 segundos
+        setTimeout(() => {
+            const trigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 1 };
+            console.log("Jogador pegou 1 trigo!");
+            this.addItemToHotbar(trigo);
+        }, 2000);
+
+        // Simula pegar mais 5 trigos após 4 segundos
+        setTimeout(() => {
+            const maisTrigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 5 };
+            console.log("Jogador pegou mais 5 trigos!");
+            this.addItemToHotbar(maisTrigo);
+        }, 4000);
+
+        // Simula pegar duas cenoura após 6 segundos
+        setTimeout(() => {
+            const milho = { id: "cenoura", name: "Cenoura", src: "./assets/img/milho.png", quantity: 2 };
+            console.log("Jogador pegou um milho!");
+            this.addItemToHotbar(milho);
+        }, 6000);
         
     }
 }
