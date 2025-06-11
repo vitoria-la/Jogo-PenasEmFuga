@@ -17,6 +17,10 @@ class Person extends GameObject {
             "left" : ["x", -1],
             "right": ["x",  1],
         }
+        
+        // Propriedades para o sistema de diálogo
+        this.talking = false;
+        this.interactionButton = null;
     }
 
     update(state){
@@ -33,6 +37,11 @@ class Person extends GameObject {
                 }) 
             }
             this.updateSprite(state); // Atualiza a animação do sprite com base no estado atual (parado ou andando)
+            
+            // Verifica proximidade com NPCs para mostrar botão de interação
+            if (this.isPlayerControlled) {
+                this.checkForNpcInteraction(state);
+            }
         }
     }
 
@@ -101,5 +110,87 @@ class Person extends GameObject {
         
         this.sprite.setAnimation("idle-"+this.direction); // Se o personagem não estiver se movendo, ele define a animação de "idle" (parado) na direção atual
         
+    }
+    
+    // Verifica se o jogador está próximo a algum NPC para mostrar botão de interação
+    checkForNpcInteraction(state) {
+        // Obtém todos os NPCs do mapa
+        const npcs = Object.values(state.map.gameObjects).filter(obj => 
+            !obj.isPlayerControlled && obj instanceof Person
+        );
+        
+        // Verifica se o jogador está próximo a algum NPC
+        let nearbyNpc = null;
+        
+        for (const npc of npcs) {
+            // Calcula a distância entre o jogador e o NPC
+            const distance = Math.abs(this.x - npc.x) + Math.abs(this.y - npc.y);
+            
+            // Se a distância for menor ou igual a 16 pixels (1 tile), considera como próximo
+            if (distance <= utils.withGrid(1)) {
+                nearbyNpc = npc;
+                break;
+            }
+        }
+        
+        // Se encontrou um NPC próximo, mostra o botão de interação
+        if (nearbyNpc && !state.map.isCutscenePlaying) {
+            this.showInteractionButton(nearbyNpc, state.map);
+            nearbyNpc.talking = true;
+        } else {
+            // Se não encontrou ou está em cutscene, esconde o botão
+            this.hideInteractionButton();
+            npcs.forEach(npc => npc.talking = false);
+        }
+    }
+    
+    // Mostra o botão de interação "E" acima do NPC
+    showInteractionButton(npc, map) {
+        if (!this.interactionButton) {
+            this.interactionButton = document.createElement("div");
+            this.interactionButton.classList.add("interaction-button");
+            this.interactionButton.textContent = "E";
+            document.querySelector(".game-container").appendChild(this.interactionButton);
+        }
+        
+        // Posiciona o botão centralizado acima do NPC
+        const cameraPerson = map.gameObjects.hero;
+        
+        // Centraliza horizontalmente e posiciona acima do sprite do NPC
+        const x = npc.x - cameraPerson.x + utils.withGrid(1);
+        
+        // Posiciona o botão exatamente acima do sprite do NPC
+        // Usa um deslocamento vertical menor para garantir que fique logo acima da cabeça do NPC
+        const y = npc.y - utils.withGrid(15) - cameraPerson.y + utils.withGrid(0);
+        
+        this.interactionButton.style.transform = `translate(${x}px, ${y}px)`;
+        this.interactionButton.style.display = "block";
+        
+        // Armazena o NPC atual para interação
+        this.currentInteractingNpc = npc;
+    }
+    
+    // Esconde o botão de interação
+    hideInteractionButton() {
+        if (this.interactionButton) {
+            this.interactionButton.style.display = "none";
+        }
+        this.currentInteractingNpc = null;
+    }
+    
+    // Inicia um diálogo com o NPC atual
+    startDialog(map) {
+        if (this.currentInteractingNpc && !map.isCutscenePlaying) {
+            // Verifica se o DialogManager existe
+            if (!map.dialogManager) {
+                map.dialogManager = new DialogManager();
+            }
+            
+            // Inicia o diálogo usando o DialogManager
+            map.dialogManager.startDialog(this.currentInteractingNpc.id, map);
+            
+            // Esconde o botão de interação durante o diálogo
+            this.hideInteractionButton();
+        }
     }
 }
