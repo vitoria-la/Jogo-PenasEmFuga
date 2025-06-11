@@ -8,6 +8,8 @@ class Hud {
     this.coinTextElement = null;
     this.levelContainerElement = null;
     this.levelTextElement = null;
+    this.easterEggIconElement = null;
+    this.easterEggPanelElement = null;
   }
 
   update() {
@@ -79,9 +81,9 @@ class Hud {
       this.taskListPanelElement.classList.toggle('visible');
     });
 
-    const closeButton = this.taskListPanelElement.querySelector('.task-list-close-button');
-      if(closeButton){
-        closeButton.addEventListener('click', () => {
+    const taskCloseButton  = this.taskListPanelElement.querySelector('.task-list-close-button');
+      if(taskCloseButton){
+        taskCloseButton.addEventListener('click', () => {
         this.taskListPanelElement.classList.remove('visible');
       })
     }
@@ -126,6 +128,56 @@ class Hud {
     // Adiciona o contêiner de nível ao contêiner principal do jogo
     gameContainerElement.appendChild(this.levelContainerElement);
 
+    // Cria o ícone de easter egg
+    this.easterEggIconElement = document.createElement("div");
+    this.easterEggIconElement.classList.add("easter-egg-icon");
+    gameContainerElement.appendChild(this.easterEggIconElement);
+
+    // Cria o painel de easter egg
+    this.easterEggPanelElement = document.createElement("div");
+    this.easterEggPanelElement.classList.add("easter-egg-panel");
+    this.easterEggPanelElement.innerHTML = `
+      <h3>Segredos Encontrados</h3>
+      <ul class="easter-egg-list">
+        <li>Nenhum segredo encontrado ainda...</li>
+      </ul>
+      <button class="easter-egg-close-button">Fechar</button>
+    `;
+    gameContainerElement.appendChild(this.easterEggPanelElement);
+
+    // Adiciona o evento para abrir/fechar o painel ao clicar no ícone
+    this.easterEggIconElement.addEventListener('click', () => {
+      this.easterEggPanelElement.classList.toggle('visible');
+    });
+
+    // Adiciona o evento para o botão de fechar
+    const easterEggCloseButton = this.easterEggPanelElement.querySelector('.easter-egg-close-button');
+    if (easterEggCloseButton) {
+      easterEggCloseButton.addEventListener('click', () => {
+        this.easterEggPanelElement.classList.remove('visible');
+      });
+    }
+
+  }
+
+  updateEasterEggs(foundEggs) {
+    const listElement = this.easterEggPanelElement.querySelector(".easter-egg-list");
+    
+    // Limpa a lista atual
+    listElement.innerHTML = "";
+
+    // Se não houver easter eggs, mostra uma mensagem padrão
+    if (foundEggs.length === 0) {
+      listElement.innerHTML = `<li>Nenhum segredo encontrado ainda...</li>`;
+      return;
+    }
+    
+    // Para cada easter egg encontrado, cria um item na lista
+    foundEggs.forEach(eggId => {
+      const li = document.createElement("li");
+      li.textContent = `Descoberta: ${eggId}`; // Exemplo de texto
+      listElement.appendChild(li);
+    });
   }
 
   updateCoins(count){

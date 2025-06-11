@@ -183,9 +183,9 @@ class Overworld {
             this.addItemToHotbar(maisTrigo);
         }, 4000);
 
-        // Simula pegar uma cenoura após 6 segundos
+        // Simula pegar duas cenoura após 6 segundos
         setTimeout(() => {
-            const milho = { id: "cenoura", name: "Cenoura", src: "./assets/img/milho.png", quantity: 1 };
+            const milho = { id: "cenoura", name: "Cenoura", src: "./assets/img/milho.png", quantity: 2 };
             console.log("Jogador pegou um milho!");
             this.addItemToHotbar(milho);
         }, 6000);
