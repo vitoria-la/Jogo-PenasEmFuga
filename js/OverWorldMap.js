@@ -136,8 +136,8 @@ window.OverworldMaps = {
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(17),
-                y: utils.withGrid(4),
+                x: utils.withGrid(16),
+                y: utils.withGrid(14),
             },
             galinhaBranca: {
                 type: "Person",
