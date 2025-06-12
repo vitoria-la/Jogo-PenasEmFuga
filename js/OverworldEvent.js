@@ -112,6 +112,22 @@ class OverworldEvent {
         resolve();
     }
 
+    toggleMusic(resolve) {
+        const audioManager = this.map.overworld.audioManager;
+        const newSong = this.event.song;
+
+        // Se a música da área JÁ ESTÁ tocando, nós queremos voltar para a padrão
+        if (audioManager.currentAreaSong === newSong) {
+            audioManager.fadeOutSoundtrack(() => {
+                audioManager.startSoundtrack();
+            });
+        } else {
+            // Senão, a música padrão está tocando, então mudamos para a da área
+            audioManager.playMusic(newSong);
+        }
+        resolve();
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação

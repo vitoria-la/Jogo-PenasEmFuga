@@ -9,6 +9,7 @@ class Overworld {
         this.playerHotbar = [
             null, null, null, null, null, null // 6 slots, todos vazios (null)
         ];
+        this.audioManager = new Audio();
     }
 
     addItemToHotbar(itemToAdd) {
@@ -137,6 +138,8 @@ class Overworld {
     }
 
     init() {
+
+
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
         this.soundtrack = new Audio();
