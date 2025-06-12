@@ -66,6 +66,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             } else if (object.type === "EasterEgg") {
                 instance = new EasterEgg(object);
                 
+            } else if (object.type === "Gif"){
+                instance = new Gif(object);
             }
 
             this.gameObjects[key] = instance;
@@ -410,7 +412,21 @@ window.OverworldMaps = {
                 y: utils.withGrid(13),
                 src: "./assets/img/easterEggs/sprites/bolaPixar.png",
             },
+            // discoteca: {
+            //     type: "Gifs", // Usa a classe base, já que não é um personagem
+            //     x: utils.withGrid(10), // Posição X onde a animação vai aparecer
+            //     y: utils.withGrid(12), // Posição Y onde a animação vai aparecer
+            //     src: "./assets/img/animacao_discoteca-to-sprite.png", // O caminho para a sua NOVA spritesheet
 
+            //     // Define a animação para o Sprite.js
+            //     animations: {
+            //         "idle": [
+            //             [0,0], [1,0], [2,0], [3,0] // 4 quadros, todos na primeira linha (y=0)
+            //         ]
+            //     },
+            //     currentAnimation: "idle",
+            //     animationFrameLimit: 8, // Controla a velocidade da animação (número maior = mais lento)
+            // },
         },
         walls: {
             //define as coordenadas das colisoes do mapa
