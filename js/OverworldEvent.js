@@ -96,8 +96,8 @@ class OverworldEvent {
         Object.values(this.map.gameObjects).forEach(async obj => { // Passa por todos os objetos do mapa
             if (obj.id === who) { //  Se achar o sapo dentre os objetos
                 await obj.playGif(obj.id);
-                utils.emitEvent("EasterEggWasFound", { // emite um sinal que foi encontrado um sapo!
-                    whoId: obj.id  // manda quem foi achado
+                utils.emitEvent("EasterEggWasFound", { // emite um sinal que foi encontrado um easter egg!
+                    whoId: obj.name  // manda quem foi achado
                 })
             }
         })
