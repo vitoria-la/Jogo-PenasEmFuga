@@ -117,6 +117,7 @@ class Overworld {
         document.addEventListener("EasterEggWasFound", e => {
             if (!this.easterEggsFound.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
                 this.easterEggsFound.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
+                this.hud.updateEasterEggs(this.easterEggsFound); // Atualiza a listagem de easter eggs na hud
             }
         })
     }
@@ -184,9 +185,9 @@ class Overworld {
             this.addItemToHotbar(maisTrigo);
         }, 4000);
 
-        // Simula pegar duas cenoura após 6 segundos
+        // Simula pegar dois milhos após 6 segundos
         setTimeout(() => {
-            const milho = { id: "cenoura", name: "Cenoura", src: "./assets/img/milho.png", quantity: 2 };
+            const milho = { id: "milho", name: "Milho", src: "./assets/img/milho.png", quantity: 2 };
             console.log("Jogador pegou um milho!");
             this.addItemToHotbar(milho);
         }, 6000);

@@ -403,7 +403,7 @@ window.OverworldMaps = {
             bolaPixar: {
                 type: "EasterEgg",
                 isEasterEgg: true,
-                name: "BolaPixar",
+                name: "Bola",
                 description: "Estranhamente familiar",
                 mapName: "Galinheiro",
                 x: utils.withGrid(11),
