@@ -16,6 +16,9 @@ class Audio {
             loop: true,
             volume: 0.28,
         });
+        this.easterEggSoundEffect = new Howl ({ // Barulho que o easte egg faz ao ser encontrado
+            src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
+        });
     }
 
     startSoundtrack() { // Começa a trilha sonora
@@ -24,13 +27,22 @@ class Audio {
         }
     }
 
-    startSoundtrackSong() { // Responsável por fazer uma música tocar
+    startSoundtrackSong(lowerVolume) { // Responsável por fazer uma música tocar
         this.currentSongIndex = this.getRandomSong(this.currentSongIndex); // sorteia o index da música a ser tocada
         this.currentSong = new Howl({ // Cria um Howl com o endereço de src no array soundtrack
             src: this.soundtrack[this.currentSongIndex].src,
         });
         this.currentSong.play(); // Toca a música
         this.isPlaying = true; // Atualiza a variável isPlaying
+
+        document.addEventListener("EasterEggWasFound", e => { // Se foi encontrado um easter egg
+            this.currentSong.fade(1, 0.3, 400); // Abaixa o volume da música de fundo com um fade
+            this.easterEggSoundEffect.play(); // Toca o efeito sonoro
+            this.easterEggSoundEffect.fade(0, 1, 1000); // Começa o efeito sonoro com um fade de 1s
+            this.easterEggSoundEffect.once('end', () => { // Quando ele acabar
+                this.currentSong.fade(0.3, 1, 15); // Volta a música de fundo com um fade
+            });
+        })
         
 
         this.currentSong.on('end', this.startSoundtrackSong.bind(this)); // Quando a música terminar, chama a função novamente
