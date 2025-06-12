@@ -930,7 +930,7 @@ window.OverworldMaps = {
             [utils.asGridCoord(9,30)] : true,
             [utils.asGridCoord(10,30)] : true,
 
-            [utils.asGridCoord(13,29)] : true,
+            //[utils.asGridCoord(13,29)] : true, Tirando a coordenada do sofá da direita para a Bernadette poder ficar em cima
             [utils.asGridCoord(13,30)] : true,
             [utils.asGridCoord(13,31)] : true,
             [utils.asGridCoord(14,29)] : true,
