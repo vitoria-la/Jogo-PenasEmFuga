@@ -116,13 +116,12 @@ class OverworldEvent {
         const audioManager = this.map.overworld.audioManager;
         const newSong = this.event.song;
 
-        // Se a música da área JÁ ESTÁ tocando, nós queremos voltar para a padrão
+        // Se a música da área JÁ ESTÁ tocando...
         if (audioManager.currentAreaSong === newSong) {
-            audioManager.fadeOutSoundtrack(() => {
-                audioManager.startSoundtrack();
-            });
+            // ...paramos ela e retomamos a trilha sonora padrão.
+            audioManager.resumeSoundtrack();
         } else {
-            // Senão, a música padrão está tocando, então mudamos para a da área
+            // Senão, a música padrão está tocando, então mudamos para a da área.
             audioManager.playMusic(newSong);
         }
         resolve();

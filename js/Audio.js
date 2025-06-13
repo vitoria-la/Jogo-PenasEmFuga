@@ -8,103 +8,127 @@ class Audio {
             {name: "sound5", src: "./assets/audio/songs/musicaFundo5.ogg"},
             {name: "sound6", src: "./assets/audio/songs/musicaFundo6.ogg"},
         ]
-        this.currentSong = null; // Uma instancia da classe Howl (biblioteca howler) que abriga a música que está tocando no momento
-        this.currentSongIndex = -1; // Variável que abriga o index do array soundtrack onde está a música atual (currentSong)
-        this.isPlaying = false; // Para saber se está tocando uma música ou não
-        this.walkingSoundEffect = new Howl ({ // Barulho que o pinguim faz ao andar
+        this.soundtrackPlaying = false; // Controla se a trilha sonora padrão deve tocar
+        this.currentSong = null;
+        this.currentSongIndex = -1;
+        this.currentAreaSong = null; // Guarda o path da música da área atual
+
+        // Efeitos Sonoros
+        this.walkingSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/andarPinguim.ogg",
             loop: true,
             volume: 0.28,
         });
-        this.easterEggSoundEffect = new Howl ({ // Barulho que o easte egg faz ao ser encontrado
+        this.easterEggSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
+            //volume: 0.5,
         });
     }
 
-    startSoundtrack() { // Começa a trilha sonora
-        if (!this.isPlaying) { // Se nenhuma música está tocando
-            this.soundtrackPlaying = true;
-            this.startSoundtrackSong(); // Começa a tocar uma música
+    startSoundtrack() {
+        if (this.currentSong || this.soundtrackPlaying) return;
+        this.soundtrackPlaying = true;
+        this.startNextSoundtrackSong();
+    }
+
+    startNextSoundtrackSong() {
+        if (!this.soundtrackPlaying || this.currentSong) return;
+        this.currentSongIndex = this.getRandomSong(this.currentSongIndex);
+        const songInfo = this.soundtrack[this.currentSongIndex];
+        this.currentSong = new Howl({
+            src: [songInfo.src],
+            loop: false,
+            volume: 0.3,
+            onend: () => {
+                this.currentSong = null;
+                if (this.soundtrackPlaying) {
+                    this.startNextSoundtrackSong();
+                }
+            }
+        });
+        this.currentSong.play();
+    }
+
+    playMusic(path, loop = true) {
+        this.fadeOutCurrentSong(() => {
+            this.currentAreaSong = path; 
+            this.currentSong = new Howl({ src: [path], loop: loop, volume: 0 });
+            this.currentSong.play();
+            this.currentSong.fade(0, 0.4, 500);
+        });
+    }
+
+    fadeOutCurrentSong(callback) {
+        this.soundtrackPlaying = false;
+        this.currentAreaSong = null;
+        if (this.currentSong) {
+            this.currentSong.fade(this.currentSong.volume(), 0, 500);
+            this.currentSong.once('fade', () => {
+                if (this.currentSong) {
+                    this.currentSong.stop();
+                    this.currentSong.unload();
+                    this.currentSong = null;
+                }
+                if (callback) callback();
+            });
+        } else {
+            if (callback) callback();
         }
     }
 
-    startSoundtrackSong(lowerVolume) { // Responsável por fazer uma música tocar
-        this.currentSongIndex = this.getRandomSong(this.currentSongIndex); // sorteia o index da música a ser tocada
-        this.currentSong = new Howl({ // Cria um Howl com o endereço de src no array soundtrack
-            src: this.soundtrack[this.currentSongIndex].src,
+    // O método resumeSoundtrack é chamado pelo toggleMusic, então não precisamos dele separadamente
+    // Se quiser mantê-lo para outras lógicas:
+    resumeSoundtrack() {
+        this.fadeOutCurrentSong(() => {
+             this.startSoundtrack();
         });
-        this.currentSong.play(); // Toca a música
-        this.isPlaying = true; // Atualiza a variável isPlaying
+    }
 
-        document.addEventListener("EasterEggWasFound", e => { // Se foi encontrado um easter egg
-            this.currentSong.fade(1, 0.3, 400); // Abaixa o volume da música de fundo com um fade
-            this.easterEggSoundEffect.play(); // Toca o efeito sonoro
-            this.easterEggSoundEffect.fade(0, 1, 1000); // Começa o efeito sonoro com um fade de 1s
-            this.easterEggSoundEffect.once('end', () => { // Quando ele acabar
-                this.currentSong.fade(0.3, 1, 15); // Volta a música de fundo com um fade
+    fadeOutCurrentSong(callback) {
+        this.soundtrackPlaying = false;
+        this.currentAreaSong = null;
+
+        if (this.currentSong) {
+            // O evento 'fade' garante que o callback só será chamado quando o fade terminar
+            this.currentSong.once('fade', () => { 
+                if (this.currentSong) {
+                    this.currentSong.stop();
+                    this.currentSong.unload(); // Libera a música da memória
+                    this.currentSong = null;
+                }
+                if (callback) callback(); // Chama a próxima ação (ex: tocar outra música)
             });
-        })
-        
+            // Inicia o fade out
+            this.currentSong.fade(this.currentSong.volume(), 0, 500);
+        } else {
+            // Se não havia música tocando, apenas executa o callback
+            if (callback) callback();
+        }
+    }
 
-        this.currentSongIndex = this.getRandomSong(this.currentSongIndex);
-        this.currentSong = new Howl({
-            src: [this.soundtrack[this.currentSongIndex].src],
-            loop: false, // O 'end' listener cuidará do loop
-            volume: 0.3, // Volume inicial
-        });
+    playEasterEggSound() {
+        if (this.currentSong) {
+            // Abaixa o volume da música de fundo para destacar o efeito
+            this.currentSong.fade(this.currentSong.volume(), 0.1, 400);
+        }
         
-        this.currentSong.play();
+        this.easterEggSoundEffect.play();
 
-        // Quando a música terminar, toca a próxima da playlist
-        this.currentSong.on('end', () => {
-            this.currentSong = null;
-            if (this.soundtrackPlaying) {
-                this.startNextSoundtrackSong();
+        // Quando o som do easter egg terminar, restaura o volume da música
+        this.easterEggSoundEffect.once('end', () => {
+            if (this.currentSong) {
+                // Retorna ao volume padrão (0.3)
+                this.currentSong.fade(0.1, 0.3, 1000); 
             }
         });
     }
 
-    // NOVO: Toca uma música específica (para uma área do mapa)
-    playMusic(path, loop = true) {
-        // Para a trilha sonora padrão com fade out
-        this.fadeOutSoundtrack();
-        //Armazena a música da área que está tocando
-        this.currentAreaSong = path;
-        // Toca a nova música após o fade out da anterior
-        setTimeout(() => {
-            this.currentSong = new Howl({
-                src: [path],
-                loop: loop,
-                volume: 0.4
-            });
-            this.currentSong.play();
-        }, 500); // 500ms para o fade out
-    }
-
-    // NOVO: Para a música atual com um efeito suave
-    fadeOutSoundtrack() {
-        this.soundtrackPlaying = false; // Impede que a próxima música da trilha comece
-        this.currentAreaSong = null; 
-        if (this.currentSong) {
-            // Howler.js fade: do volume atual para 0 em 500ms
-            this.currentSong.fade(this.currentSong.volume(), 0, 500);
-            
-            // Para a música e a remove após o fade
-            setTimeout(() => {
-                if (this.currentSong) {
-                    this.currentSong.stop();
-                    this.currentSong = null;
-                }
-            }, 500);
-        }
-    }
-
-    getRandomSong(currentSongIndex) { // Pega um index aleatório para escolher a música
-        let newSongIndex; // Cria um novo index
+    getRandomSong(currentSongIndex) {
+        let newSongIndex;
         do {
-            newSongIndex = Math.floor(Math.random() * this.soundtrack.length) + 0; // Sorteio que vai de 0 - o tamanho do array soundtrack
-        } while (newSongIndex === currentSongIndex); // Só sai do loop se o novo index for diferente do antigo
-        return newSongIndex; // Retorna o novo index
+            newSongIndex = Math.floor(Math.random() * this.soundtrack.length);
+        } while (this.soundtrack.length > 1 && newSongIndex === currentSongIndex);
+        return newSongIndex;
     }
 
     startWalkingSound() { // Começa o barulho de andar 

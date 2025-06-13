@@ -119,6 +119,8 @@ class Overworld {
             if (!this.easterEggsFound.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
                 this.easterEggsFound.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
                 this.hud.updateEasterEggs(this.easterEggsFound); // Atualiza a listagem de easter eggs na hud
+
+                this.audioManager.playEasterEggSound();
             }
         })
     }
@@ -138,12 +140,12 @@ class Overworld {
     }
 
     init() {
-
+        this.audioManager.startSoundtrack();
 
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
-        this.soundtrack = new Audio();
-        this.soundtrack.startSoundtrack();
+        // this.soundtrack = new Audio();
+        // this.soundtrack.startSoundtrack();
 
         this.startMap(window.OverworldMaps.Galinheiro);
 
