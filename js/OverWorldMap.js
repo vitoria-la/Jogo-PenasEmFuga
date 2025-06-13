@@ -16,6 +16,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.foundFrog2 = state.foundFrog2 || false;
         this.foundFrog3 = state.foundFrog3 || false;
         this.easterEggsFound = state.easterEggsFound || [];
+        this.easterEggsFoundID = state.easterEggsFoundID || [];
         this.name = config.name; // Serve para saber em qual mapa se está
     }
 
@@ -124,11 +125,13 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     checkForFootstepCutscene() { // Método que percebe se o pinguim entrou na coordenada que inicia alguma cutscene
         const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
         const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
-        //console.log("testando");
 
         if (this.isCutscenePlaying === false && match) { // Se não tiver rodando nenhuma cutscene e o player estiver no lugar que inicia uma
-            this.startCutscene(match[0].events);
-            //console.log("testando o checkForFootstepCutscene ");
+
+            // A cutscene começa se: Não for do tipo "foundEasterEgg" OU se ela for do tipo "foundEasterEgg" e o easterEgg encontrado já não tinha sido encontrado
+            if ((match[0].events[0].type === "foundEasterEgg" && !this.easterEggsFoundID.includes(match[0].events[0].who)) || match[0].events[0].type != "foundEasterEgg") {
+                this.startCutscene(match[0].events);
+            }
         }
 
     }
@@ -368,7 +371,7 @@ window.OverworldMaps = {
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
             },
-            galinhaDosOvosDourados: {
+            galinhaDosOvosDourados: { // Trata-se do NPC dessa galinha
                 type: "Person",
                 x: utils.withGrid(0),
                 y: utils.withGrid(14),
@@ -426,6 +429,26 @@ window.OverworldMaps = {
                 x: utils.withGrid(11),
                 y: utils.withGrid(13),
                 src: "./assets/img/easterEggs/sprites/bolaPixar.png",
+            },
+            galinhaDouradaEG: { // É um objeto de easter egg da galinha dourada, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Galinha Dos Ovos Dourados",
+                description: "Nem tudo que reluz é ouro. Mas nesse caso é sim",
+                mapName: "Galinheiro",
+                x: utils.withGrid(33),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png",
+            },
+            albumGalinha: { // É um objeto de easter egg do álbum, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Álbum da Galinha Pintadinha",
+                description: "O item mais cobiçado do galinheiro",
+                mapName: "Galinheiro",
+                x: utils.withGrid(33),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
             },
 
         },
@@ -988,6 +1011,12 @@ window.OverworldMaps = {
             ],
             [utils.asGridCoord(11,14)] : [ // Achou os pintinhos fingindo ser adultos
                 {events: [{type: "foundEasterEgg", who: "bolaPixar"},]}
+            ],
+            [utils.asGridCoord(7,14)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "galinhaDouradaEG"},]}
+            ],
+            [utils.asGridCoord(21,32)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "albumGalinha"},]}
             ],
         }
     },
