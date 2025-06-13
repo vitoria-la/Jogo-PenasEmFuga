@@ -86,6 +86,14 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 this.gameObjects[key].x = utils.withGrid(25);
                 this.gameObjects[key].y = utils.withGrid(5);
             }
+
+            if (key === "galinhaDourada") { // Se o objeto é a galinha dos ovos dourados
+                const num = Math.floor(Math.random() * 5) + 1; // Sorteia um número
+                console.log(num);
+                if (num%2 === 0) { // Se ele for par, coloca ela para fora do mapa
+                    this.gameObjects[key].x = utils.withGrid(33);
+                }
+            }
             
             instance.mount(this);
 
@@ -356,6 +364,15 @@ window.OverworldMaps = {
                 x: utils.withGrid(14),
                 y: utils.withGrid(13),
                 src: "./assets/img/galinhaPenosa.png",
+                behaviorLoop: [ 
+                    //{type: "stand", direction: "bottom", time: 5200}, 
+                ]
+            },
+            galinhaDosOvosDourados: {
+                type: "Person",
+                x: utils.withGrid(0),
+                y: utils.withGrid(14),
+                src: "./assets/img/galinhaOvosDourados.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
@@ -1005,7 +1022,28 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                 ]
-            }
+            },
+            cavalo: {
+                type: "Person",
+                isHorse: true,
+                x: utils.withGrid(-1),
+                y: utils.withGrid(20),
+                src: "./assets/img/cavaloSpriteSheet.png",
+                animations: {
+                    "idle-right" : [ [1,0] ],
+                    "idle-left"  : [ [1,1] ],
+                    "walk-right" : [ [0,0],[1,0],[2,0],[3,0],[4,0],[5,0], ],
+                    "walk-left"  : [ [0,1],[1,1],[2,1],[3,1],[4,1],[5,1], ],
+                },
+                behaviorLoop: [ 
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                ]
+            },
         },
         walls: {
             //define as coordenadas das colisoes do mapa

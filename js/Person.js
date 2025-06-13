@@ -22,6 +22,12 @@ class Person extends GameObject {
         this.talking = false;
         this.interactionButton = null;
 
+        this.isHorse = config.isHorse || false;
+
+        if (this.isHorse) {
+            this.direction = "right";
+        }
+
 
         this.walkSoundEffect = new Audio(); // O efeito sonoro que o pinguim faz ao andar
     }
