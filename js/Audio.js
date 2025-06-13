@@ -21,7 +21,7 @@ class Audio {
         });
         this.easterEggSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
-            //volume: 0.5,
+            volume: 0.4,
         });
     }
 
@@ -37,8 +37,6 @@ class Audio {
         const songInfo = this.soundtrack[this.currentSongIndex];
         this.currentSong = new Howl({
             src: [songInfo.src],
-            loop: false,
-            volume: 0.3,
             onend: () => {
                 this.currentSong = null;
                 if (this.soundtrackPlaying) {
@@ -52,7 +50,11 @@ class Audio {
     playMusic(path, loop = true) {
         this.fadeOutCurrentSong(() => {
             this.currentAreaSong = path; 
-            this.currentSong = new Howl({ src: [path], loop: loop, volume: 0 });
+            this.currentSong = new Howl({ 
+                src: [path], 
+                loop: loop, 
+                volume: 0 
+            });
             this.currentSong.play();
             this.currentSong.fade(0, 0.4, 500);
         });

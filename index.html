@@ -21,11 +21,12 @@
 <body>
 
     <div class="game-container">
+        <audio src="./assets/audio/songs/musicaFundo1.ogg" id="homeSong" autoplay="autoplay"></audio>
         <div id="titlescreen">
             <span class="title">PENAS EM FUGA!</span>
             <img src="assets/img/Telainicial.png" id="Telainicial">
             <div class="wrapper">
-                <button id="start-button" class="titlescreen-button">Jogar</button>
+                <button id="start-button" class="titlescreen-button" onclick="document.getElementById('homeSong').pause()">Jogar</button>
                 <button id="credits-button" class="titlescreen-button">Créditos</button>
                 <button id="settings-button" class="titlescreen-button">Configurações</button>
             </div>
