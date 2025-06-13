@@ -14,7 +14,7 @@ class Audio {
         this.walkingSoundEffect = new Howl ({ // Barulho que o pinguim faz ao andar
             src: "./assets/audio/soundEffects/andarPinguim.ogg",
             loop: true,
-            volume: 0.28,
+            volume: 0.6,
         });
         this.easterEggSoundEffect = new Howl ({ // Barulho que o easte egg faz ao ser encontrado
             src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
