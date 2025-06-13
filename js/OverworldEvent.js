@@ -92,12 +92,14 @@ class OverworldEvent {
 
     async foundEasterEgg(resolve) {  // Evento caso o player tenha achado um easter egg
         const who = this.event.who; // pega o objeto do NPC
-        //console.log(who);
         Object.values(this.map.gameObjects).forEach(async obj => { // Passa por todos os objetos do mapa
             if (obj.id === who) { //  Se achar o easter egg dentre os objetos
                 await obj.playGif(obj.id);
                 utils.emitEvent("EasterEggWasFound", { // emite um sinal que foi encontrado um easter egg!
                     whoId: obj.name  // manda quem foi achado
+                })
+                utils.emitEvent("EasterEggWasFoundID", { // emite um sinal que foi encontrado um easter egg!
+                    whoId: obj.id  // manda quem foi achado
                 })
             }
         })

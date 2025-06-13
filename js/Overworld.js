@@ -6,6 +6,7 @@ class Overworld {
         this.map = null;
         this.foundFrog2 = config.foundFrog2 || false;
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
+        this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
         this.playerHotbar = [
             null, null, null, null, null, null // 6 slots, todos vazios (null)
         ];
@@ -123,6 +124,11 @@ class Overworld {
                 this.audioManager.playEasterEggSound();
             }
         })
+        document.addEventListener("EasterEggWasFoundID", e => {
+            if (!this.easterEggsFoundID.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
+                this.easterEggsFoundID.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
+            }
+        })
     }
 
     startMap(mapConfig) {
@@ -132,7 +138,8 @@ class Overworld {
             foundFrog1: this.foundFrog1,
             foundFrog2: this.foundFrog2,
             foundFrog3: this.foundFrog3,
-            easterEggsFound: this.easterEggsFound, // Passa a lista de easter-eggs encontrados
+            easterEggsFound: this.easterEggsFound, // Passa a lista do nome de easter-eggs encontrados
+            easterEggsFoundID: this.easterEggsFoundID, // Passa a lista do id dos de easter-eggs encontrados
         });
         this.map.overworld = this;
         

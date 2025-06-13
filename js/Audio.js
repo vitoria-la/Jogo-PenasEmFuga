@@ -17,7 +17,7 @@ class Audio {
         this.walkingSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/andarPinguim.ogg",
             loop: true,
-            volume: 0.28,
+            volume: 0.6,
         });
         this.easterEggSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
