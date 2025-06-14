@@ -133,30 +133,34 @@ class OverworldEvent {
         const flag = this.event.flag;
         const state = this.map.overworld.playerState;
 
-        state.storyFlags[flag] = true;
+        // Verifica se o jogador já interagiu com este NPC antes
+        if (!state.storyFlags[flag]) {
+            // Se for a primeira vez, define a flag e atualiza o progresso
+            state.storyFlags[flag] = true;
 
-        if (this.event.counter) {
-            const counterName = this.event.counter;
-            if (!state.questFlags[counterName]) {
-                state.questFlags[counterName] = 0;
+            if (this.event.counter) {
+                const counterName = this.event.counter;
+                if (!state.questFlags[counterName]) {
+                    state.questFlags[counterName] = 0;
+                }
+                state.questFlags[counterName] += 1;
             }
-            state.questFlags[counterName] += 1;
+    
+            // Atualiza a HUD com o novo progresso
+            this.map.overworld.hud.updateTasks(state.currentQuestId, state);
+    
+            // Verifica se a quest foi completada
+            this.map.overworld.checkForQuestCompletion();
         }
 
-        // ATUALIZA A HUD COM O NOVO PROGRESSO
-        this.map.overworld.hud.updateTasks(state.currentQuestId, state);
-
-        // Verifica se a quest foi completada
-        this.map.overworld.checkForQuestCompletion();
+        // Resolve o evento de qualquer maneira para a cutscene continuar
         resolve();
     }
 
+    // OverworldEvent.js
+
     textMessage(resolve) {
-        // Se o evento incluir a propriedade 'faceHero', faz o NPC virar para o jogador
-        if (this.event.faceHero) {
-            const obj = this.map.gameObjects[this.event.faceHero];
-            obj.direction = utils.oppositeDirection(this.map.gameObjects["hero"].direction);
-        }
+        // O bloco que fazia o NPC virar foi removido.
 
         // Cria a instância da caixa de diálogo
         const message = new TextMessage({

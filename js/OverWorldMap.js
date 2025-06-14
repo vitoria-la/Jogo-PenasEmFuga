@@ -396,6 +396,14 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaOvosDourados.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA__OVOS_DOURADOS", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
             },
             frog1: {  // Sapo da sala de costura
