@@ -143,11 +143,10 @@ class Person extends GameObject {
         // Se encontrou um NPC próximo, mostra o botão de interação
         if (nearbyNpc && !state.map.isCutscenePlaying) {
             this.showInteractionButton(nearbyNpc, state.map);
-            nearbyNpc.talking = true;
+            // A linha 'nearbyNpc.talking = true;' foi removida.
         } else {
             // Se não encontrou ou está em cutscene, esconde o botão
             this.hideInteractionButton();
-            npcs.forEach(npc => npc.talking = false);
         }
     }
     
@@ -185,25 +184,5 @@ class Person extends GameObject {
         this.currentInteractingNpc = null;
     }
     
-    // Inicia um diálogo com o NPC atual
-    startDialog(map) {
-        if (this.currentInteractingNpc && !map.isCutscenePlaying) {
-            // Verifica se o DialogManager existe
-            if (!map.dialogManager) {
-                map.dialogManager = new DialogManager();
-            }
-           if(this.currentInteractingNpc.id === "galinhaPenosa"){
-                map.dialogManager.startDialog("galinhaPenosa", map, () => {
-                    openShop(); // Chama a função openShop() após o diálogo
-                });
-            }else {
-                // Inicia o diálogo usando o DialogManager
-            map.dialogManager.startDialog(this.currentInteractingNpc.id, map);
-            }
-        }
-   
-            // Esconde o botão de interação durante o diálogo
-            this.hideInteractionButton();
-        }
-    }
-
+    
+}

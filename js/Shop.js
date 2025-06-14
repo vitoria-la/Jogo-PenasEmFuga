@@ -11,7 +11,7 @@ const itens_loja = [
         name: "Semente de Trigo (x5)",
         price: 2,
         description: "Sementes de trigo para plantar!",
-        Image: "./../assets/img/trigo.png",
+        Image: "./../assets/img/trigoSemente.png",
         quantity: 0,
         itemPorCompra: 5,
     },
@@ -27,7 +27,7 @@ const itens_loja = [
         name: "Semente de Milho (x5)",
         price: 4,
         description: "Sementes de milho para plantar!",
-        Image: "./../assets/img/milho.png",
+        Image: "./../assets/img/milhoSemente.png",
         quantity: 0,
         itemPorCompra: 5,
     },
@@ -35,7 +35,7 @@ const itens_loja = [
         name: "Carretel de linha",
         price: 4,
         description: "Carretel de linha para fazer roupas e outros itens!",
-        Image: "./../assets/img/trigo.png",
+        Image: "./../assets/img/linha.png",
         quantity: 0,
         itemPorCompra: 1,
     }
@@ -111,16 +111,3 @@ function openShop() {
     document.body.appendChild(shopMenu); // Adiciona o menu da loja ao body
 
 }
-
-
-
-
-// buy: function(player) {
-//             if (player.coins >= this.price) {
-//                 player.coins -= this.price;
-//                 this.quantity += 1;
-//                 console.log(`Você comprou ${this.name}!`);
-//             } else {
-//                 console.log("Moedas insuficientes para comprar " + this.name);
-//             }
-//         }

@@ -153,6 +153,7 @@ class TextMessage {
         this.done = () => {
           this.element.remove();
           this.keypressListener.unbind();
+          this.onComplete(); // <<-- ADICIONE ESTA LINHA
           resolve();
         };
       });

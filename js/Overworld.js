@@ -22,8 +22,8 @@ class Overworld {
     addItemToHotbar(itemToAdd) {
         let added = false;
         // 1. Tenta empilhar com um item existente
-        for (let i = 0; i < this.playerHotbar.length; i++) {
-            const slot = this.playerHotbar[i];
+        for (let i = 0; i < this.playerState.items.length; i++) { // Alterado de playerHotbar para playerState.items
+            const slot = this.playerState.items[i];
             if (slot && slot.id === itemToAdd.id) {
                 slot.quantity += itemToAdd.quantity;
                 added = true;
@@ -32,9 +32,9 @@ class Overworld {
         }
         // 2. Se não empilhou, procura um slot vazio
         if (!added) {
-            for (let i = 0; i < this.playerHotbar.length; i++) {
-                if (this.playerHotbar[i] === null) {
-                    this.playerHotbar[i] = itemToAdd;
+            for (let i = 0; i < this.playerState.items.length; i++) { // Alterado de playerHotbar para playerState.items
+                if (this.playerState.items[i] === null) {
+                    this.playerState.items[i] = itemToAdd;
                     added = true;
                     break;
                 }
@@ -43,7 +43,7 @@ class Overworld {
 
         if (added) {
             // 3. Sincroniza a HUD com o novo estado do inventário
-            this.playerHotbar.forEach((item, i) => {
+            this.playerState.items.forEach((item, i) => { // Alterado de playerHotbar para playerState.items
                 this.hud.updateHotbarSlot(i, item);
             });
         } else {
@@ -153,11 +153,29 @@ class Overworld {
     bindActionInput() {
         new KeypressListener("KeyE", () => {
             const hero = this.map.gameObjects.hero;
-            
-            // Verifica se há um NPC com quem interagir e se não há uma cutscene em andamento.
-            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
-                // Chama diretamente o método startDialog do herói (Person.js).
-                hero.startDialog(this.map);
+            const npc = hero.currentInteractingNpc;
+
+            if (npc && !this.map.isCutscenePlaying) {
+                // Se o NPC tem eventos de quest, inicia a cutscene
+                if (npc.talking && npc.talking.length > 0) {
+                    this.map.startCutscene(npc.talking[0].events);
+                } else {
+                    // Senão, usa o DialogManager para diálogos simples
+                    if (!this.map.dialogManager) {
+                        this.map.dialogManager = new DialogManager();
+                    }
+
+                    // Condição especial para a galinha da loja
+                    if (npc.id === "galinhaPenosa") {
+                        this.map.dialogManager.startDialog(npc.id, this.map, () => {
+                            // Esta função será chamada QUANDO o diálogo terminar
+                            openShop(); 
+                        });
+                    } else {
+                        // Para todos os outros NPCs simples
+                        this.map.dialogManager.startDialog(npc.id, this.map);
+                    }
+                }
             }
         });
     }

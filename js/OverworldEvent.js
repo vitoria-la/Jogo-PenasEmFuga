@@ -133,10 +133,8 @@ class OverworldEvent {
         const flag = this.event.flag;
         const state = this.map.overworld.playerState;
 
-        // Adiciona a flag de história (ex: "FALOU_COM_GALINHA_BRANCA")
         state.storyFlags[flag] = true;
 
-        // Atualiza contadores (se existirem)
         if (this.event.counter) {
             const counterName = this.event.counter;
             if (!state.questFlags[counterName]) {
@@ -145,7 +143,10 @@ class OverworldEvent {
             state.questFlags[counterName] += 1;
         }
 
-        // Verifica se a quest foi completada após a ação
+        // ATUALIZA A HUD COM O NOVO PROGRESSO
+        this.map.overworld.hud.updateTasks(state.currentQuestId, state);
+
+        // Verifica se a quest foi completada
         this.map.overworld.checkForQuestCompletion();
         resolve();
     }
