@@ -1031,11 +1031,14 @@ window.OverworldMaps = {
                     ]
                 }
             ],
-            [utils.asGridCoord(7,14)] : [ // Achou os pintinhos fingindo ser adultos
+            [utils.asGridCoord(7,14)] : [ // Achou q galinha douradas
                 {events: [{type: "foundEasterEgg", who: "galinhaDouradaEG"},]}
             ],
-            [utils.asGridCoord(21,32)] : [ // Achou os pintinhos fingindo ser adultos
+            [utils.asGridCoord(21,32)] : [ // Achou o álbum da galinha pintadinha
                 {events: [{type: "foundEasterEgg", who: "albumGalinha"},]}
+            ],
+            [utils.asGridCoord(11,16)] : [ // 
+                {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
             ],
         }
     },
