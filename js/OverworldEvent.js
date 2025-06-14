@@ -138,7 +138,10 @@ class OverworldEvent {
 
         document.querySelector(".game-container").appendChild(zoom);
 
-        resolve();
+        setTimeout(() => {
+            zoom.remove();// Caso acabe o fade-out, remove o elemento;
+            resolve();
+        }, 7600);
 
     }
 
