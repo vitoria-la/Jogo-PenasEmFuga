@@ -7,10 +7,16 @@ class Overworld {
         this.foundFrog2 = config.foundFrog2 || false;
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
-        this.playerHotbar = [
-            null, null, null, null, null, null // 6 slots, todos vazios (null)
-        ];
+        this.playerState = {
+            items: [ null, null, null, null, null, null ],
+            storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
+            completedQuests: new Set(), // Um conjunto de IDs de quests já completadas
+            currentQuestId: "Q1", // Começa com a primeira quest
+            questFlags: {}
+        };
         this.audioManager = new Audio();
+        this.level = 1;
+        this.coins = 100;
     }
 
     addItemToHotbar(itemToAdd) {
@@ -42,6 +48,45 @@ class Overworld {
             });
         } else {
             console.log("Hotbar cheia! Não foi possível adicionar o item.");
+        }
+    }
+
+    // Método principal para verificar o progresso da quest
+    checkForQuestCompletion() {
+        const questId = this.playerState.currentQuestId;
+        if (!questId) return; // Se não houver quest ativa, não faz nada.
+
+        // Encontra a quest atual na lista de quests
+        const quest = window.QuestList.find(q => q.id === questId);
+        if (!quest) return;
+
+        // Chama a função de verificação da quest
+        if (quest.checkCompletion(this.playerState)) {
+            console.log(`Quest ${quest.name} completada!`);
+            
+            // Marca como completa e avança para a próxima
+            this.playerState.completedQuests.add(questId);
+            const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
+            const nextQuest = window.QuestList[currentQuestIndex + 1];
+            this.playerState.currentQuestId = nextQuest ? nextQuest.id : null;
+
+            // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
+            this.level += 1; // Aumenta o nível do jogador
+            this.hud.updateLevel(this.level); // Atualiza a HUD com o novo nível
+
+            // Entrega a recompensa
+            if (quest.reward) {
+                if (quest.reward.type === "item") {
+                    this.addItemToHotbar(quest.reward.item);
+                }
+                if (quest.reward.type === "coins") {
+                    this.coins += quest.reward.amount;
+                    this.hud.updateCoins(this.coins);
+                }
+            }
+            
+            // Atualiza a HUD
+            this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
         }
     }
 
@@ -107,10 +152,15 @@ class Overworld {
 
     bindActionInput() {
         new KeypressListener("KeyE", () => {
-            // Verifica se o jogador está próximo a um NPC e inicia o diálogo
             const hero = this.map.gameObjects.hero;
-            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
-                hero.startDialog(this.map);
+            const npc = hero.currentInteractingNpc; // Pega o NPC com o qual estamos interagindo
+
+            if (npc && !this.map.isCutscenePlaying) {
+                // Verifica se o NPC tem uma cutscene de 'talking' definida
+                if (npc.talking && npc.talking.length > 0) {
+                    // Inicia a cutscene definida para a conversa com este NPC
+                    this.map.startCutscene(npc.talking[0].events);
+                }
             }
         });
     }
@@ -147,12 +197,13 @@ class Overworld {
     }
 
     init() {
-        this.audioManager.startSoundtrack();
-
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
-        // this.soundtrack = new Audio();
-        // this.soundtrack.startSoundtrack();
+        
+        this.audioManager.startSoundtrack();
+        this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
+        this.hud.updateLevel(this.level);
+        this.hud.updateCoins(this.coins);
 
         this.startMap(window.OverworldMaps.Galinheiro);
 
@@ -166,15 +217,10 @@ class Overworld {
         this.startGameLoop(); // inicia o loop principal do jogo
 
         // Inicializa o sistema de moedas e níveis
-        this.coins = 100;
-        this.hud.updateCoins(this.coins); // Atualiza a HUD com as moedas iniciais
+        // this.coins = 100;
+        // this.hud.updateCoins(this.coins); // Atualiza a HUD com as moedas iniciais
 
-        this.level = 0;
-        setInterval(() => {
-            this.level += 1; // Sobe de nível
-            this.hud.updateLevel(this.level); // Atualiza a HUD
-            console.log("Subiu de nível! Nível atual:", this.level);
-        }, 5000); // A cada 5 segundos
-        
+        // this.level = 1;
+        // this.hud.updateLevel(this.level);
     }
 }

@@ -1,27 +1,27 @@
 class Audio {
-    constructor(config) {
-        this.soundtrack = [ // Lista de músicas de fundo
+    constructor() {
+        this.soundtrack = [ // Sua lista de músicas
             {name: "sound1", src: "./assets/audio/songs/musicaFundo1.ogg"},
             {name: "sound2", src: "./assets/audio/songs/musicaFundo2.ogg"},
             {name: "sound3", src: "./assets/audio/songs/musicaFundo3.ogg"},
             {name: "sound4", src: "./assets/audio/songs/musicaFundo4.ogg"},
             {name: "sound5", src: "./assets/audio/songs/musicaFundo5.ogg"},
             {name: "sound6", src: "./assets/audio/songs/musicaFundo6.ogg"},
-        ]
-        this.soundtrackPlaying = false; // Controla se a trilha sonora padrão deve tocar
+        ];
+        this.soundtrackPlaying = false;
         this.currentSong = null;
         this.currentSongIndex = -1;
-        this.currentAreaSong = null; // Guarda o path da música da área atual
+        this.currentAreaSong = null;
 
         // Efeitos Sonoros
         this.walkingSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/andarPinguim.ogg",
             loop: true,
-            volume: 0.6,
+            volume: 0.28,
         });
         this.easterEggSoundEffect = new Howl({
             src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
-            volume: 0.4,
+            volume: 0.5,
         });
     }
 
@@ -37,6 +37,8 @@ class Audio {
         const songInfo = this.soundtrack[this.currentSongIndex];
         this.currentSong = new Howl({
             src: [songInfo.src],
+            loop: false,
+            volume: 0.3,
             onend: () => {
                 this.currentSong = null;
                 if (this.soundtrackPlaying) {
@@ -47,24 +49,28 @@ class Audio {
         this.currentSong.play();
     }
 
+    // Toca uma música específica para uma área
     playMusic(path, loop = true) {
         this.fadeOutCurrentSong(() => {
-            this.currentAreaSong = path; 
-            this.currentSong = new Howl({ 
-                src: [path], 
-                loop: loop, 
-                volume: 0 
-            });
+            this.currentAreaSong = path;
+            this.currentSong = new Howl({ src: [path], loop: loop, volume: 0 });
             this.currentSong.play();
-            this.currentSong.fade(0, 0.4, 500);
+            this.currentSong.fade(0, 0.4, 500); // Fade In
         });
     }
 
+    // Para a música da área e retoma a trilha sonora padrão
+    resumeSoundtrack() {
+        this.fadeOutCurrentSong(() => {
+             this.startSoundtrack();
+        });
+    }
+
+    // MÉTODO QUE ESTAVA FALTANDO E CAUSANDO O ERRO
     fadeOutCurrentSong(callback) {
         this.soundtrackPlaying = false;
         this.currentAreaSong = null;
         if (this.currentSong) {
-            this.currentSong.fade(this.currentSong.volume(), 0, 500);
             this.currentSong.once('fade', () => {
                 if (this.currentSong) {
                     this.currentSong.stop();
@@ -73,54 +79,20 @@ class Audio {
                 }
                 if (callback) callback();
             });
-        } else {
-            if (callback) callback();
-        }
-    }
-
-    // O método resumeSoundtrack é chamado pelo toggleMusic, então não precisamos dele separadamente
-    // Se quiser mantê-lo para outras lógicas:
-    resumeSoundtrack() {
-        this.fadeOutCurrentSong(() => {
-             this.startSoundtrack();
-        });
-    }
-
-    fadeOutCurrentSong(callback) {
-        this.soundtrackPlaying = false;
-        this.currentAreaSong = null;
-
-        if (this.currentSong) {
-            // O evento 'fade' garante que o callback só será chamado quando o fade terminar
-            this.currentSong.once('fade', () => { 
-                if (this.currentSong) {
-                    this.currentSong.stop();
-                    this.currentSong.unload(); // Libera a música da memória
-                    this.currentSong = null;
-                }
-                if (callback) callback(); // Chama a próxima ação (ex: tocar outra música)
-            });
-            // Inicia o fade out
             this.currentSong.fade(this.currentSong.volume(), 0, 500);
         } else {
-            // Se não havia música tocando, apenas executa o callback
             if (callback) callback();
         }
     }
 
     playEasterEggSound() {
         if (this.currentSong) {
-            // Abaixa o volume da música de fundo para destacar o efeito
             this.currentSong.fade(this.currentSong.volume(), 0.1, 400);
         }
-        
         this.easterEggSoundEffect.play();
-
-        // Quando o som do easter egg terminar, restaura o volume da música
         this.easterEggSoundEffect.once('end', () => {
             if (this.currentSong) {
-                // Retorna ao volume padrão (0.3)
-                this.currentSong.fade(0.1, 0.3, 1000); 
+                this.currentSong.fade(0.1, 0.3, 1000);
             }
         });
     }
@@ -133,18 +105,13 @@ class Audio {
         return newSongIndex;
     }
 
-    startWalkingSound() { // Começa o barulho de andar 
-        if (this.walkingSoundEffect.playing()) { // Se o som já está rodando, não começa a tocar de novo
-            return;
+    startWalkingSound() {
+        if (!this.walkingSoundEffect.playing()) {
+            this.walkingSoundEffect.play();
         }
-        this.walkingSoundEffect.play();
     }
 
-    stopWalkingSound() { // Para o barulho de andar
-        if (!this.walkingSoundEffect.playing()) { // Se o som já está parado, não precisa parar
-            return; 
-        }
+    stopWalkingSound() {
         this.walkingSoundEffect.stop();
     }
-
 }

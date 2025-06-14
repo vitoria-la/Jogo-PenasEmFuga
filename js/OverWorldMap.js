@@ -166,8 +166,16 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right", time: 800},
                     {type: "walk", direction: "right", time: 800},
                     {type: "stand", direction: "down", time: 300}
-                ]
-            },
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    },
+                ] 
+            },  
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
@@ -186,6 +194,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
             },
             Paova: {
