@@ -197,12 +197,18 @@ class Person extends GameObject {
             if (!map.dialogManager) {
                 map.dialogManager = new DialogManager();
             }
-            
-            // Inicia o diálogo usando o DialogManager
+           if(this.currentInteractingNpc.id === "galinhaPenosa"){
+                map.dialogManager.startDialog("galinhaPenosa", map, () => {
+                    openShop(); // Chama a função openShop() após o diálogo
+                });
+            }else {
+                // Inicia o diálogo usando o DialogManager
             map.dialogManager.startDialog(this.currentInteractingNpc.id, map);
-            
+            }
+        }
+   
             // Esconde o botão de interação durante o diálogo
             this.hideInteractionButton();
         }
     }
-}
+
