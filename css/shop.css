@@ -1,0 +1,35 @@
+#shop-menu {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fffbe7;
+    border: 4px solid #333;
+    padding: 32px;
+    z-index: 1000;
+    min-width: 320px;
+    box-shadow: 0 0 24px #0008;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#shop-menu ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+#shop-menu li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+}
+
+#shop-overlay{
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
