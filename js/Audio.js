@@ -1,7 +1,7 @@
 class Audio {
-    constructor() {
-        this.soundtrack = [ // Sua lista de músicas
-            {name: "sound1", src: "./assets/audio/songs/musicaFundo1.ogg"},
+    constructor(config) {
+        this.soundtrack = [ // Lista de músicas de fundo
+            //{name: "sound1", src: "./assets/audio/songs/musicaFundo1.ogg"},
             {name: "sound2", src: "./assets/audio/songs/musicaFundo2.ogg"},
             {name: "sound3", src: "./assets/audio/songs/musicaFundo3.ogg"},
             {name: "sound4", src: "./assets/audio/songs/musicaFundo4.ogg"},
@@ -87,12 +87,17 @@ class Audio {
 
     playEasterEggSound() {
         if (this.currentSong) {
-            this.currentSong.fade(this.currentSong.volume(), 0.1, 400);
+            // Abaixa o volume da música de fundo para destacar o efeito
+            this.currentSong.fade(this.currentSong.volume(), 0.3, 800);
         }
         this.easterEggSoundEffect.play();
+        this.easterEggSoundEffect.fade(0, 0,4, 900);
+
+        // Quando o som do easter egg terminar, restaura o volume da música
         this.easterEggSoundEffect.once('end', () => {
             if (this.currentSong) {
-                this.currentSong.fade(0.1, 0.3, 1000);
+                // Retorna ao volume padrão (0.3)
+                this.currentSong.fade(0.3, 1, 1000); 
             }
         });
     }

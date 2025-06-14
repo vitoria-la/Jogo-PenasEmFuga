@@ -1,0 +1,19 @@
+#zoom-screen {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 32px;
+    z-index: 100;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 1;
+}
+
+#zoom-screen img {
+    max-width: 1878px;
+    border-radius: 20px;
+}
+

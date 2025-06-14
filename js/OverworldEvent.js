@@ -171,6 +171,22 @@ class OverworldEvent {
     }
 
 
+    pinguimZoom(resolve) {
+        const zoom = document.createElement("div");
+        zoom.id = "zoom-screen";
+        const zoomGif = document.createElement("img");
+        zoomGif.src = this.event.who;
+        zoom.appendChild(zoomGif);
+
+        document.querySelector(".game-container").appendChild(zoom);
+
+        setTimeout(() => {
+            zoom.remove();// Caso acabe o fade-out, remove o elemento;
+            resolve();
+        }, 7600);
+
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação
