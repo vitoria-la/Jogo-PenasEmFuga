@@ -6,6 +6,43 @@ class Overworld {
         this.map = null;
         this.foundFrog2 = config.foundFrog2 || false;
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
+        this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
+        this.playerHotbar = [
+            null, null, null, null, null, null // 6 slots, todos vazios (null)
+        ];
+        this.audioManager = new Audio();
+    }
+
+    addItemToHotbar(itemToAdd) {
+        let added = false;
+        // 1. Tenta empilhar com um item existente
+        for (let i = 0; i < this.playerHotbar.length; i++) {
+            const slot = this.playerHotbar[i];
+            if (slot && slot.id === itemToAdd.id) {
+                slot.quantity += itemToAdd.quantity;
+                added = true;
+                break;
+            }
+        }
+        // 2. Se não empilhou, procura um slot vazio
+        if (!added) {
+            for (let i = 0; i < this.playerHotbar.length; i++) {
+                if (this.playerHotbar[i] === null) {
+                    this.playerHotbar[i] = itemToAdd;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        if (added) {
+            // 3. Sincroniza a HUD com o novo estado do inventário
+            this.playerHotbar.forEach((item, i) => {
+                this.hud.updateHotbarSlot(i, item);
+            });
+        } else {
+            console.log("Hotbar cheia! Não foi possível adicionar o item.");
+        }
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -82,6 +119,14 @@ class Overworld {
         document.addEventListener("EasterEggWasFound", e => {
             if (!this.easterEggsFound.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
                 this.easterEggsFound.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
+                this.hud.updateEasterEggs(this.easterEggsFound); // Atualiza a listagem de easter eggs na hud
+
+                this.audioManager.playEasterEggSound();
+            }
+        })
+        document.addEventListener("EasterEggWasFoundID", e => {
+            if (!this.easterEggsFoundID.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
+                this.easterEggsFoundID.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
             }
         })
     }
@@ -93,7 +138,8 @@ class Overworld {
             foundFrog1: this.foundFrog1,
             foundFrog2: this.foundFrog2,
             foundFrog3: this.foundFrog3,
-            easterEggsFound: this.easterEggsFound, // Passa a lista de easter-eggs encontrados
+            easterEggsFound: this.easterEggsFound, // Passa a lista do nome de easter-eggs encontrados
+            easterEggsFoundID: this.easterEggsFoundID, // Passa a lista do id dos de easter-eggs encontrados
         });
         this.map.overworld = this;
         
@@ -101,9 +147,12 @@ class Overworld {
     }
 
     init() {
+        this.audioManager.startSoundtrack();
 
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
+        // this.soundtrack = new Audio();
+        // this.soundtrack.startSoundtrack();
 
         this.startMap(window.OverworldMaps.Galinheiro);
 
@@ -133,6 +182,29 @@ class Overworld {
             this.hud.updateLevel(this.level); // Atualiza a HUD
             console.log("Subiu de nível! Nível atual:", this.level);
         }, 5000); // A cada 5 segundos
+
+        // --- EXEMPLO: Simulação de pegar itens com quantidade ---
+
+        // Simula pegar 1 trigo após 2 segundos
+        setTimeout(() => {
+            const trigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 1 };
+            console.log("Jogador pegou 1 trigo!");
+            this.addItemToHotbar(trigo);
+        }, 2000);
+
+        // Simula pegar mais 5 trigos após 4 segundos
+        setTimeout(() => {
+            const maisTrigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 5 };
+            console.log("Jogador pegou mais 5 trigos!");
+            this.addItemToHotbar(maisTrigo);
+        }, 4000);
+
+        // Simula pegar dois milhos após 6 segundos
+        setTimeout(() => {
+            const milho = { id: "milho", name: "Milho", src: "./assets/img/milho.png", quantity: 2 };
+            console.log("Jogador pegou um milho!");
+            this.addItemToHotbar(milho);
+        }, 6000);
         
     }
 }

@@ -21,6 +21,15 @@ class Person extends GameObject {
         // Propriedades para o sistema de diálogo
         this.talking = false;
         this.interactionButton = null;
+
+        this.isHorse = config.isHorse || false;
+
+        if (this.isHorse) {
+            this.direction = "right";
+        }
+
+
+        this.walkSoundEffect = new Audio(); // O efeito sonoro que o pinguim faz ao andar
     }
 
     update(state){
@@ -31,6 +40,7 @@ class Person extends GameObject {
             //Caso: 
             if(!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow){ // Se o personagem é controlado pelo jogador e há uma entrada de direção (state.arrow), ele inicia um comportamento de "caminhada"
                 // ele só consegue andar caso não tenha uma cutscene acontecendo
+                this.walkSoundEffect.startWalkingSound(); // Começa o som de andar
                 this.startBehavior(state, {
                     type: "walk",
                     direction: state.arrow
@@ -55,7 +65,7 @@ class Person extends GameObject {
         this.direction = behavior.direction;
         if(behavior.type === "walk"){
             if(state.map.isSpaceTaken(this.x, this.y, this.direction)){ // Verifica se o próximo espaço na direção do movimento está ocupado por uma "parede". Se sim, o movimento é abortado
-
+                this.walkSoundEffect.stopWalkingSound(); // Para o som de andar
                 behavior.retry && setTimeout(() => { // se for um NPC que foi interrompido, espera 10 milissegundos e tenta andar de novo
                     this.startBehavior(state, behavior); // tenta andar de novo
                 }, 10)
@@ -65,6 +75,7 @@ class Person extends GameObject {
             // Pronto para andar
             // state.map.moveWall(this.x,this.y,this.direction);
             this.movingProgressRemaining = 16;
+            //this.walkSoundEffect.startWalkingSound();
 
             //Adiciona a  intenção da próxima posição
             const intentPosition = utils.nextPosition(this.x, this.y, this.direction);
@@ -96,7 +107,8 @@ class Person extends GameObject {
             this.intentPosition = null; // Tira o que seria a próxima posição
             utils.emitEvent("PersonWalkingComplete", { // emite um sinal que foi terminado a animação de andar
                 whoId: this.id  // manda quem terminou de andar
-            })
+            });
+            this.walkSoundEffect.stopWalkingSound(); // Para o som de andar
             // a estrutura do método emitEvent está na classe utils
         }
     }

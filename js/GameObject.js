@@ -10,6 +10,7 @@ class GameObject {
             src: config.src || "./assets/img/pinguim-spriteSheet.png", // Define o caminho da imagem. Se não tiver é usada a do caminho fornecido (no caso o personagem principal)
             isFrog: config.isFrog || false, // Para saber se é um sapo ou não. Caso não seja definido, ele assume que é falso
             isEasterEgg: config.isEasterEgg || false,
+            isHorse: config.isHorse || false,
         }); 
         this.behaviorLoop = config.behaviorLoop || [];  // é um array que vai ser usado para definir os comportamentos normais dos NPCs
         this.behaviorLoopIndex = 0; // serve para saber qual comportamento está acontecendo
@@ -86,38 +87,38 @@ class GameObject {
     }
     
     // Método para retomar o behaviorLoop após uma cutscene
-    resumeBehaviorLoop(map) {
-        // Só retoma se não estiver ativo e tiver comportamentos definidos
-        if (!this.behaviorLoopActive && this.behaviorLoop.length > 0 && this.isMounted) {
-            // Limpa qualquer timeout existente
-            if (this.retryTimeout) {
-                clearTimeout(this.retryTimeout);
-                this.retryTimeout = null;
-            }
+    // resumeBehaviorLoop(map) {
+    //     // Só retoma se não estiver ativo e tiver comportamentos definidos
+    //     if (!this.behaviorLoopActive && this.behaviorLoop.length > 0 && this.isMounted) {
+    //         // Limpa qualquer timeout existente
+    //         if (this.retryTimeout) {
+    //             clearTimeout(this.retryTimeout);
+    //             this.retryTimeout = null;
+    //         }
             
-            // Força a flag para true para garantir que o loop seja reiniciado
-            this.behaviorLoopActive = true;
+    //         // Força a flag para true para garantir que o loop seja reiniciado
+    //         this.behaviorLoopActive = true;
             
-            // Inicia o behaviorLoop imediatamente
-            this.doBehaviorEvent(map);
-        }
-    }
+    //         // Inicia o behaviorLoop imediatamente
+    //         this.doBehaviorEvent(map);
+    //     }
+    // }
     
     // Método para forçar a retomada do behaviorLoop
-    forceBehaviorLoop(map) {
-        // Força a retomada do behaviorLoop independentemente do estado atual
-        if (this.behaviorLoop.length > 0 && this.isMounted) {
-            // Limpa qualquer timeout existente
-            if (this.retryTimeout) {
-                clearTimeout(this.retryTimeout);
-                this.retryTimeout = null;
-            }
+    // forceBehaviorLoop(map) {
+    //     // Força a retomada do behaviorLoop independentemente do estado atual
+    //     if (this.behaviorLoop.length > 0 && this.isMounted) {
+    //         // Limpa qualquer timeout existente
+    //         if (this.retryTimeout) {
+    //             clearTimeout(this.retryTimeout);
+    //             this.retryTimeout = null;
+    //         }
             
-            // Força a flag para true para garantir que o loop seja reiniciado
-            this.behaviorLoopActive = true;
+    //         // Força a flag para true para garantir que o loop seja reiniciado
+    //         this.behaviorLoopActive = true;
             
-            // Inicia o behaviorLoop imediatamente
-            this.doBehaviorEvent(map);
-        }
-    }
+    //         // Inicia o behaviorLoop imediatamente
+    //         this.doBehaviorEvent(map);
+    //     }
+    // }
 }

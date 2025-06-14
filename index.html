@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penas em Fuga!</title>
-    <link rel="icon" href="assets\img\favicon.png" type="image/x-icon">
+
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/titlescreen.css">
     <link rel="stylesheet" href="css/Hud.css">
@@ -12,38 +14,52 @@
     <link rel="stylesheet" href="css/dialog.css">
     <link rel="stylesheet" href="css/EasterEgg.css">
     <link rel="stylesheet" href="css/shop.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <div class="game-container">
+        <audio src="./assets/audio/songs/musicaFundo1.ogg" id="homeSong" autoplay="autoplay"></audio>
         <div id="titlescreen">
             <span class="title">PENAS EM FUGA!</span>
             <img src="assets/img/Telainicial.png" id="Telainicial">
             <div class="wrapper">
-                <button id="start-button">Jogar</button>
-                <button id="credits-button">Créditos</button>
-                <button id="settings-button">Configurações</button>
+                <button id="start-button" class="titlescreen-button" onclick="document.getElementById('homeSong').pause()">Jogar</button>
+                <button id="credits-button" class="titlescreen-button">Créditos</button>
+                <button id="settings-button" class="titlescreen-button">Configurações</button>
             </div>
         </div>
         <canvas class="game-canvas"></canvas>
         <button onclick="openShop()">loja</button>
     </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
     <script src="js/utils.js"></script>
     <script src="js/DirectionInput.js"></script>
     <script src="js/Overworld.js"></script>
     <script src="js/GameObject.js"></script>
     <script src="js/Quests.js"></script>
     <script src="js/Shop.js"></script>
+    <script src="js/KeypressListener.js"></script>
+    <script src="js/Sprite.js"></script> <script src="js/GameObject.js"></script>
+
     <script src="js/Person.js"></script>
-    <script src="js/Sprite.js"></script>
+    <script src="js/EasterEgg.js"></script>
+    
+    <script src="js/Audio.js"></script> <script src="js/Overworld.js"></script>
     <script src="js/OverWorldMap.js"></script>
     <script src="js/OverWorldEvent.js"></script>
-    <script src="js/Init.js"></script>
-    <script src="js/SceneTransition.js"></script>
+
     <script src="js/Hud.js"></script>
-    <script src="js/KeypressListener.js"></script>
+    <script src="js/SceneTransition.js"></script>
     <script src="js/DialogManager.js"></script>
     <script src="js/TextMessage.js"></script>
-    <script src="js/EasterEgg.js"></script>
+
+    <script src="js/Init.js"></script>
+    
 </body>
 </html>
