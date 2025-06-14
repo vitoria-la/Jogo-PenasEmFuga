@@ -2,25 +2,21 @@ class Person extends GameObject {
     constructor(config){
         super(config);
         this.movingProgressRemaining = 0; // controla o progresso de um movimento em pixels
-
         this.direction = "down"; // Define a direção inicial do personagem
-
         this.isStanding = false; // Para saber se um NPC está no meio de uma animação de ficar parado
-
         this.intentPosition = null; // Ou é nulo ou é uma coordenada [x,y] e trata-se da intenção que um NPC tem de se mover
-
         this.isPlayerControlled = config.isPlayerControlled || false; // indica se este personagem é controlado pelo jogador
 
         this.directionUpdate = {
             "up"   : ["y", -1],
             "down" : ["y",  1],
             "left" : ["x", -1],
-            "right": ["x",  1],
+            "right": ["x",  1], 
         }
         
         // Propriedades para o sistema de diálogo
-        this.talking = false;
-        this.interactionButton = null;
+        this.talking = config.talking || [];
+        //this.interactionButton = null;
 
         this.isHorse = config.isHorse || false;
 
@@ -33,27 +29,26 @@ class Person extends GameObject {
     }
 
     update(state){
-        if(this.movingProgressRemaining > 0){ // Se o personagem ainda estiver em progresso de um movimento, chama updatePosition() para continuar o movimento
-            this.updatePosition();
-        } else {
+    if(this.movingProgressRemaining > 0){
+        this.updatePosition();
+    } else {
 
-            //Caso: 
-            if(!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow){ // Se o personagem é controlado pelo jogador e há uma entrada de direção (state.arrow), ele inicia um comportamento de "caminhada"
-                // ele só consegue andar caso não tenha uma cutscene acontecendo
-                this.walkSoundEffect.startWalkingSound(); // Começa o som de andar
-                this.startBehavior(state, {
-                    type: "walk",
-                    direction: state.arrow
-                }) 
-            }
-            this.updateSprite(state); // Atualiza a animação do sprite com base no estado atual (parado ou andando)
-            
-            // Verifica proximidade com NPCs para mostrar botão de interação
-            if (this.isPlayerControlled) {
-                this.checkForNpcInteraction(state);
-            }
+        //Caso o jogador esteja se movendo
+        if(!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow){
+            this.walkSoundEffect.startWalkingSound();
+            this.startBehavior(state, {
+                type: "walk",
+                direction: state.arrow
+            }) 
+        }
+        this.updateSprite(state);
+        
+        // ADICIONE ESTE BLOCO DE VOLTA PARA REATIVAR A INTERAÇÃO
+        if (this.isPlayerControlled) {
+            this.checkForNpcInteraction(state);
         }
     }
+}
 
     startBehavior(state, behavior){
 
@@ -148,11 +143,10 @@ class Person extends GameObject {
         // Se encontrou um NPC próximo, mostra o botão de interação
         if (nearbyNpc && !state.map.isCutscenePlaying) {
             this.showInteractionButton(nearbyNpc, state.map);
-            nearbyNpc.talking = true;
+            // A linha 'nearbyNpc.talking = true;' foi removida.
         } else {
             // Se não encontrou ou está em cutscene, esconde o botão
             this.hideInteractionButton();
-            npcs.forEach(npc => npc.talking = false);
         }
     }
     
@@ -190,19 +184,5 @@ class Person extends GameObject {
         this.currentInteractingNpc = null;
     }
     
-    // Inicia um diálogo com o NPC atual
-    startDialog(map) {
-        if (this.currentInteractingNpc && !map.isCutscenePlaying) {
-            // Verifica se o DialogManager existe
-            if (!map.dialogManager) {
-                map.dialogManager = new DialogManager();
-            }
-            
-            // Inicia o diálogo usando o DialogManager
-            map.dialogManager.startDialog(this.currentInteractingNpc.id, map);
-            
-            // Esconde o botão de interação durante o diálogo
-            this.hideInteractionButton();
-        }
-    }
+    
 }

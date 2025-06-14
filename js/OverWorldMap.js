@@ -166,8 +166,16 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right", time: 800},
                     {type: "walk", direction: "right", time: 800},
                     {type: "stand", direction: "down", time: 300}
-                ]
-            },
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    },
+                ] 
+            },  
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
@@ -186,6 +194,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
             },
             Paova: {
@@ -380,6 +396,14 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaOvosDourados.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA__OVOS_DOURADOS", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
             },
             frog1: {  // Sapo da sala de costura
@@ -1031,11 +1055,14 @@ window.OverworldMaps = {
                     ]
                 }
             ],
-            [utils.asGridCoord(7,14)] : [ // Achou os pintinhos fingindo ser adultos
+            [utils.asGridCoord(7,14)] : [ // Achou q galinha douradas
                 {events: [{type: "foundEasterEgg", who: "galinhaDouradaEG"},]}
             ],
-            [utils.asGridCoord(21,32)] : [ // Achou os pintinhos fingindo ser adultos
+            [utils.asGridCoord(21,32)] : [ // Achou o álbum da galinha pintadinha
                 {events: [{type: "foundEasterEgg", who: "albumGalinha"},]}
+            ],
+            [utils.asGridCoord(11,16)] : [ // 
+                {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
             ],
         }
     },

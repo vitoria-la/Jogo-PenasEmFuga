@@ -216,4 +216,28 @@ class Hud {
       slotElement.appendChild(quantityText);
     }
   }
+
+  // Método para atualizar a lista de tarefas
+  updateTasks(activeQuestId, playerState) {
+    const listElement = this.taskListPanelElement.querySelector("ul");
+    listElement.innerHTML = ""; // Limpa a lista
+
+    if (!activeQuestId) {
+      listElement.innerHTML = `<li>Nenhuma tarefa no momento.</li>`;
+      return;
+    }
+
+    const quest = window.QuestList.find(q => q.id === activeQuestId);
+    if (quest) {
+      const li = document.createElement("li");
+        
+      // Pega o progresso atual do estado do jogador
+      const currentProgress = playerState.questFlags[quest.progressKey] || 0;
+        
+      // Monta o texto com o progresso
+      li.textContent = `${quest.description} (${currentProgress}/${quest.progressTarget})`;
+        
+      listElement.appendChild(li);
+    }
+  }
 }

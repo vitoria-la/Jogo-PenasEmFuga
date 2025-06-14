@@ -7,17 +7,23 @@ class Overworld {
         this.foundFrog2 = config.foundFrog2 || false;
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
-        this.playerHotbar = [
-            null, null, null, null, null, null // 6 slots, todos vazios (null)
-        ];
+        this.playerState = {
+            items: [ null, null, null, null, null, null ],
+            storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
+            completedQuests: new Set(), // Um conjunto de IDs de quests já completadas
+            currentQuestId: "Q1", // Começa com a primeira quest
+            questFlags: {}
+        };
         this.audioManager = new Audio();
+        this.level = 1;
+        this.coins = 100;
     }
 
     addItemToHotbar(itemToAdd) {
         let added = false;
         // 1. Tenta empilhar com um item existente
-        for (let i = 0; i < this.playerHotbar.length; i++) {
-            const slot = this.playerHotbar[i];
+        for (let i = 0; i < this.playerState.items.length; i++) { // Alterado de playerHotbar para playerState.items
+            const slot = this.playerState.items[i];
             if (slot && slot.id === itemToAdd.id) {
                 slot.quantity += itemToAdd.quantity;
                 added = true;
@@ -26,9 +32,9 @@ class Overworld {
         }
         // 2. Se não empilhou, procura um slot vazio
         if (!added) {
-            for (let i = 0; i < this.playerHotbar.length; i++) {
-                if (this.playerHotbar[i] === null) {
-                    this.playerHotbar[i] = itemToAdd;
+            for (let i = 0; i < this.playerState.items.length; i++) { // Alterado de playerHotbar para playerState.items
+                if (this.playerState.items[i] === null) {
+                    this.playerState.items[i] = itemToAdd;
                     added = true;
                     break;
                 }
@@ -37,11 +43,50 @@ class Overworld {
 
         if (added) {
             // 3. Sincroniza a HUD com o novo estado do inventário
-            this.playerHotbar.forEach((item, i) => {
+            this.playerState.items.forEach((item, i) => { // Alterado de playerHotbar para playerState.items
                 this.hud.updateHotbarSlot(i, item);
             });
         } else {
             console.log("Hotbar cheia! Não foi possível adicionar o item.");
+        }
+    }
+
+    // Método principal para verificar o progresso da quest
+    checkForQuestCompletion() {
+        const questId = this.playerState.currentQuestId;
+        if (!questId) return; // Se não houver quest ativa, não faz nada.
+
+        // Encontra a quest atual na lista de quests
+        const quest = window.QuestList.find(q => q.id === questId);
+        if (!quest) return;
+
+        // Chama a função de verificação da quest
+        if (quest.checkCompletion(this.playerState)) {
+            console.log(`Quest ${quest.name} completada!`);
+            
+            // Marca como completa e avança para a próxima
+            this.playerState.completedQuests.add(questId);
+            const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
+            const nextQuest = window.QuestList[currentQuestIndex + 1];
+            this.playerState.currentQuestId = nextQuest ? nextQuest.id : null;
+
+            // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
+            this.level += 1; // Aumenta o nível do jogador
+            this.hud.updateLevel(this.level); // Atualiza a HUD com o novo nível
+
+            // Entrega a recompensa
+            if (quest.reward) {
+                if (quest.reward.type === "item") {
+                    this.addItemToHotbar(quest.reward.item);
+                }
+                if (quest.reward.type === "coins") {
+                    this.coins += quest.reward.amount;
+                    this.hud.updateCoins(this.coins);
+                }
+            }
+            
+            // Atualiza a HUD
+            this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
         }
     }
 
@@ -107,10 +152,30 @@ class Overworld {
 
     bindActionInput() {
         new KeypressListener("KeyE", () => {
-            // Verifica se o jogador está próximo a um NPC e inicia o diálogo
             const hero = this.map.gameObjects.hero;
-            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
-                hero.startDialog(this.map);
+            const npc = hero.currentInteractingNpc;
+
+            if (npc && !this.map.isCutscenePlaying) {
+                // Se o NPC tem eventos de quest, inicia a cutscene
+                if (npc.talking && npc.talking.length > 0) {
+                    this.map.startCutscene(npc.talking[0].events);
+                } else {
+                    // Senão, usa o DialogManager para diálogos simples
+                    if (!this.map.dialogManager) {
+                        this.map.dialogManager = new DialogManager();
+                    }
+
+                    // Condição especial para a galinha da loja
+                    if (npc.id === "galinhaPenosa") {
+                        this.map.dialogManager.startDialog(npc.id, this.map, () => {
+                            // Esta função será chamada QUANDO o diálogo terminar
+                            openShop(); 
+                        });
+                    } else {
+                        // Para todos os outros NPCs simples
+                        this.map.dialogManager.startDialog(npc.id, this.map);
+                    }
+                }
             }
         });
     }
@@ -147,12 +212,13 @@ class Overworld {
     }
 
     init() {
-        this.audioManager.startSoundtrack();
-
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
-        // this.soundtrack = new Audio();
-        // this.soundtrack.startSoundtrack();
+        
+        this.audioManager.startSoundtrack();
+        this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
+        this.hud.updateLevel(this.level);
+        this.hud.updateCoins(this.coins);
 
         this.startMap(window.OverworldMaps.Galinheiro);
 
@@ -165,44 +231,11 @@ class Overworld {
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
-        // --- EXEMPLO: Simulação de ganho de moedas a cada 1 segundo ---
-        // (Remova isso depois e chame 'this.hud.updateCoins' quando o jogador realmente ganhar moedas)
-        this.coins = 0;
-        setInterval(() => {
-            this.coins += 1; // Adiciona 1 moeda
-            this.hud.updateCoins(this.coins); // Atualiza a HUD
-            console.log("Moedas atualizadas:", this.coins);
-        }, 1000); // A cada 1 segundos
+        // Inicializa o sistema de moedas e níveis
+        // this.coins = 100;
+        // this.hud.updateCoins(this.coins); // Atualiza a HUD com as moedas iniciais
 
-        this.level = 0;
-        setInterval(() => {
-            this.level += 1; // Sobe de nível
-            this.hud.updateLevel(this.level); // Atualiza a HUD
-            console.log("Subiu de nível! Nível atual:", this.level);
-        }, 5000); // A cada 5 segundos
-
-        // --- EXEMPLO: Simulação de pegar itens com quantidade ---
-
-        // Simula pegar 1 trigo após 2 segundos
-        setTimeout(() => {
-            const trigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 1 };
-            console.log("Jogador pegou 1 trigo!");
-            this.addItemToHotbar(trigo);
-        }, 2000);
-
-        // Simula pegar mais 5 trigos após 4 segundos
-        setTimeout(() => {
-            const maisTrigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 5 };
-            console.log("Jogador pegou mais 5 trigos!");
-            this.addItemToHotbar(maisTrigo);
-        }, 4000);
-
-        // Simula pegar dois milhos após 6 segundos
-        setTimeout(() => {
-            const milho = { id: "milho", name: "Milho", src: "./assets/img/milho.png", quantity: 2 };
-            console.log("Jogador pegou um milho!");
-            this.addItemToHotbar(milho);
-        }, 6000);
-        
+        // this.level = 1;
+        // this.hud.updateLevel(this.level);
     }
 }
