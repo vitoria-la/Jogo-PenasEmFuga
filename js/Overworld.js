@@ -153,14 +153,11 @@ class Overworld {
     bindActionInput() {
         new KeypressListener("KeyE", () => {
             const hero = this.map.gameObjects.hero;
-            const npc = hero.currentInteractingNpc; // Pega o NPC com o qual estamos interagindo
-
-            if (npc && !this.map.isCutscenePlaying) {
-                // Verifica se o NPC tem uma cutscene de 'talking' definida
-                if (npc.talking && npc.talking.length > 0) {
-                    // Inicia a cutscene definida para a conversa com este NPC
-                    this.map.startCutscene(npc.talking[0].events);
-                }
+            
+            // Verifica se há um NPC com quem interagir e se não há uma cutscene em andamento.
+            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
+                // Chama diretamente o método startDialog do herói (Person.js).
+                hero.startDialog(this.map);
             }
         });
     }
