@@ -165,14 +165,9 @@ class Overworld {
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
-        // --- EXEMPLO: Simulação de ganho de moedas a cada 1 segundo ---
-        // (Remova isso depois e chame 'this.hud.updateCoins' quando o jogador realmente ganhar moedas)
-        this.coins = 0;
-        setInterval(() => {
-            this.coins += 1; // Adiciona 1 moeda
-            this.hud.updateCoins(this.coins); // Atualiza a HUD
-            console.log("Moedas atualizadas:", this.coins);
-        }, 1000); // A cada 1 segundos
+        // Inicializa o sistema de moedas e níveis
+        this.coins = 100;
+        this.hud.updateCoins(this.coins); // Atualiza a HUD com as moedas iniciais
 
         this.level = 0;
         setInterval(() => {
@@ -180,29 +175,6 @@ class Overworld {
             this.hud.updateLevel(this.level); // Atualiza a HUD
             console.log("Subiu de nível! Nível atual:", this.level);
         }, 5000); // A cada 5 segundos
-
-        // --- EXEMPLO: Simulação de pegar itens com quantidade ---
-
-        // Simula pegar 1 trigo após 2 segundos
-        setTimeout(() => {
-            const trigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 1 };
-            console.log("Jogador pegou 1 trigo!");
-            this.addItemToHotbar(trigo);
-        }, 2000);
-
-        // Simula pegar mais 5 trigos após 4 segundos
-        setTimeout(() => {
-            const maisTrigo = { id: "trigo", name: "Trigo", src: "./assets/img/trigo.png", quantity: 5 };
-            console.log("Jogador pegou mais 5 trigos!");
-            this.addItemToHotbar(maisTrigo);
-        }, 4000);
-
-        // Simula pegar dois milhos após 6 segundos
-        setTimeout(() => {
-            const milho = { id: "milho", name: "Milho", src: "./assets/img/milho.png", quantity: 2 };
-            console.log("Jogador pegou um milho!");
-            this.addItemToHotbar(milho);
-        }, 6000);
         
     }
 }
