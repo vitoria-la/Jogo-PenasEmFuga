@@ -37,6 +37,18 @@ class Sprite { //animações
         this.animationFrameProgress = this.animationFrameLimit; // contador
 
         this.isFrog = config.isFrog || false;
+        this.isEasterEgg = config.isEasterEgg || false; // Para saber se é um easter egg
+        this.isHorse = config.isHorse || false;
+
+        if (this.isHorse) {
+            this.animations = {
+                "idle-right" : [ [1,0] ],
+                "idle-left"  : [ [1,1] ],
+                "walk-right" : [ [0,0],[1,0],[2,0],[3,0],[4,0],[5,0], ],
+                "walk-left"  : [ [0,1],[1,1],[2,1],[3,1],[4,1],[5,1], ],
+            }
+            this.currentAnimation = "idle-right";
+        }
 
         //Referencia aos objetos do jogo
         this.gameObject = config.gameObject;
@@ -78,12 +90,15 @@ class Sprite { //animações
         if (this.isFrog) { // Se for o sapo, ele, por ser 16x16, é calculado diferente
             x = this.gameObject.x - (-16) + utils.withGrid(8) - cameraPerson.x;
             y = this.gameObject.y - 16 + utils.withGrid(5) - cameraPerson.y;
+        } else if (this.isHorse) { // Se for o cavalo, ele, por ser 84x84, é calculado diferente
+            x = this.gameObject.x - (41) + utils.withGrid(8) - cameraPerson.x;
+            y = this.gameObject.y - 83 + utils.withGrid(5) - cameraPerson.y;
         } else {
             x = this.gameObject.x - (-9) + utils.withGrid(8) - cameraPerson.x;
             y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
         }
 
-        if (!this.isFrog) { // Se não for um sapo, pode colocar a sombra
+        if (!this.isFrog && !this.isHorse) { // Se não for um sapo, pode colocar a sombra
             this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas
         }
 
@@ -96,6 +111,15 @@ class Sprite { //animações
                 x,y,
                 16,16
                 // especificam onde e com que tamanho o frame cortado será desenhado no canvas.
+            )
+        } else if (this.isEasterEgg) { // Se for um easter egg, ele não é animado
+            this.isLoaded && ctx.drawImage(this.image, x, y, 32, 32);
+        } else if (this.isHorse) {
+            this.isLoaded && ctx.drawImage(this.image,
+                frameX * 84, frameY * 84,
+                84,84,
+                x,y,
+                84,84
             )
         } else {
             this.isLoaded && ctx.drawImage(this.image,

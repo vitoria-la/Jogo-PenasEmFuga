@@ -15,6 +15,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.foundFrog1 = state.foundFrog1 || false; // Para saber se foi encontrado os sapos. Caso não tenha valor, é falso
         this.foundFrog2 = state.foundFrog2 || false;
         this.foundFrog3 = state.foundFrog3 || false;
+        this.easterEggsFound = state.easterEggsFound || [];
+        this.easterEggsFoundID = state.easterEggsFoundID || [];
         this.name = config.name; // Serve para saber em qual mapa se está
     }
 
@@ -62,6 +64,11 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             let instance; // Cria uma instância de acordo com o tipo de objeto
             if (object.type === "Person") {
                 instance = new Person(object);
+            } else if (object.type === "EasterEgg") {
+                instance = new EasterEgg(object);
+                
+            } else if (object.type === "Gif"){
+                instance = new Gif(object);
             }
 
             this.gameObjects[key] = instance;
@@ -81,6 +88,14 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 // Montar ele lá no pet-shop
                 this.gameObjects[key].x = utils.withGrid(25);
                 this.gameObjects[key].y = utils.withGrid(5);
+            }
+
+            if (key === "galinhaDourada") { // Se o objeto é a galinha dos ovos dourados
+                const num = Math.floor(Math.random() * 5) + 1; // Sorteia um número
+                console.log(num);
+                if (num%2 === 0) { // Se ele for par, coloca ela para fora do mapa
+                    this.gameObjects[key].x = utils.withGrid(33);
+                }
             }
             
             instance.mount(this);
@@ -112,11 +127,13 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
     checkForFootstepCutscene() { // Método que percebe se o pinguim entrou na coordenada que inicia alguma cutscene
         const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
         const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
-        //console.log("testando");
 
         if (this.isCutscenePlaying === false && match) { // Se não tiver rodando nenhuma cutscene e o player estiver no lugar que inicia uma
-            this.startCutscene(match[0].events);
-            //console.log("testando o checkForFootstepCutscene ");
+
+            // A cutscene começa se: Não for do tipo "foundEasterEgg" OU se ela for do tipo "foundEasterEgg" e o easterEgg encontrado já não tinha sido encontrado
+            if ((match[0].events[0].type === "foundEasterEgg" && !this.easterEggsFoundID.includes(match[0].events[0].who)) || match[0].events[0].type != "foundEasterEgg") {
+                this.startCutscene(match[0].events);
+            }
         }
 
     }
@@ -127,13 +144,13 @@ window.OverworldMaps = {
     Galinheiro: { // mapa
         name: "Galinheiro",
         lowerSrc: "./assets/img/galinheiroMapa.png", // layer de base do mapa (chão do mapa)
-        upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
+        upperSrc: "./assets/img/galinheiroMapaUpper.png", // layer superior do mapa (se precisa de algo acima do player)
         configObjects: { // define os personagens/objetos que o mapa vai ter
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(16),
-                y: utils.withGrid(14),
+                x: utils.withGrid(14),
+                y: utils.withGrid(16),
             },
             galinhaBranca: {
                 type: "Person",
@@ -356,6 +373,15 @@ window.OverworldMaps = {
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
             },
+            galinhaDosOvosDourados: { // Trata-se do NPC dessa galinha
+                type: "Person",
+                x: utils.withGrid(0),
+                y: utils.withGrid(14),
+                src: "./assets/img/galinhaOvosDourados.png",
+                behaviorLoop: [ 
+                    //{type: "stand", direction: "bottom", time: 5200}, 
+                ]
+            },
             frog1: {  // Sapo da sala de costura
                 type: "Person",
                 x: utils.withGrid(-15),
@@ -385,6 +411,46 @@ window.OverworldMaps = {
                 behaviorLoop: [ 
                     {type: "stand", direction: "left", time: 3000}
                 ]
+            },
+            pintinhos: {
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Pintinhos",
+                description: "Ou será uma galinha adulta!?",
+                mapName: "Galinheiro",
+                x: utils.withGrid(-4),
+                y: utils.withGrid(12),
+                src: "./assets/img/easterEggs/sprites/pintinhosEasterEgg.png",
+            },
+            bolaPixar: {
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Bola",
+                description: "Estranhamente familiar",
+                mapName: "Galinheiro",
+                x: utils.withGrid(11),
+                y: utils.withGrid(13),
+                src: "./assets/img/easterEggs/sprites/bolaPixar.png",
+            },
+            galinhaDouradaEG: { // É um objeto de easter egg da galinha dourada, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Galinha Dos Ovos Dourados",
+                description: "Nem tudo que reluz é ouro. Mas nesse caso é sim",
+                mapName: "Galinheiro",
+                x: utils.withGrid(33),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png",
+            },
+            albumGalinha: { // É um objeto de easter egg do álbum, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Álbum da Galinha Pintadinha",
+                description: "O item mais cobiçado do galinheiro",
+                mapName: "Galinheiro",
+                x: utils.withGrid(33),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
             },
 
         },
@@ -882,9 +948,21 @@ window.OverworldMaps = {
 
             [utils.asGridCoord(15,4)] : true,
             [utils.asGridCoord(16,4)] : true,
+            [utils.asGridCoord(17,4)] : true,
+            [utils.asGridCoord(20,4)] : true,
+            [utils.asGridCoord(21,4)] : true,
+            [utils.asGridCoord(22,4)] : true,
             [utils.asGridCoord(24,4)] : true,
             [utils.asGridCoord(25,4)] : true,
             [utils.asGridCoord(26,4)] : true,
+
+            [utils.asGridCoord(17,5)] : true,
+            [utils.asGridCoord(16,5)] : true,
+            [utils.asGridCoord(15,5)] : true,
+
+            [utils.asGridCoord(15,8)] : true,
+            [utils.asGridCoord(26,8)] : true,
+            [utils.asGridCoord(26,6)] : true,
 
             //------------------------------------------//
 
@@ -894,7 +972,7 @@ window.OverworldMaps = {
             [utils.asGridCoord(9,30)] : true,
             [utils.asGridCoord(10,30)] : true,
 
-            [utils.asGridCoord(13,29)] : true,
+            //[utils.asGridCoord(13,29)] : true, Tirando a coordenada do sofá da direita para a Bernadette poder ficar em cima
             [utils.asGridCoord(13,30)] : true,
             [utils.asGridCoord(13,31)] : true,
             [utils.asGridCoord(14,29)] : true,
@@ -930,6 +1008,35 @@ window.OverworldMaps = {
             [utils.asGridCoord(12,31)] : [ // Espaço acima do sapo da sala
                 {events: [{type: "foundFrog", who: "frog3", x: 12, y: 31},]}
             ],
+            [utils.asGridCoord(-4,13)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "pintinhos"},]}
+            ],
+            [utils.asGridCoord(11,14)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "bolaPixar"},]}
+            ],
+            [utils.asGridCoord(20, 29)]: [
+                {
+                    events: [
+                        // Para a música padrão e toca a nova música da área
+                        { type: "toggleMusic", song: "./assets/audio/songs/discoteca_songtrack.ogg" }
+                    ]
+                }
+             ],
+            // Ao pisar na casa (10, 16) - a "saída" da área - a música padrão retorna
+            [utils.asGridCoord(20, 30)]: [
+                {
+                    events: [
+                        // Para a música da área e retoma a trilha sonora
+                        { type: "toggleMusic", song: "./assets/audio/songs/discoteca_songtrack.ogg" }
+                    ]
+                }
+            ],
+            [utils.asGridCoord(7,14)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "galinhaDouradaEG"},]}
+            ],
+            [utils.asGridCoord(21,32)] : [ // Achou os pintinhos fingindo ser adultos
+                {events: [{type: "foundEasterEgg", who: "albumGalinha"},]}
+            ],
         }
     },
     // Mapa da parte da fazenda
@@ -963,7 +1070,28 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                 ]
-            }
+            },
+            cavalo: {
+                type: "Person",
+                isHorse: true,
+                x: utils.withGrid(-1),
+                y: utils.withGrid(20),
+                src: "./assets/img/cavaloSpriteSheet.png",
+                animations: {
+                    "idle-right" : [ [1,0] ],
+                    "idle-left"  : [ [1,1] ],
+                    "walk-right" : [ [0,0],[1,0],[2,0],[3,0],[4,0],[5,0], ],
+                    "walk-left"  : [ [0,1],[1,1],[2,1],[3,1],[4,1],[5,1], ],
+                },
+                behaviorLoop: [ 
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                ]
+            },
         },
         walls: {
             //define as coordenadas das colisoes do mapa

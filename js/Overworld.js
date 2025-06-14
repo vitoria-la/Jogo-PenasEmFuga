@@ -5,6 +5,44 @@ class Overworld {
         this.ctx = this.canvas.getContext("2d");
         this.map = null;
         this.foundFrog2 = config.foundFrog2 || false;
+        this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
+        this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
+        this.playerHotbar = [
+            null, null, null, null, null, null // 6 slots, todos vazios (null)
+        ];
+        this.audioManager = new Audio();
+    }
+
+    addItemToHotbar(itemToAdd) {
+        let added = false;
+        // 1. Tenta empilhar com um item existente
+        for (let i = 0; i < this.playerHotbar.length; i++) {
+            const slot = this.playerHotbar[i];
+            if (slot && slot.id === itemToAdd.id) {
+                slot.quantity += itemToAdd.quantity;
+                added = true;
+                break;
+            }
+        }
+        // 2. Se não empilhou, procura um slot vazio
+        if (!added) {
+            for (let i = 0; i < this.playerHotbar.length; i++) {
+                if (this.playerHotbar[i] === null) {
+                    this.playerHotbar[i] = itemToAdd;
+                    added = true;
+                    break;
+                }
+            }
+        }
+
+        if (added) {
+            // 3. Sincroniza a HUD com o novo estado do inventário
+            this.playerHotbar.forEach((item, i) => {
+                this.hud.updateHotbarSlot(i, item);
+            });
+        } else {
+            console.log("Hotbar cheia! Não foi possível adicionar o item.");
+        }
     }
 
     startGameLoop() { // loop principal do jogo, responsável por atualizar e redesenhar tudo em cada quadro
@@ -67,12 +105,41 @@ class Overworld {
         })
     }
 
+    bindActionInput() {
+        new KeypressListener("KeyE", () => {
+            // Verifica se o jogador está próximo a um NPC e inicia o diálogo
+            const hero = this.map.gameObjects.hero;
+            if (hero.currentInteractingNpc && !this.map.isCutscenePlaying) {
+                hero.startDialog(this.map);
+            }
+        });
+    }
+
+    easterEggsFoundCheck() { // Método que vê se algum easter-egg foi encontrado
+        document.addEventListener("EasterEggWasFound", e => {
+            if (!this.easterEggsFound.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
+                this.easterEggsFound.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
+                this.hud.updateEasterEggs(this.easterEggsFound); // Atualiza a listagem de easter eggs na hud
+
+                this.audioManager.playEasterEggSound();
+            }
+        })
+        document.addEventListener("EasterEggWasFoundID", e => {
+            if (!this.easterEggsFoundID.includes(e.detail.whoId)) { // Se não tiver esse easter-egg na lista
+                this.easterEggsFoundID.push(e.detail.whoId); // Inclui ele na lista de easter eggs encontrados
+            }
+        })
+    }
+
     startMap(mapConfig) {
         this.frogsFoundCheck(); // Ve se os sapos já foram encontrados
+        this.easterEggsFoundCheck();
         this.map = new OverworldMap(mapConfig, { // Passa os valores de foundFrog
             foundFrog1: this.foundFrog1,
             foundFrog2: this.foundFrog2,
             foundFrog3: this.foundFrog3,
+            easterEggsFound: this.easterEggsFound, // Passa a lista do nome de easter-eggs encontrados
+            easterEggsFoundID: this.easterEggsFoundID, // Passa a lista do id dos de easter-eggs encontrados
         });
         this.map.overworld = this;
         
@@ -80,9 +147,12 @@ class Overworld {
     }
 
     init() {
+        this.audioManager.startSoundtrack();
 
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
+        // this.soundtrack = new Audio();
+        // this.soundtrack.startSoundtrack();
 
         this.startMap(window.OverworldMaps.Galinheiro);
 
@@ -90,20 +160,14 @@ class Overworld {
         this.directionInput.init();
         //this.directionInput.direction;
 
-        this.bindHeroPositionCheck(); // Vincula o evento de verificação de posição do herói para verificar se o personagem mudou de posição
+        this.bindHeroPositionCheck();
+        this.bindActionInput();
 
         this.startGameLoop(); // inicia o loop principal do jogo
 
-        
-
-        // --- EXEMPLO: Simulação de ganho de moedas a cada 1 segundo ---
-        // (Remova isso depois e chame 'this.hud.updateCoins' quando o jogador realmente ganhar moedas)
-        this.coins = 0;
-        setInterval(() => {
-            this.coins += 1; // Adiciona 1 moeda
-            this.hud.updateCoins(this.coins); // Atualiza a HUD
-            console.log("Moedas atualizadas:", this.coins);
-        }, 1000); // A cada 1 segundos
+        // Inicializa o sistema de moedas e níveis
+        this.coins = 100;
+        this.hud.updateCoins(this.coins); // Atualiza a HUD com as moedas iniciais
 
         this.level = 0;
         setInterval(() => {

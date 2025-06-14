@@ -13,12 +13,37 @@
 /* --- Hotbar Individual --- */
 .hotbar {
   /* O tamanho de cada slot da hotbar será 4% da altura da tela, mas no mínimo 20px e no máximo 50px */
-  width: clamp(20px, 4vh, 50px);
-  height: clamp(20px, 4vh, 50px);
+  width: clamp(100px, 4vh, 50px);
+  height: clamp(100px, 4vh, 50px);
   
   background-image: url('../assets/img/hotBar.png');
   image-rendering: pixelated;
   background-size: cover;
+  position: relative;
+}
+
+.hotbar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+}
+
+.hotbar .item-quantity {
+  position: absolute; /* Posiciona em relação ao pai (.hotbar) */
+  right: 0.5vw;     /* Ancorado no canto inferior direito */
+  bottom: 0.2vh;
+
+  /* Estilos da fonte */
+  font-size: clamp(10px, 1.8vh, 16px);
+  font-weight: bold;
+  font-family: monospace;
+  color: white;
+  
+  /* Sombra para melhor legibilidade */
+  text-shadow: 1px 1px 2px #000000, -1px -1px 2px #000000;
+  
+  /* Impede que o texto bloqueie cliques no slot, se necessário */
+  pointer-events: none; 
 }
 
 /* --- Ícone da Lista de Tarefas --- */
@@ -28,10 +53,10 @@
   right: 1.5vw; /* Distância da direita baseada na LARGURA da tela */
   
   /* Tamanho similar ao da hotbar para consistência */
-  width: clamp(25px, 4.5vh, 55px);
-  height: clamp(25px, 4.5vh, 55px);
+  width: clamp(100px, 4.5vh, 55px);
+  height: clamp(100px, 4.5vh, 55px);
   
-  background-image: url('../assets/img/hotBar.png'); /* Lembre-se de usar um ícone dedicado */
+  background-image: url('../assets/img/Task-icon.png'); /* Lembre-se de usar um ícone dedicado */
   background-size: contain;
   image-rendering: pixelated;
   border: clamp(1px, 0.3vh, 3px) solid #3f3939; /* Borda também responsiva */
@@ -42,24 +67,28 @@
 /* --- Painel da Lista de Tarefas --- */
 .task-list-panel {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 69%;
+  left: 86%;
   transform: translate(-50%, -50%);
   
   /* O painel terá 25% da largura da tela, mas no mínimo 250px e no máximo 400px */
-  width: clamp(250px, 25vw, 400px);
+  width: clamp(280px, 25vw, 420px);
   height: auto; /* A altura se ajusta ao conteúdo */
   max-height: 80vh; /* Para não estourar a altura da tela */
 
+  /* Aplicando a fonte pixelada importada do Google Fonts */
+  font-family: 'Press Start 2P', cursive;
+
   overflow-y: auto;
-  background-color: #f9f9f9;
-  border: clamp(2px, 0.5vh, 4px) solid #4A4A4A;
-  border-radius: clamp(5px, 1vh, 12px);
-  padding: clamp(10px, 2vw, 20px); /* Padding responsivo */
+  background-color: #DEB887;
+  border: clamp(2px, 0.5vh, 4px) solid #5C4033;
+  border-radius: 8px;
+  padding: clamp(15px, 2vw, 25px);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 4px 6px rgba(0,0,0,0.2); /* Sombra interna e externa para profundidade */
   
+  overflow-y: auto;
   display: none;
   z-index: 1001;
-  color: #333;
 }
 
 .task-list-panel.visible {
@@ -69,20 +98,28 @@
 /* --- Fontes e Elementos Internos do Painel --- */
 .task-list-panel h3 {
   text-align: center;
-  color: #2c3e50;
-  border-bottom: 1px solid #ddd;
-  /* A fonte será 2% da largura da tela, mas no mínimo 14px e no máximo 22px */
-  font-size: clamp(14px, 2vw, 22px);
-  margin: 0 0 1vh 0;
-  padding-bottom: 1vh;
+  color: #4A2E2A; /* Cor de terra escura para o título */
+  font-size: clamp(14px, 1.8vw, 20px);
+  margin: 0 0 2vh 0;
+  padding-bottom: 1.5vh;
+  border-bottom: 3px double #7a5c55; /* Borda dupla para um toque rústico */
+  text-shadow: 2px 2px #fff8e7; /* Sombra clara para destacar */
 }
 
 .task-list-panel li {
-  border-left: clamp(3px, 0.5vw, 5px) solid #00fa21;
-  font-size: clamp(12px, 1.5vw, 18px); /* Fonte dos itens também responsiva */
-  padding: 1vh 1vw;
-  margin-top: 1vh;
-  background-color: #fff;
+  font-size: clamp(10px, 1.2vw, 16px);
+  color: #3D2B1F; /* Cor de texto marrom escuro */
+  
+  /* Estilo de "nota de papel" para cada tarefa */
+  background-color: #FFF8DC; /* Cor de pergaminho (Cornsilk) */
+  padding: 1.5vh 1.5vw;
+  margin-top: 1.5vh;
+  border: 1px dashed #bda275; /* Borda tracejada sutil */
+  border-radius: 4px;
+  
+  /* Remove a linha verde e usa um ícone de "galinha" como marcador */
+  list-style-image: url('../assets/img/favicon.png'); 
+  list-style-position: inside;
 }
 
 .task-list-panel .task-list-close-button {
@@ -100,26 +137,27 @@
 /* --- Contêiner do Medidor de Moedas --- */
 .coin-container {
   position: absolute;
-  top: 2vh;    /* Alinha no topo, com a mesma distância do ícone de tarefas */
-  left: 1.5vw; /* Alinha na esquerda */
+  top: 2vh;
+  left: 1.5vw;
   
   display: flex;
-  align-items: center; /* Alinha o ícone e o texto verticalmente */
-  
-  background-color: rgba(0, 0, 0, 0.4); /* Fundo semi-transparente opcional */
-  padding: clamp(4px, 0.8vh, 8px);
-  border-radius: clamp(5px, 1vh, 12px);
-  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
+  align-items: center;
   z-index: 1000;
+
+  /* ESTILOS ATUALIZADOS PARA O TEMA "FAZENDA" */
+  background-color: #DEB887; /* Cor de madeira clara / cortiça */
+  border: clamp(2px, 0.5vh, 4px) solid #5C4033; /* Marrom escuro para a moldura */
+  border-radius: clamp(5px, 1vh, 12px);
+  padding: clamp(4px, 0.8vh, 8px);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.4); /* Sombra interna para profundidade */
 }
 
 /* --- Ícone da Moeda --- */
 .coin-icon {
-  /* Tamanho similar aos outros ícones para consistência */
-  width: clamp(25px, 4.5vh, 55px);
-  height: clamp(25px, 4.5vh, 55px);
+  width: clamp(100px, 4.5vh, 55px); /* Ajustei o tamanho mínimo para 25px */
+  height: clamp(100px, 4.5vh, 55px);
   
-  background-image: url('../assets/img/hotBar.png'); /* Usando hotBar.png como solicitado */
+  background-image: url('../assets/img/coin-icon.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -128,42 +166,40 @@
 
 /* --- Texto da Contagem de Moedas --- */
 .coin-text {
-  /* A fonte será responsiva, mas nunca menor que 14px ou maior que 24px */
   font-size: clamp(14px, 3vh, 24px);
-  
-  color: #FFD700; /* Cor de ouro para as moedas */
+  color: #FFD700; /* Cor de ouro */
   font-weight: bold;
-  font-family: monospace; /* Uma fonte que combina com estilo de jogo */
+  font-family: 'Press Start 2P', cursive;
+  margin-left: 0.8vw;
   
-  margin-left: 0.8vw; /* Espaço entre o ícone e o texto */
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Sombra para legibilidade */
+  /* Sombra mais nítida para fontes pixeladas */
+  text-shadow: 2px 2px #000000; 
 }
 
 /* --- Contêiner do Medidor de Nível --- */
 .level-container {
   position: absolute;
-  top: 25vh;   /* Posiciona abaixo do medidor de moedas (que está em 2vh) */
-  left: 1.5vw; /* Alinha na mesma coluna do medidor de moedas */
+  top: 20vh; /* Posição um pouco mais abaixo para não sobrepor */
+  left: 1.5vw;
   
   display: flex;
   align-items: center;
-  
-  /* Estilos visuais similares ao de moedas */
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: clamp(4px, 0.8vh, 8px);
-  border-radius: clamp(5px, 1vh, 12px);
-  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
   z-index: 1000;
+
+  /* ESTILOS ATUALIZADOS PARA O TEMA "FAZENDA" */
+  background-color: #DEB887; /* Cor de madeira clara / cortiça */
+  border: clamp(2px, 0.5vh, 4px) solid #5C4033; /* Marrom escuro para a moldura */
+  border-radius: clamp(5px, 1vh, 12px);
+  padding: clamp(4px, 0.8vh, 8px);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.4); /* Sombra interna para profundidade */
 }
 
 /* --- Ícone de Nível --- */
 .level-icon {
-  /* Reutiliza o mesmo tamanho do ícone de moeda para consistência */
-  width: clamp(25px, 4.5vh, 55px);
-  height: clamp(25px, 4.5vh, 55px);
-  
-  /* Usando hotBar.png como solicitado */
-  background-image: url('../assets/img/hotBar.png');
+  width: clamp(100px, 4.5vh, 55px); /* Ajustei o tamanho mínimo para 25px */
+  height: clamp(100px, 4.5vh, 55px);
+
+  background-image: url('../assets/img/Level-icon.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -173,11 +209,92 @@
 /* --- Texto da Contagem de Nível --- */
 .level-text {
   font-size: clamp(14px, 3vh, 24px);
-  
-  color: #a0d2eb; /* Um azul claro para diferenciar do ouro das moedas */
+  color: #a0d2eb; /* Azul claro */
   font-weight: bold;
-  font-family: monospace;
-  
+  font-family: 'Press Start 2P', cursive;
   margin-left: 0.8vw;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+  
+  /* Sombra mais nítida para fontes pixeladas */
+  text-shadow: 2px 2px #000000;
+}
+
+/* --- Ícone do Painel de Easter Eggs --- */
+.easter-egg-icon {
+  position: absolute;
+  top: 18vh;  /* Posição abaixo do ícone de tarefas (que está em 2vh) */
+  right: 1.5vw; /* Alinhado na mesma coluna do ícone de tarefas */
+  
+  /* Estilos visuais consistentes com os outros ícones */
+  width: clamp(100px, 4.5vh, 55px);
+  height: clamp(100px, 4.5vh, 55px);
+  background-image: url('../assets/img/easteregg-icon.png'); /* CRIE UM ÍCONE PARA ISSO! */
+  background-size: contain;
+  image-rendering: pixelated;
+  border: clamp(1px, 0.3vh, 3px) solid #3f3939;
+  cursor: pointer;
+  z-index: 1000;
+  background-color: #fdfdfb;
+}
+
+/* --- Painel de Easter Eggs (com o mesmo estilo do painel de tarefas) --- */
+.easter-egg-panel {
+  position: absolute;
+  top: 20%;
+  left: 75%; /* Mantendo a mesma posição horizontal do painel de tarefas */
+  transform: translate(-50%, -50%);
+  
+  width: clamp(280px, 25vw, 420px);
+  height: auto;
+  max-height: 80vh;
+  
+  font-family: 'Press Start 2P', cursive;
+
+  /* Estilo visual de "fazenda" (copiado do .task-list-panel) */
+  background-color: #DEB887;
+  border: clamp(4px, 1vh, 8px) solid #5C4033;
+  border-radius: 8px;
+  padding: clamp(15px, 2vw, 25px);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 4px 4px 0px #3a2d27;
+  
+  overflow-y: auto;
+  display: none;
+  z-index: 1001;
+}
+
+/* Regras de visibilidade e para os elementos internos (copiadas do .task-list-panel) */
+.easter-egg-panel.visible {
+  display: block;
+}
+
+.easter-egg-panel h3 {
+  text-align: center;
+  color: #4A2E2A;
+  font-size: clamp(14px, 1.8vw, 20px);
+  margin: 0 0 2vh 0;
+  padding-bottom: 1.5vh;
+  border-bottom: 3px double #7a5c55;
+  text-shadow: 2px 2px #fff8e7;
+}
+
+.easter-egg-panel li {
+  font-size: clamp(10px, 1.2vw, 16px);
+  color: #3D2B1F;
+  background-color: #FFF8DC;
+  padding: 1.5vh 1.5vw;
+  margin-top: 1.5vh;
+  border: 1px dashed #bda275;
+  list-style-position: inside;
+}
+
+.easter-egg-panel .easter-egg-close-button {
+  display: block;
+  margin: 2vh auto 0;
+  padding: 1vh 2vw;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(12px, 1.5vw, 18px);
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 5px;
+  font-family: 'Press Start 2P', cursive;
 }

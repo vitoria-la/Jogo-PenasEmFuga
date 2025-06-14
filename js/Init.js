@@ -3,7 +3,11 @@
     
     function start(){
         document.getElementById("titlescreen").style.display = "none"; // Remove toda a tela do título do jogo
-        const overworld = new Overworld({
+        window.overworld = new Overworld({ //window.overworld é a instância do jogo
+            // Cria uma nova instância do Overworld com as opções fornecidas,
+            // isso permite que outras partes do código acessem o jogo através de window.overworld
+            // e interajam com ele, como iniciar mapas, gerenciar eventos, etc.
+            // Danilo: "Estou usando para a loja"
             element: document.querySelector(".game-container")
         });
         overworld.init();

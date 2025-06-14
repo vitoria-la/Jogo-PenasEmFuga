@@ -90,6 +90,45 @@ class OverworldEvent {
         resolve(); // Resolve o evento
     }
 
+    async foundEasterEgg(resolve) {  // Evento caso o player tenha achado um easter egg
+        const who = this.event.who; // pega o objeto do NPC
+        Object.values(this.map.gameObjects).forEach(async obj => { // Passa por todos os objetos do mapa
+            if (obj.id === who) { //  Se achar o easter egg dentre os objetos
+                await obj.playGif(obj.id);
+                utils.emitEvent("EasterEggWasFound", { // emite um sinal que foi encontrado um easter egg!
+                    whoId: obj.name  // manda quem foi achado
+                })
+                utils.emitEvent("EasterEggWasFoundID", { // emite um sinal que foi encontrado um easter egg!
+                    whoId: obj.id  // manda quem foi achado
+                })
+            }
+        })
+        resolve(); // Resolve o evento
+    }
+
+    addItemToPlayer(resolve) {
+        // this.map.overworld é a referência para a instância principal da classe Overworld
+        this.map.overworld.addItemToHotbar(this.event.item);
+        
+        // Resolve o evento para que a cutscene possa continuar, se houver mais eventos. 
+        resolve();
+    }
+
+    toggleMusic(resolve) {
+        const audioManager = this.map.overworld.audioManager;
+        const newSong = this.event.song;
+
+        // Se a música da área JÁ ESTÁ tocando...
+        if (audioManager.currentAreaSong === newSong) {
+            // ...paramos ela e retomamos a trilha sonora padrão.
+            audioManager.resumeSoundtrack();
+        } else {
+            // Senão, a música padrão está tocando, então mudamos para a da área.
+            audioManager.playMusic(newSong);
+        }
+        resolve();
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação
