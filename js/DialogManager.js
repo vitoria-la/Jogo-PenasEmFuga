@@ -37,6 +37,12 @@ class DialogManager {
       ],
       "frog2": [
         "Eu amo programar hahaha HAHAHAHAHAHA"
+      ],
+      "galinhaPenosa": [
+        "Oi, eu sou a Penosa!",
+        "Você veio conhecer minha vendinha né??",
+        "Tenho os melhores produtos do galinheiro!",
+        "Dá uma olhada!",
       ]
       
     };
@@ -84,7 +90,7 @@ class DialogManager {
   // }
 
   // Método para iniciar um diálogo com um NPC
-  async startDialog(npcId, map) {
+  async startDialog(npcId, map, onDialogEnd) {
     const dialogs = this.getDialogsForNpc(npcId);
     
     // Salva o estado de todos os NPCs antes de iniciar o diálogo
@@ -117,6 +123,11 @@ class DialogManager {
     
     // Reinicia os behaviorLoops de TODOS os NPCs após o diálogo
     //this.forceResumeAllNpcBehaviors(map);
+
+    if(typeof onDialogEnd === "function"){
+      // Chama a função onDialogEnd se estiver definida
+      onDialogEnd();
+    }
   }
   
   // Método para forçar a retomada dos behaviorLoops de TODOS os NPCs após o diálogo
