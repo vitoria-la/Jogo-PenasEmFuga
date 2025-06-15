@@ -63,6 +63,21 @@ class Overworld {
         // Chama a função de verificação da quest
         if (quest.checkCompletion(this.playerState)) {
             console.log(`Quest ${quest.name} completada!`);
+
+            // Para rodar o gif de quest concluída
+            if(document.getElementById("gif-screen"))return; 
+
+            const finishedQuestGif = document.createElement("div");
+            finishedQuestGif.id = "gif-screen";
+
+            const gif = document.createElement("img");
+            gif.src = "./assets/img/questFim.gif";
+            finishedQuestGif.appendChild(gif);
+
+            document.querySelector(".game-container").appendChild(finishedQuestGif);
+            setTimeout(() => {
+                finishedQuestGif.remove();
+            }, 7800);
             
             // Marca como completa e avança para a próxima
             this.playerState.completedQuests.add(questId);
