@@ -58,6 +58,13 @@ class OverworldEvent {
         const sceneTransition = new SceneTransition(); // sceneTransition é uma instância da classe SceneTransition
         sceneTransition.init(document.querySelector(".game-container"), () => { // Começa a transição de mapa
             this.map.overworld.startMap(window.OverworldMaps[this.event.map]); // Muda de mapa
+            let gameBody = document.getElementById("body");
+            let currentColor = getComputedStyle(gameBody).backgroundColor;
+            if (currentColor === "rgb(42, 24, 24)") {
+                gameBody.style.backgroundColor = "#409F53";
+            } else {
+                gameBody.style.backgroundColor = "#2A1818";
+            }
             resolve();
             sceneTransition.fadeOut(); // Tira a cor sólida da tela e mostra o novo mapa
         });

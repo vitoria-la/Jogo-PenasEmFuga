@@ -22,12 +22,23 @@ class Person extends GameObject {
             this.direction = "right";
         }
 
+        this.questIcon = null;
+
+        this.haveQuestIcon = config.haveQuestIcon || false;
+        this.isQuestIcon = config.isQuestIcon || false;
+        this.isVisible = config.hasOwnProperty("isVisible") ? config.isVisible : true; // Se for false, ele respeita isso
+
+
         this.walkSoundEffect = new Audio(); // O efeito sonoro que o pinguim faz ao andar
     }
 
     update(state) {
         if (this.movingProgressRemaining > 0) {
             this.updatePosition();
+            if (this.questIcon && this.questIcon.isVisible) { // Se esse NPC tiver um questIcon, move ele junto com o NPC
+                this.questIcon.x = this.x;
+                this.questIcon.y = this.y - utils.withGrid(2);
+            }
         } else {
             //Caso o jogador esteja se movendo
             if (!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow) {

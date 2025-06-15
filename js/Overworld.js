@@ -231,6 +231,7 @@ class Overworld {
         this.map.overworld = this;
         
         this.map.mountObjects();
+        this.map.putQuestIcon();
     }
 
     init() {

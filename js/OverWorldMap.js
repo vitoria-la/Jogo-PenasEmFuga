@@ -85,7 +85,9 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         })
 
         //return this.walls[`${x},${y}`] || false;
-    }    mountObjects() { 
+    }    
+    
+    mountObjects() { 
         Object.keys(this.configObjects).forEach(key => {
             let object = this.configObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
             object.id = key;
@@ -120,7 +122,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 this.gameObjects[key].y = utils.withGrid(5);
             }
 
-            if (key === "galinhaDourada") { // Se o objeto é a galinha dos ovos dourados
+            if (key === "galinhaDosOvosDourados") { // Se o objeto é a galinha dos ovos dourados
                 const num = Math.floor(Math.random() * 5) + 1; // Sorteia um número
                 console.log(num);
                 if (num%2 === 0) { // Se ele for par, coloca ela para fora do mapa
@@ -128,10 +130,34 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 }
             }
             
+            if(!this.gameObjects[key].isVisible) {
+                this.gameObjects[key].x = utils.withGrid(50);
+            }
+
             instance.mount(this);
 
             //Determina se o objeto realmente poderia ser montado
             //object.mount(this)
+        })
+    }
+
+    putQuestIcon() { // Vincula os objetos de questIcon com suas respectivas galinhas
+        let questIconsList = []; // Lista de questIcon
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos 
+            let object = this.gameObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
+            if (object.isQuestIcon) { // Se for um questIcon
+                questIconsList.push(key); // Coloca na lista
+            }
+        })
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos
+            let object = this.gameObjects[key]; 
+            if (object.haveQuestIcon) { // Se esse objeto tem um questIcon
+                questIconsList.forEach(name => { // Percorre a lista de questIcons
+                    if (name.includes(key)) { // Se o nome desse questIcon tiver o nome do NPC
+                        object.questIcon = this.gameObjects[name]; // Vincula os dois
+                    }
+                })
+            }
         })
     }
 
@@ -187,6 +213,7 @@ window.OverworldMaps = {
                 x: utils.withGrid(19),
                 y: utils.withGrid(19),
                 src: "./assets/img/galinhaBranca.png",
+                haveQuestIcon: true, // Significa que essa galinha pode ter um questIcon
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
                     {type: "walk", direction: "left",time: 800},  
                     {type: "walk", direction: "left",time: 800},
@@ -206,27 +233,18 @@ window.OverworldMaps = {
                     },
                 ] 
             },  
-            questBranca: {
+            galinhaBrancaQuestIcon: {
                 type:"Person",
                 x: utils.withGrid(19),
                 y: utils.withGrid(17),
                 src: "./assets/img/questIcon.png",
                 isQuestIcon: true,
-                behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
-                    {type: "walk", direction: "left",time: 800},  
-                    {type: "walk", direction: "left",time: 800},
-                    {type: "walk", direction: "left",time: 800},
-                    {type: "stand", direction: "down", time: 300},  // o time é para quanto tempo vai passar até a próxima animação
-                    {type: "walk", direction: "right", time: 800},
-                    {type: "walk", direction: "right", time: 800},
-                    {type: "walk", direction: "right", time: 800},
-                    {type: "stand", direction: "down", time: 300}
-                ],
             },
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
                 y: utils.withGrid(14),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -250,6 +268,14 @@ window.OverworldMaps = {
                         ]
                     }
                 ]
+            },
+            galinhaMarromQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(21),
+                y: utils.withGrid(12),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
             Paova: {
                 type: "Person",
@@ -1122,7 +1148,7 @@ window.OverworldMaps = {
             hero: {
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(-28),
+                x: utils.withGrid(-25),
                 y: utils.withGrid(17),
             },
             galinhaMarrom: {
@@ -1130,6 +1156,26 @@ window.OverworldMaps = {
                 x: utils.withGrid(21),
                 y: utils.withGrid(14),
                 src: "./assets/img/galinhaMarrom.png",
+                behaviorLoop: [
+                    {type: "walk", direction: "left"},  
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"}, 
+                    {type: "walk", direction: "down"},  
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                ]
+            },
+            galinhaCaipira: {
+                type: "Person",
+                x: utils.withGrid(0),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaCaipira.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},
@@ -1217,13 +1263,18 @@ window.OverworldMaps = {
         },
         // Espaços em que acontece cutscenes
         cutsceneSpaces: {
-            [utils.asGridCoord(32,17)] : [
-                {
-                    events: [
-                        {type: "changeMap", map: "Galinheiro"},
-                    ]
-                }
-            ]
+            [utils.asGridCoord(-28,15)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+            [utils.asGridCoord(-28,16)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+            [utils.asGridCoord(-28,17)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+            [utils.asGridCoord(-28,18)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
 
     }    
 }
