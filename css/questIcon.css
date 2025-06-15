@@ -1,0 +1,13 @@
+.quest-icon {
+  position: absolute;
+  background: #000000;
+  color: white;
+  font-size: 35px;
+  padding: 8px 14px;
+  border-radius: 100%;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  z-index: 10;
+  pointer-events: none;
+  display: none;
+}
