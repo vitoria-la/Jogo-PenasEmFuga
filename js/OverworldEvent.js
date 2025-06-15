@@ -158,6 +158,12 @@ class OverworldEvent {
     }
 
     // OverworldEvent.js
+    // ADICIONE O MÉTODO ABAIXO
+    startPlanting(resolve) {
+        this.map.overworld.plantingSystem.open(() => {
+            resolve();
+        });
+    }
 
     textMessage(resolve) {
         // O bloco que fazia o NPC virar foi removido.

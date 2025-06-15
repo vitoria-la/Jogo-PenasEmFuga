@@ -8,7 +8,12 @@ class Overworld {
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
         this.playerState = {
-            items: [ null, null, null, null, null, null ],
+            items:[
+                // Para teste, vamos começar com algumas sementes
+                { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 },
+                { id: 4, name: "Semente de Milho (x5)", src: "./assets/img/milhoSemente.png", quantity: 5 },
+                null, null, null, null
+            ],
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
             completedQuests: new Set(), // Um conjunto de IDs de quests já completadas
             currentQuestId: "Q1", // Começa com a primeira quest
@@ -17,6 +22,8 @@ class Overworld {
         this.audioManager = new Audio();
         this.level = 1;
         this.coins = 100;
+
+        this.plantingSystem = null; // Sistema de plantio, será inicializado depois
     }
 
     addItemToHotbar(itemToAdd) {
@@ -229,8 +236,15 @@ class Overworld {
     init() {
         this.hud = new Hud();
         this.hud.init(document.querySelector(".game-container"));
+
+        this.plantingSystem = new PlantingSystem(this);
+        this.plantingSystem.init();
         
         this.audioManager.startSoundtrack();
+        // Inicializa a hotbar com os itens iniciais
+        this.playerState.items.forEach((item, i) => {
+            this.hud.updateHotbarSlot(i, item);
+        });
         this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
         this.hud.updateLevel(this.level);
         this.hud.updateCoins(this.coins);
