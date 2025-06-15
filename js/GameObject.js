@@ -23,7 +23,6 @@ class GameObject {
         // Armazena o estado atual da animação
         this.currentAnimationState = null;
         this.isQuestIcon = config.isQuestIcon || false;
-        this.isVisible = config.isVisible || true;
     }
 
     mount(map){ // metodo responsável por montar o objeto no mapa
