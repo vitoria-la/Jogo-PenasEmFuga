@@ -204,6 +204,31 @@ class OverworldEvent {
 
     }
 
+    entregarItem(resolve) {
+        const { itemId, quantity, events_if_enough, events_if_not_enough } = this.event;
+        const playerItems = this.map.overworld.playerState.items;
+
+        // Verifica se o jogador tem o item na quantidade necessária
+        const itemSlot = playerItems.findIndex(slot => slot && slot.name === itemId && slot.quantity >= quantity);
+
+        if (itemSlot > -1) {
+            // Se tiver, remove os itens
+            playerItems[itemSlot].quantity -= quantity;
+            if (playerItems[itemSlot].quantity <= 0) {
+                playerItems[itemSlot] = null; // Remove o item se a quantidade for zero
+            }
+            this.map.overworld.hud.updateHotbarSlot(itemSlot, playerItems[itemSlot]);
+            
+            // Inicia a cutscene de sucesso
+            this.map.startCutscene(events_if_enough);
+        } else {
+            // Se não tiver, inicia a cutscene de falha
+            this.map.startCutscene(events_if_not_enough);
+        }
+        
+        resolve();
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação

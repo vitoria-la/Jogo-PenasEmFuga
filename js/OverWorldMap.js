@@ -300,6 +300,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"},
                     {type: "walk", direction: "right"}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto." },
+                            { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
             Clotilde: {
@@ -335,6 +343,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
+                            { type: "questProgress", flag: "TALKED_TO_CLOTILDE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
             Bernadette: {
@@ -414,6 +430,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "right"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
+                            { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
             galinhaSegurancaMarrom: {
@@ -423,6 +447,14 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaSegurancaMarrom.png",
                 behaviorLoop: [  
                    {type: "stand", direction: "left", time: 2800},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
+                            { type: "questProgress", flag: "TALKED_TO_SEGURANCA_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
              galinhaGalinacia: {
