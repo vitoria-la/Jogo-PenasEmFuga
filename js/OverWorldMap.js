@@ -205,8 +205,8 @@ window.OverworldMaps = {
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(14),
-                y: utils.withGrid(16),
+                x: utils.withGrid(19), // 14
+                y: utils.withGrid(28), // 16
             },
             galinhaBranca: {
                 type: "Person",
@@ -649,6 +649,20 @@ window.OverworldMaps = {
             [utils.asGridCoord(29,23)] : true,
             [utils.asGridCoord(30,23)] : true,
             [utils.asGridCoord(31,23)] : true,
+
+
+            [utils.asGridCoord(20,27)] : true,
+            [utils.asGridCoord(21,27)] : true,
+            [utils.asGridCoord(21,26)] : true,
+            [utils.asGridCoord(22,26)] : true,
+            [utils.asGridCoord(23,26)] : true,
+            [utils.asGridCoord(29,26)] : true,
+            [utils.asGridCoord(30,26)] : true,
+            [utils.asGridCoord(28,32)] : true,
+            [utils.asGridCoord(29,31)] : true,
+            [utils.asGridCoord(29,32)] : true,
+            [utils.asGridCoord(30,32)] : true,
+            [utils.asGridCoord(30,31)] : true,
 
             //------------------------------------------//
 
