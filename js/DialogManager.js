@@ -43,7 +43,12 @@ class DialogManager {
         "Você veio conhecer minha vendinha né??",
         "Tenho os melhores produtos do galinheiro!",
         "Dá uma olhada!",
-      ]
+      ],
+      "galinhaBrancaQuestIcon": [
+        "Hmmmm",
+        "Não era para isso ter acontecido...",
+        "Isso não aconteceu, ok?",
+      ],
       
     };
     

@@ -126,11 +126,11 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 const num = Math.floor(Math.random() * 5) + 1; // Sorteia um número
                 console.log(num);
                 if (num%2 === 0) { // Se ele for par, coloca ela para fora do mapa
-                    this.gameObjects[key].x = utils.withGrid(33);
+                    this.gameObjects[key].x = utils.withGrid(50);
                 }
             }
             
-            if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot") {
+            if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
                 this.gameObjects[key].x = utils.withGrid(50);
             }
 
