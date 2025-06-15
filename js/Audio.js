@@ -37,8 +37,6 @@ class Audio {
         const songInfo = this.soundtrack[this.currentSongIndex];
         this.currentSong = new Howl({
             src: [songInfo.src],
-            loop: false,
-            volume: 0.3,
             onend: () => {
                 this.currentSong = null;
                 if (this.soundtrackPlaying) {

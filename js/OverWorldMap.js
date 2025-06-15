@@ -70,6 +70,11 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
         // Ver se tem algum objeto do jogo, tipo uma galinha, nessa opção
         return Object.values(this.gameObjects).find(obj => {
+
+            if (obj.isQuestIcon) {
+                return false;
+            }
+
             if (obj.x === x && obj.y === y) { // Se as coordenadas desse objeto forem as mesmas do pinguim
                 return true; 
             } else {
@@ -201,6 +206,23 @@ window.OverworldMaps = {
                     },
                 ] 
             },  
+            questBranca: {
+                type:"Person",
+                x: utils.withGrid(19),
+                y: utils.withGrid(17),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
+                    {type: "walk", direction: "left",time: 800},  
+                    {type: "walk", direction: "left",time: 800},
+                    {type: "walk", direction: "left",time: 800},
+                    {type: "stand", direction: "down", time: 300},  // o time é para quanto tempo vai passar até a próxima animação
+                    {type: "walk", direction: "right", time: 800},
+                    {type: "walk", direction: "right", time: 800},
+                    {type: "walk", direction: "right", time: 800},
+                    {type: "stand", direction: "down", time: 300}
+                ],
+            },
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
