@@ -130,7 +130,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 }
             }
             
-            if(!this.gameObjects[key].isVisible) {
+            if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot") {
                 this.gameObjects[key].x = utils.withGrid(50);
             }
 
