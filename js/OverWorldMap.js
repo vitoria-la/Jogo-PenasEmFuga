@@ -126,7 +126,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 const num = Math.floor(Math.random() * 5) + 1; // Sorteia um número
                 console.log(num);
                 if (num%2 === 0) { // Se ele for par, coloca ela para fora do mapa
-                    this.gameObjects[key].x = utils.withGrid(50);
+                    instance.isVisible = false;
                 }
             }
             
@@ -595,7 +595,17 @@ window.OverworldMaps = {
                 name: "Álbum da Galinha Pintadinha",
                 description: "O item mais cobiçado do galinheiro",
                 mapName: "Galinheiro",
-                x: utils.withGrid(33),
+                x: utils.withGrid(50),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+            },
+            baldePenas: { 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Balde de penas",
+                description: "Não sabia que era possível costurar com penas",
+                mapName: "Galinheiro",
+                x: utils.withGrid(50),
                 y: utils.withGrid(0),
                 src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
             },
@@ -1183,6 +1193,9 @@ window.OverworldMaps = {
             ],
             [utils.asGridCoord(21,32)] : [ // Achou o álbum da galinha pintadinha
                 {events: [{type: "foundEasterEgg", who: "albumGalinha"},]}
+            ],
+            [utils.asGridCoord(-15,13)] : [ // Achou o balde de penas
+                {events: [{type: "foundEasterEgg", who: "baldePenas"},]}
             ],
             [utils.asGridCoord(11,16)] : [ // 
                 {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
