@@ -24,7 +24,6 @@ class Person extends GameObject {
             this.direction = "right";
         }
 
-
         this.walkSoundEffect = new Audio(); // O efeito sonoro que o pinguim faz ao andar
     }
 
@@ -183,40 +182,5 @@ class Person extends GameObject {
         }
         this.currentInteractingNpc = null;
     }
-
-
-    showQuestIcon(npc, map) {
-        if (!this.questIcon) {
-            this.questIcon = document.createElement("div");
-            this.questIcon.classList.add("quest-icon");
-            this.questIcon.textContent = "!";
-            document.querySelector(".game-container").appendChild(this.questIcon);
-        }
-        
-        // Posiciona o botão centralizado acima do NPC
-        const cameraPerson = map.gameObjects.hero;
-        
-        // Centraliza horizontalmente e posiciona acima do sprite do NPC
-        const x = npc.x - cameraPerson.x + utils.withGrid(1);
-        
-        // Posiciona o botão exatamente acima do sprite do NPC
-        // Usa um deslocamento vertical menor para garantir que fique logo acima da cabeça do NPC
-        const y = npc.y - utils.withGrid(15) - cameraPerson.y + utils.withGrid(0);
-        
-        this.questIcon.style.transform = `translate(${x}px, ${y}px)`;
-        this.questIcon.style.display = "block";
-        
-        // Armazena o NPC atual para interação
-        this.currentQuestNpc = npc;
-    }
-    
-    // Esconde o botão de interação
-    hideQuestIcon() {
-        if (this.questIcon) {
-            this.questIcon.style.display = "none";
-        }
-        this.currentQuestNpc = null;
-    }
-    
     
 }
