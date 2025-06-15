@@ -89,10 +89,14 @@
   overflow-y: auto;
   display: none;
   z-index: 1001;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .task-list-panel.visible {
-  display: block;
+  display: flex;
 }
 
 /* --- Fontes e Elementos Internos do Painel --- */
@@ -104,6 +108,12 @@
   padding-bottom: 1.5vh;
   border-bottom: 3px double #7a5c55; /* Borda dupla para um toque rústico */
   text-shadow: 2px 2px #fff8e7; /* Sombra clara para destacar */
+}
+
+.task-list-panel ul {
+  width: 100%; /* Faz a lista ocupar a largura total do espaço */
+  padding: 0;  /* Remove o preenchimento padrão para melhor controle */
+  margin: 0;   /* Remove a margem padrão */
 }
 
 .task-list-panel li {
@@ -120,6 +130,8 @@
   /* Remove a linha verde e usa um ícone de "galinha" como marcador */
   list-style-image: url('../assets/img/favicon.png'); 
   list-style-position: inside;
+
+  text-align: left;
 }
 
 .task-list-panel .task-list-close-button {
@@ -132,6 +144,56 @@
   background-color: #e74c3c;
   color: white;
   border-radius: 5px;
+}
+
+/* Container para a ferramenta de debug dentro do painel de tarefas */
+.debug-quest-container {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    width: 80%;
+    text-align: center;
+}
+
+.debug-quest-container h4 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #f0f0f0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Estilo para o campo de texto */
+#quest-id-input {
+    font-family: 'Press Start 2P', cursive;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid #a0a0a0;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 200px;
+    font-size: 0.9rem;
+    margin-right: 10px;
+}
+
+#quest-id-input::placeholder {
+    color: #b0b0b0;
+}
+
+/* Estilo para o botão */
+#skip-quest-button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9rem;
+    padding: 10px 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    background-color: #ff5722;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+#skip-quest-button:hover {
+    background-color: #f4511e;
 }
 
 /* --- Contêiner do Medidor de Moedas --- */

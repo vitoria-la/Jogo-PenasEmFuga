@@ -26,6 +26,33 @@ class Overworld {
         this.plantingSystem = null; // Sistema de plantio, será inicializado depois
     }
 
+    skipToQuest(questId) {
+        // 1. Valida se a quest existe na lista principal
+        const questExists = window.QuestList.find(q => q.id === questId);
+        if (!questExists) {
+            console.error(`A Quest com o ID "${questId}" não foi encontrada!`);
+            alert(`Quest inválida: ${questId}`);
+            return;
+        }
+
+        // 2. Atualiza o estado do jogador para a nova quest
+        this.playerState.currentQuestId = questId;
+
+        // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
+        // (Opcional, mas recomendado para quests com contadores)
+        // Por exemplo, se a nova quest usar um contador, você pode querer zerá-lo aqui.
+        // const quest = questExists;
+        // if (quest.progressKey) {
+        //    this.playerState.questFlags[quest.progressKey] = 0;
+        // }
+
+
+        // 4. Atualiza a interface (HUD) para refletir a nova quest
+        this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
+
+        console.log(`Pulou para a Quest: ${questExists.name} (${questId})`);
+    }
+
     addItemToHotbar(itemToAdd) {
         let added = false;
         // 1. Tenta empilhar com um item existente
@@ -236,7 +263,7 @@ class Overworld {
 
     init() {
         this.hud = new Hud();
-        this.hud.init(document.querySelector(".game-container"));
+        this.hud.init(document.querySelector(".game-container"), this);
 
         this.plantingSystem = new PlantingSystem(this);
         this.plantingSystem.init();

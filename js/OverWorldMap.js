@@ -304,7 +304,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto." },
+                            { type: "textMessage", who: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto." },
                             { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     }
@@ -347,7 +347,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
+                            { type: "textMessage", who: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
                             { type: "questProgress", flag: "TALKED_TO_CLOTILDE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     }
@@ -434,7 +434,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
+                            { type: "textMessage", who: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
                             { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     }
@@ -451,7 +451,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
+                            { type: "textMessage", who: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
                             { type: "questProgress", flag: "TALKED_TO_SEGURANCA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     }
@@ -483,6 +483,24 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            {
+                                type: "entregarItem",
+                                itemId: "Milho",
+                                quantity: 20,
+                                events_if_enough: [
+                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!" },
+                                { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
+                                ],
+                                events_if_not_enough: [
+                                    {type: "textMessage", who: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor."}
+                                ]
+                            }
+                        ]
+                    }
                 ]
             },
             galinhaPenosa: {

@@ -204,7 +204,7 @@ class OverworldEvent {
 
     }
 
-    entregarItem(resolve) {
+    async entregarItem(resolve) {
         const { itemId, quantity, events_if_enough, events_if_not_enough } = this.event;
         const playerItems = this.map.overworld.playerState.items;
 
@@ -220,10 +220,10 @@ class OverworldEvent {
             this.map.overworld.hud.updateHotbarSlot(itemSlot, playerItems[itemSlot]);
             
             // Inicia a cutscene de sucesso
-            this.map.startCutscene(events_if_enough);
+        await this.map.startCutscene(events_if_enough);
         } else {
             // Se não tiver, inicia a cutscene de falha
-            this.map.startCutscene(events_if_not_enough);
+            await this.map.startCutscene(events_if_not_enough);
         }
         
         resolve();
