@@ -39,6 +39,8 @@ class Sprite { //animações
         this.isFrog = config.isFrog || false;
         this.isEasterEgg = config.isEasterEgg || false; // Para saber se é um easter egg
         this.isHorse = config.isHorse || false;
+        
+        this.isInvisible = config.isInvisible || false; // Para saber se o sprite não deve ser renderizado
 
         if (this.isHorse) {
             this.animations = {
@@ -84,6 +86,10 @@ class Sprite { //animações
     }
 
     draw(ctx, cameraPerson){
+        // Se for invisível, não desenha nada.
+        if (this.isInvisible) {
+            return;
+        }
         let x, y;
         
         // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject

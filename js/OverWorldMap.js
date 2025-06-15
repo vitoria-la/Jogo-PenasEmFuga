@@ -5,6 +5,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.cutsceneSpaces = config.cutsceneSpaces || {};
         this.walls = config.walls || {}; // Armazena um objeto que representa as áreas de colisão ("paredes") no mapa. As chaves são coordenadas no formato "x,y", e o valor true indica que há uma parede. O padrão é um objeto vazio
         this.configObjects = config.configObjects;
+
+        this.groundDecals = {}; // Para armazenar as imagens de detalhe do chão
         
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc; // cria a camada inferior do mapa
@@ -18,6 +20,20 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.easterEggsFound = state.easterEggsFound || [];
         this.easterEggsFoundID = state.easterEggsFoundID || [];
         this.name = config.name; // Serve para saber em qual mapa se está
+
+        const groundDecalsConfig = config.groundDecals || {};
+        Object.keys(groundDecalsConfig).forEach(key => {
+            const decalConfig = groundDecalsConfig[key];
+            const image = new Image();
+            image.src = decalConfig.src;
+            image.onload = () => {
+                this.groundDecals[key] = {
+                    ...decalConfig,
+                    image: image,
+                    isLoaded: true,
+                };
+            };
+        });
     }
 
     drawLowerImage(ctx, cameraPerson){
@@ -25,7 +41,17 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             this.lowerImage,
             utils.withGrid(-20) - cameraPerson.x,
             utils.withGrid(3) - cameraPerson.y // são deslocamentos para centralizar a câmera
-        )
+        );
+        // Desenha os detalhes do chão (como a área de plantação)
+        Object.values(this.groundDecals).forEach(decal => {
+            if (decal.isLoaded) {
+                ctx.drawImage(
+                    decal.image,
+                    decal.x + utils.withGrid(-20) - cameraPerson.x,
+                    decal.y + utils.withGrid(3) - cameraPerson.y
+                );
+            }
+        });
     }
     drawUpperImage(ctx, cameraPerson){
         ctx.drawImage(
@@ -54,9 +80,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         })
 
         //return this.walls[`${x},${y}`] || false;
-    }
-
-    mountObjects() { 
+    }    mountObjects() { 
         Object.keys(this.configObjects).forEach(key => {
             let object = this.configObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
             object.id = key;
@@ -66,9 +90,10 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 instance = new Person(object);
             } else if (object.type === "EasterEgg") {
                 instance = new EasterEgg(object);
-                
-            } else if (object.type === "Gif"){
+            } else if (object.type === "Gif") {
                 instance = new Gif(object);
+            } else if (object.type === "PlantableSpot") {
+                instance = new PlantableSpot(object);
             }
 
             this.gameObjects[key] = instance;
@@ -313,7 +338,7 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"},  
-                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
@@ -1067,17 +1092,17 @@ window.OverworldMaps = {
         }
     },
     // Mapa da parte da fazenda
-    Fazenda: { // mapa
+    Fazenda: {
         name: "Fazenda",
-        lowerSrc: "./assets/img/fazendaMapa.png", // layer de base do mapa (chão do mapa)
-        upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
-        configObjects: { // define os personagens/objetos que o mapa vai ter
-            hero: ({ // personagem principal
+        lowerSrc: "./assets/img/fazendaMapa.png",
+        upperSrc: "",
+        configObjects: {
+            hero: {
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(16),
-                y: utils.withGrid(14),
-            }),
+                x: utils.withGrid(-28),
+                y: utils.withGrid(17),
+            },
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
@@ -1119,7 +1144,52 @@ window.OverworldMaps = {
                     {type: "walk", direction: "left"},
                 ]
             },
+
+            // Tiles de plantação FUNCIONAIS            plantTile1: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile2: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile3: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile4: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile5: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile6: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile7: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile8: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile9: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile10: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile11: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile12: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile13: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile14: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile15: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile16: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile17: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile18: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile19: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile20: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile21: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile22: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile23: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile24: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile25: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile26: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile27: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile28: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile29: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile30: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile31: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile32: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile33: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile34: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile35: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile36: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
         },
+        groundDecals: {
+            plantingArea: {
+                src: "./assets/img/terreno.png",
+                x: utils.withGrid(-15),
+                y: utils.withGrid(15)
+            }
+        },
+        // ...restante do mapa...
         walls: {
             //define as coordenadas das colisoes do mapa
         },
@@ -1132,6 +1202,7 @@ window.OverworldMaps = {
                     ]
                 }
             ]
-        }
-    } 
+
+    }    
+}
 }
