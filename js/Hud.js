@@ -33,7 +33,7 @@ class Hud {
     }
     gameContainerElement.appendChild(this.hotbarContainerElement);
 
-    // --- PAINEL DE TAREFAS ---
+    // --- PAINEL DE TAREFAS (CRIADO APENAS UMA VEZ) ---
     this.taskListIconElement = document.createElement("div");
     this.taskListIconElement.classList.add("task-list-icon");
     gameContainerElement.appendChild(this.taskListIconElement);
@@ -54,10 +54,9 @@ class Hud {
     `;
     gameContainerElement.appendChild(this.taskListPanelElement);
 
-    // --- MEDIDOR DE MOEDAS (COM A CORREÇÃO) ---
+    // --- MEDIDOR DE MOEDAS ---
     this.coinContainerElement = document.createElement("div");
     this.coinContainerElement.classList.add("coin-container");
-    // A CORREÇÃO ESTÁ AQUI: "class.add" foi trocado por "class"
     this.coinContainerElement.innerHTML = `
       <div class="coin-icon"></div>
       <div class="coin-text">0</div>
