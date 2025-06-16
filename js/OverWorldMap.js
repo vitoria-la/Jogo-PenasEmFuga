@@ -134,6 +134,9 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             if (this.playerState.currentQuestId === "Q1.1" && key === "galinhaCaipiraQuestIcon") {
                 this.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
             }
+            if (this.playerState.currentQuestId === "Q5.1" && key === "galinhaGalinaciaQuestIcon") {
+                this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
             
             if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
                 this.gameObjects[key].y = utils.withGrid(-50);
@@ -274,7 +277,14 @@ window.OverworldMaps = {
                     {
                         events: [
                             { type: "textMessage", text: "Uai, achei que a Caipira tinha te mandado trabalhar...", faceHero: "galinhaBranca", quest: "Q2"},
-                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "A não... de novo não...", faceHero: "galinhaBranca", quest: "Q5.2"},
+                            { type: "textMessage", text: "Foi a Galinácia, não foi!?", faceHero: "galinhaBranca", quest: "Q5.2"},
+                            { type: "textMessage", text: "Ela não me entende que aquilo nunca será uma galinha!", faceHero: "galinhaBranca", quest: "Q5.2"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     },
                 ] 
@@ -311,6 +321,13 @@ window.OverworldMaps = {
                         events: [
                             { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }, {
+                        events: [
+                            { type: "textMessage", text: "Ouvi a Branca falando...", faceHero: "galinhaMarrom", quest: "Q5.2"},
+                            { type: "textMessage", text: "O chefe não vai ficar nada feliz", faceHero: "galinhaMarrom", quest: "Q5.2"},
+                            { type: "textMessage", text: "Aqueles bichos ficam gritando!", faceHero: "galinhaMarrom", quest: "Q5.2"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     }
                 ]
@@ -395,6 +412,14 @@ window.OverworldMaps = {
                         events: [
                             { type: "textMessage", who: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
                             { type: "questProgress", flag: "TALKED_TO_CLOTILDE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Vi que já conheceu a Galinácia", faceHero: "Clotilde", quest: "Q5.2"},
+                            { type: "textMessage", text: "Os bichinhos dela ficam saltitando por aí", faceHero: "Clotilde", quest: "Q5.2"},
+                            { type: "textMessage", text: "Parece até que consigo ouvi-los...", faceHero: "Clotilde", quest: "Q5.2"},
+                            { type: "questProgress", flag: "TALKED_TO_CLOTILDE", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     }
                 ]
@@ -507,6 +532,7 @@ window.OverworldMaps = {
                 type: "Person",
                 x: utils.withGrid(25),
                 y: utils.withGrid(7),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaGalinacia.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "left", time: 5200}, // Descansa na poltrona
@@ -538,7 +564,7 @@ window.OverworldMaps = {
                                 itemId: "Milho",
                                 quantity: 20,
                                 events_if_enough: [
-                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!" },
+                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!", quest: "Q5"},
                                     { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
                                 ],
                                 events_if_not_enough: [
@@ -546,8 +572,29 @@ window.OverworldMaps = {
                                 ]
                             }
                         ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Querido! Minhas queridíssimas galinhas da montanha...", quest: "Q5.1"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "S U M I R A M", quest: "Q5.1"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "São umas 3... trás elas para cá, eu te imploro!", quest: "Q5.1"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINACIA_FROGS", counter: "SPOKEN_TO_GALINACIA" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Querido! Muito obrigado!", quest: "Q7"},
+                        ]
                     }
                 ]
+            },
+            galinhaGalinaciaQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(25),
+                y: utils.withGrid(5),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
             galinhaPenosa: {
                 type: "Person",
@@ -1317,7 +1364,7 @@ window.OverworldMaps = {
                     {
                         events: [
                             { type: "textMessage", text: "Guri, preciso de ajuda. Plante 9 trigos para a Paova assar os pães do cafézin", faceHero: "galinhaCaipira", quest: "Q1.1"},
-                            { type: "questProgress", flag: "TALKED_TO_GALINHA_CAIPIRA", counter: "CHICKENS_SPOKEN_TO" }
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_CAIPIRA", counter: "SPOKEN_TO_CAIPIRA" }
                         ]
                     }
                 ]

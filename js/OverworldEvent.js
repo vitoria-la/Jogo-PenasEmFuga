@@ -72,6 +72,12 @@ class OverworldEvent {
 
     foundFrog(resolve) {  // Evento caso o player tenha achado um sapo (galinha da montanha)
         const who = this.event.who; // pega o objeto do NPC
+
+        if (this.map.overworld.playerState.currentQuestId != "Q6") {
+            resolve();
+            return;
+        }
+
         //console.log(who);
         Object.values(this.map.gameObjects).forEach(obj => { // Passa por todos os objetos do mapa
             if (obj.id === who) { //  Se achar o sapo dentre os objetos
@@ -139,8 +145,6 @@ class OverworldEvent {
     questProgress(resolve) {
         const flag = this.event.flag;
         const state = this.map.overworld.playerState;
-        console.log(flag);
-        console.log(state);
 
         // Verifica se o jogador já interagiu com este NPC antes
         if (!state.storyFlags[flag]) {
@@ -149,14 +153,11 @@ class OverworldEvent {
 
             if (this.event.counter) {
                 const counterName = this.event.counter;
-                console.log(counterName);
-                console.log(state.questFlags[counterName]);
                 if (!state.questFlags[counterName]) {
                     state.questFlags[counterName] = 0;
                     console.log("uai")
                 }
                 state.questFlags[counterName] += 1;
-                console.log(state.questFlags[counterName]);
             }
     
             // Atualiza a HUD com o novo progresso
@@ -191,8 +192,8 @@ class OverworldEvent {
         });
 
         if (state.currentQuestId === this.event.quest) { // Se a quest atual for a mesma desse diálogo, passa ele para o text message
-           message.text = this.event.text;
-           message.init();
+            message.text = this.event.text;
+            message.init();
         } else { // Se não, cria um dialog manager e faz o diálogo genérico da galinha
             const dialogoMan = new DialogManager();
             dialogoMan.startDialog(this.event.faceHero, this.map, () => {

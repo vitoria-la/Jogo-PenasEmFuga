@@ -53,7 +53,6 @@ class TextMessage {
     
     // Adiciona o elemento ao DOM
     document.querySelector(".game-container").appendChild(this.element);
-    
     // Posiciona a caixa de diálogo acima do NPC
     this.positionMessageBox();
   }

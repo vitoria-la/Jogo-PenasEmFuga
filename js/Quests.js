@@ -17,8 +17,17 @@ const QuestChecks = {
         // O objetivo é ter falado com 4 galinhas ou mais para a quest do chef
         return playerState.questFlags.CHEF_INFO_GATHERED >= 4;
     },
+    FALAR_COM_3_GALINHAS_SAPO(playerState) {
+        return playerState.questFlags.CHICKENS_SPOKEN_TO_FROG >= 3;
+    },
     FALAR_COM_CAIPIRA(playerState) {
-        return playerState.questFlags.CHICKENS_SPOKEN_TO >= 1;
+        return playerState.questFlags.SPOKEN_TO_CAIPIRA >= 1;
+    },
+    FALAR_COM_GALINACIA(playerState) {
+        return playerState.questFlags.SPOKEN_TO_GALINACIA >= 1;
+    },
+    PEGAR_3_SAPOS(playerState) {
+        return playerState.questFlags.FROGS_COLLECTED >= 3;
     }
     // Adicione as funções de verificação para as outras quests aqui...
 }
@@ -42,7 +51,7 @@ window.QuestList = [
         name: "",
         description: "Fale com a Galinha Caipira na fazenda",
         checkCompletion: QuestChecks.FALAR_COM_CAIPIRA,
-        progressKey: "CHICKENS_SPOKEN_TO", 
+        progressKey: "SPOKEN_TO_CAIPIRA", 
         progressTarget: 1,
         reward: {
             type: "item",
@@ -70,6 +79,36 @@ window.QuestList = [
         progressKey: "CORN_DELIVERED",
         progressTarget: 1, // Apenas um evento de entrega
         reward: { type: "coins", amount: 50 }
+    },
+    {
+        id: "Q5.1",
+        name: "",
+        description: "Fale com a Galinácia",
+        checkCompletion: QuestChecks.FALAR_COM_GALINACIA,
+        progressKey: "SPOKEN_TO_GALINACIA", 
+        progressTarget: 1,
+        reward: { type: "coins", amount: 50 }
+    },
+    {
+        id: "Q5.2",
+        name: "",
+        description: "Pergunte a 3 galinhas sobre as 'galinhas da montanha'",
+        checkCompletion: QuestChecks.FALAR_COM_3_GALINHAS_SAPO,
+        progressKey: "CHICKENS_SPOKEN_TO_FROG", 
+        progressTarget: 3,
+        reward: { type: "coins", amount: 50 }
+    },
+    {
+        id: "Q6",
+        name: "Caça montanhosa!",
+        description: "Colete as 3 galinhas da montanha para a Galinácia.",
+        checkCompletion: QuestChecks.PEGAR_3_SAPOS,
+        progressKey: "FROGS_COLLECTED", 
+        progressTarget: 3, 
+        reward: {
+            type: "coins",
+            amount: 20
+        }
     },
     // ... Suas quests Q6, Q7, Q8 aqui ...
     {

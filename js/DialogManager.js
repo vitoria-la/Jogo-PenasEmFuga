@@ -60,6 +60,9 @@ class DialogManager {
         "Não era para isso ter acontecido...",
         "Isso não aconteceu, ok?",
       ],
+      "galinhaGalinacia": [
+        "Ue cachoeira!?",
+      ],
       
     };
     
