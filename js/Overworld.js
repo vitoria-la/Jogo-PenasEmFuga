@@ -203,29 +203,54 @@ class Overworld {
         new KeypressListener("KeyE", () => {
             const hero = this.map.gameObjects.hero;
             const npc = hero.currentInteractingNpc;
+            let dialogHappened = false;
 
             if (npc && !this.map.isCutscenePlaying) {
+                console.log("1")
                 // Se o NPC tem eventos de quest, inicia a cutscene
                 if (npc.talking && npc.talking.length > 0) {
-                    this.map.startCutscene(npc.talking[0].events);
-                } else {
+                    console.log("1")
+                    if (npc.talking[0].events[0].type === "startPlanting") {
+                        console.log("1")
+                        this.map.startCutscene(npc.talking[0].events);
+                        dialogHappened = true;
+                    } else {
+                        console.log("1")
+                        for (let x = 0; x < npc.talking.length; x++) { // Passa por todos os eventos de fala do NPC
+                            npc.talking[x].events.forEach(event => { // Para cada evento
+                                if (event.type === "textMessage" && event.quest === this.playerState.currentQuestId && !dialogHappened) { // Se o tipo do evento for textMessage e a quest do evento for a quest atual do player
+                                    this.map.startCutscene(npc.talking[x].events); // Começa a cutscene
+                                    dialogHappened = true; // Marca que já ouve o diálogo
+                                }
+                            })
+                        }
+                    }
+                } 
+
+                if (!dialogHappened) { // Se o diálogo não aconteceu
                     // Senão, usa o DialogManager para diálogos simples
+                    console.log("1")
                     if (!this.map.dialogManager) {
                         this.map.dialogManager = new DialogManager();
                     }
-
-                    // Condição especial para a galinha da loja
+                        // Condição especial para a galinha da loja
                     if (npc.id === "galinhaPenosa") {
+                        console.log("1")
                         this.map.dialogManager.startDialog(npc.id, this.map, () => {
-                            // Esta função será chamada QUANDO o diálogo terminar
+                                // Esta função será chamada QUANDO o diálogo terminar
                             openShop(); 
                         });
                     } else {
-                        // Para todos os outros NPCs simples
+                        console.log("1")
+                            // Para todos os outros NPCs simples
                         this.map.dialogManager.startDialog(npc.id, this.map);
                     }
                 }
             }
+
+            
+
+
         });
     }
 
@@ -254,6 +279,7 @@ class Overworld {
             foundFrog3: this.foundFrog3,
             easterEggsFound: this.easterEggsFound, // Passa a lista do nome de easter-eggs encontrados
             easterEggsFoundID: this.easterEggsFoundID, // Passa a lista do id dos de easter-eggs encontrados
+            playerState: this.playerState,
         });
         this.map.overworld = this;
         
