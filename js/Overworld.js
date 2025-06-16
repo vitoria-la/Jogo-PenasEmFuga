@@ -113,6 +113,7 @@ class Overworld {
                 if (questId === "Q5.1") {
                     this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
                 }
+
                 console.log("foi")
                 this.playerState.completedQuests.add(questId);
                 const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
@@ -134,8 +135,20 @@ class Overworld {
             finishedQuestGif.appendChild(gif);
 
             document.querySelector(".game-container").appendChild(finishedQuestGif);
+
+            let oldQuestId = this.playerState.currentQuestId;
+
             setTimeout(() => {
                 finishedQuestGif.remove();
+                console.log(this.playerState.currentQuestId);
+                if (oldQuestId === "Q6") { // Se a quest que foi concluída era a 6, se for, o player recebe o easter egg da galinha da montanha
+                    console.log("uai");
+                    const eventManager = new OverworldEvent ({
+                        event: {type: "foundEasterEgg", who: "galinhaDaMontanha"},
+                        map: this.map,
+                    });
+                    eventManager.init();
+                }
             }, 7800);
             
             // Marca como completa e avança para a próxima

@@ -701,6 +701,16 @@ window.OverworldMaps = {
                 y: utils.withGrid(0),
                 src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
             },
+            galinhaDaMontanha: { 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Galinha da Montanha",
+                description: "Não sabia que era possível costurar com penas",
+                mapName: "Galinheiro",
+                x: utils.withGrid(50),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+            },
 
         },
         walls: {
