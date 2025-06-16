@@ -64,9 +64,6 @@ class TextMessage {
     // Formata o nome do NPC para exibição (remove camelCase, adiciona espaços, etc.)
     let name = this.npc.id;
     
-    // Remove prefixos comuns como "galinha" ou "npc"
-    name = name.replace(/^galinha/i, "");
-    
     // Adiciona espaço antes de cada letra maiúscula e capitaliza a primeira letra
     name = name.replace(/([A-Z])/g, ' $1').trim();
     name = name.charAt(0).toUpperCase() + name.slice(1);
@@ -82,8 +79,9 @@ class TextMessage {
     const cameraPerson = this.map.gameObjects.hero;
     
     // Calcula a posição relativa à câmera
-    const x = this.npc.x - cameraPerson.x + utils.withGrid(67);
-    const y = this.npc.y - cameraPerson.y + utils.withGrid(10); // Posiciona acima do NPC
+    const x =  utils.withGrid(18);
+    const y =  utils.withGrid(35); // Posiciona acima do NPC
+    
     box.style.transform = `translate(${x}px, ${y}px)`;
   }
   
