@@ -17,7 +17,8 @@ class Overworld {
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
             completedQuests: new Set(), // Um conjunto de IDs de quests já completadas
             currentQuestId: "Q1", // Começa com a primeira quest
-            questFlags: {}
+            questFlags: {},
+            frogsList: [],
         };
         this.audioManager = new Audio();
         this.level = 1;
@@ -40,6 +41,9 @@ class Overworld {
 
         if (questId === "Q1.1") {
             this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+        }
+        if (questId === "Q5.1") {
+            this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
         }
 
         // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
@@ -93,7 +97,7 @@ class Overworld {
     checkForQuestCompletion() {
         const questId = this.playerState.currentQuestId;
         if (!questId) return; // Se não houver quest ativa, não faz nada.
-
+        console.log("ue")
         // Encontra a quest atual na lista de quests
         const quest = window.QuestList.find(q => q.id === questId);
         if (!quest) return;
@@ -105,6 +109,9 @@ class Overworld {
             if (questId.includes(".")) {
                 if (questId === "Q1.1") {
                     this.map.hideQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+                }
+                if (questId === "Q5.1") {
+                    this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
                 }
                 console.log("foi")
                 this.playerState.completedQuests.add(questId);
@@ -139,6 +146,9 @@ class Overworld {
 
             if (this.playerState.currentQuestId === "Q1.1") {
                 this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+            }
+            if (this.playerState.currentQuestId === "Q5.1") {
+                this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
             }
 
             // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
@@ -218,6 +228,27 @@ class Overworld {
             if (e.detail.whoId === "frog3" && this.map.name === "Galinheiro") {
                 this.foundFrog3 = true;
             }
+            if (!this.playerState.frogsList.includes(e.detail.whoId)) {
+                this.audioManager.playFrogSoundEffect();
+                this.playerState.frogsList.push(e.detail.whoId);
+
+                let flagFrog;
+                if (e.detail.whoId === "frog1") {
+                    flagFrog = "FOUND_FROG_1";
+                }
+                if (e.detail.whoId === "frog2") {
+                    flagFrog = "FOUND_FROG_2";
+                }
+                if (e.detail.whoId === "frog3") {
+                    flagFrog = "FOUND_FROG_3";
+                }
+                const eventManager = new OverworldEvent ({
+                    event: { type: "questProgress", flag: flagFrog, counter: "FROGS_COLLECTED" },
+                    map: this.map,
+                });
+                eventManager.init();
+                this.checkForQuestCompletion();
+            }
         })
     }
 
@@ -239,8 +270,11 @@ class Overworld {
                     } else {
                         console.log("1")
                         for (let x = 0; x < npc.talking.length; x++) { // Passa por todos os eventos de fala do NPC
+                            console.log(npc.talking[x].events);
                             npc.talking[x].events.forEach(event => { // Para cada evento
+                                console.log(event);
                                 if (event.type === "textMessage" && event.quest === this.playerState.currentQuestId && !dialogHappened) { // Se o tipo do evento for textMessage e a quest do evento for a quest atual do player
+                                    console.log("hmm")
                                     this.map.startCutscene(npc.talking[x].events); // Começa a cutscene
                                     dialogHappened = true; // Marca que já ouve o diálogo
                                 }

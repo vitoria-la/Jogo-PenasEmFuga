@@ -53,7 +53,6 @@ class TextMessage {
     
     // Adiciona o elemento ao DOM
     document.querySelector(".game-container").appendChild(this.element);
-    
     // Posiciona a caixa de diálogo acima do NPC
     this.positionMessageBox();
   }
@@ -85,7 +84,6 @@ class TextMessage {
     // Calcula a posição relativa à câmera
     const x = this.npc.x - cameraPerson.x + utils.withGrid(67);
     const y = this.npc.y - cameraPerson.y + utils.withGrid(10); // Posiciona acima do NPC
-    
     box.style.transform = `translate(${x}px, ${y}px)`;
   }
   
