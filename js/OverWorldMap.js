@@ -20,6 +20,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.easterEggsFound = state.easterEggsFound || [];
         this.easterEggsFoundID = state.easterEggsFoundID || [];
         this.name = config.name; // Serve para saber em qual mapa se está
+        this.playerState = state.playerState || {};
 
         const groundDecalsConfig = config.groundDecals || {};
         Object.keys(groundDecalsConfig).forEach(key => {
@@ -227,7 +228,13 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca" },
+                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca", quest: "Q1"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Uai, achei que a Caipira tinha te mandado trabalhar...", faceHero: "galinhaBranca", quest: "Q2"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
                         ]
                     },
@@ -263,7 +270,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
                         ]
                     }
@@ -521,12 +528,11 @@ window.OverworldMaps = {
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ],
                 talking: [
-                    {
-                        events: [
-                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                    {events: [ 
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1" },
                             { type: "questProgress", flag: "TALKED_TO_GALINHA__OVOS_DOURADOS", counter: "CHICKENS_SPOKEN_TO" }
                         ]
-                    }
+                    },
                 ]
             },
             frog1: {  // Sapo da sala de costura

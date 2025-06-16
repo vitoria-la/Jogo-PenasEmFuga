@@ -6,15 +6,15 @@ class DialogManager {
   constructor() {
     this.npcDialogs = {
       // Diálogos para cada NPC do jogo
-      // "galinhaBranca": [
-      //   "Olá! Bem-vindo ao galinheiro.",
-      //   "Estamos planejando uma fuga em breve.",
-      //   "Você vai nos ajudar?"
-      // ],
-      // "galinhaMarrom": [
-      //   "Psiu! Não deixe os guardas te verem.",
-      //   "Eles estão de olho em todos nós."
-      // ],
+      "galinhaBranca": [
+        "Olá! Bem-vindo ao galinheiro.",
+        "Estamos planejando uma fuga em breve.",
+        "Você vai nos ajudar?"
+      ],
+      "galinhaMarrom": [
+        "Psiu! Não deixe os guardas te verem.",
+        "Eles estão de olho em todos nós."
+      ],
       "Paova": [
         "Eu sou a Paova, a galinha mais velha daqui.",
         "Já vi muitas tentativas de fuga fracassarem.",
