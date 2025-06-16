@@ -206,8 +206,8 @@ window.OverworldMaps = {
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(19), // 14
-                y: utils.withGrid(28), // 16
+                x: utils.withGrid(14), // 14
+                y: utils.withGrid(16), // 16
             },
             galinhaBranca: {
                 type: "Person",
@@ -500,7 +500,7 @@ window.OverworldMaps = {
                                 quantity: 20,
                                 events_if_enough: [
                                     { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!" },
-                                { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
+                                    { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
                                 ],
                                 events_if_not_enough: [
                                     {type: "textMessage", who: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor."}
@@ -1256,8 +1256,8 @@ window.OverworldMaps = {
             },
             galinhaCaipira: {
                 type: "Person",
-                x: utils.withGrid(0),
-                y: utils.withGrid(0),
+                x: utils.withGrid(-20),
+                y: utils.withGrid(23),
                 src: "./assets/img/galinhaCaipira.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -1272,6 +1272,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Guri, preciso de ajuda. Plante 9 trigos para a Paova assar os pães do cafézin", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_CAIPIRA", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
             },
             cavalo: {

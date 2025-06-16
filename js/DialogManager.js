@@ -44,6 +44,10 @@ class DialogManager {
         "Tenho os melhores produtos do galinheiro!",
         "Dá uma olhada!",
       ],
+      "galinhaCaipira": [
+        "...Toda vez que eu viajava",
+        "pela estrada de ouro fino...",
+      ],
       "galinhaBrancaQuestIcon": [
         "Hmmmm",
         "Não era para isso ter acontecido...",
