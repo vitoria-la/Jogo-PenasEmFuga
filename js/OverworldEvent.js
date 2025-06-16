@@ -139,6 +139,8 @@ class OverworldEvent {
     questProgress(resolve) {
         const flag = this.event.flag;
         const state = this.map.overworld.playerState;
+        console.log(flag);
+        console.log(state);
 
         // Verifica se o jogador já interagiu com este NPC antes
         if (!state.storyFlags[flag]) {
@@ -147,10 +149,14 @@ class OverworldEvent {
 
             if (this.event.counter) {
                 const counterName = this.event.counter;
+                console.log(counterName);
+                console.log(state.questFlags[counterName]);
                 if (!state.questFlags[counterName]) {
                     state.questFlags[counterName] = 0;
+                    console.log("uai")
                 }
                 state.questFlags[counterName] += 1;
+                console.log(state.questFlags[counterName]);
             }
     
             // Atualiza a HUD com o novo progresso

@@ -16,6 +16,9 @@ const QuestChecks = {
     FALAR_COM_4_GALINHAS(playerState) {
         // O objetivo é ter falado com 4 galinhas ou mais para a quest do chef
         return playerState.questFlags.CHEF_INFO_GATHERED >= 4;
+    },
+    FALAR_COM_CAIPIRA(playerState) {
+        return playerState.questFlags.CHICKENS_SPOKEN_TO >= 1;
     }
     // Adicione as funções de verificação para as outras quests aqui...
 }
@@ -29,6 +32,18 @@ window.QuestList = [
         checkCompletion: QuestChecks.FALAR_COM_GALINHAS,
         progressKey: "CHICKENS_SPOKEN_TO", 
         progressTarget: 3,
+        reward: {
+            type: "item",
+            item: { id: "semente_trigo", name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
+        }
+    },
+    {
+        id: "Q1.1",
+        name: "",
+        description: "Fale com a Galinha Caipira na fazenda",
+        checkCompletion: QuestChecks.FALAR_COM_CAIPIRA,
+        progressKey: "CHICKENS_SPOKEN_TO", 
+        progressTarget: 1,
         reward: {
             type: "item",
             item: { id: "semente_trigo", name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
