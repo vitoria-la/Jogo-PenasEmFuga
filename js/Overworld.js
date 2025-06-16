@@ -38,6 +38,10 @@ class Overworld {
         // 2. Atualiza o estado do jogador para a nova quest
         this.playerState.currentQuestId = questId;
 
+        if (questId === "Q1.1") {
+            this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+        }
+
         // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
         // (Opcional, mas recomendado para quests com contadores)
         // Por exemplo, se a nova quest usar um contador, você pode querer zerá-lo aqui.
@@ -99,6 +103,9 @@ class Overworld {
             console.log(`Quest ${quest.name} completada!`);
             console.log(questId);
             if (questId.includes(".")) {
+                if (questId === "Q1.1") {
+                    this.map.hideQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+                }
                 console.log("foi")
                 this.playerState.completedQuests.add(questId);
                 const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
@@ -129,6 +136,10 @@ class Overworld {
             const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
             const nextQuest = window.QuestList[currentQuestIndex + 1];
             this.playerState.currentQuestId = nextQuest ? nextQuest.id : null;
+
+            if (this.playerState.currentQuestId === "Q1.1") {
+                this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+            }
 
             // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
             this.level += 1; // Aumenta o nível do jogador
@@ -315,7 +326,6 @@ class Overworld {
         this.hud.updateCoins(this.coins);
 
         this.startMap(window.OverworldMaps.Galinheiro);
-
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
         this.directionInput.init();
         //this.directionInput.direction;

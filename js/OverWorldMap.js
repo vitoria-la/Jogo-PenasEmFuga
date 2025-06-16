@@ -130,9 +130,13 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                     instance.isVisible = false;
                 }
             }
+
+            if (this.playerState.currentQuestId === "Q1.1" && key === "galinhaCaipiraQuestIcon") {
+                this.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+            }
             
             if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
-                this.gameObjects[key].x = utils.withGrid(50);
+                this.gameObjects[key].y = utils.withGrid(-50);
             }
 
             instance.mount(this);
@@ -158,6 +162,41 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                         object.questIcon = this.gameObjects[name]; // Vincula os dois
                     }
                 })
+            }
+        })
+    }
+
+    showQuestIcon(questIcon, npc) {
+        let objectNpc, questIconObj;
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos 
+            if (key === npc) {
+                objectNpc = this.gameObjects[key];
+            }
+        })
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos
+            if (key === questIcon) {
+                questIconObj = this.gameObjects[key];
+                questIconObj.isVisible = true;
+                questIconObj.x = utils.withGrid(objectNpc.x);
+                questIconObj.y = utils.withGrid(objectNpc.y) - utils.withGrid(2);
+                console.log("teste")
+            }
+        })
+    }
+
+    hideQuestIcon(questIcon, npc) {
+        let objectNpc, questIconObj;
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos 
+            if (key === npc) {
+                objectNpc = this.gameObjects[key];
+            }
+        })
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos
+            if (key === questIcon) {
+                questIconObj = this.gameObjects[key];
+                questIconObj.isVisible = false;
+                questIconObj.y = utils.withGrid(-50);
+                console.log("teste")
             }
         })
     }
@@ -1258,6 +1297,7 @@ window.OverworldMaps = {
                 type: "Person",
                 x: utils.withGrid(-20),
                 y: utils.withGrid(23),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaCaipira.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -1281,6 +1321,14 @@ window.OverworldMaps = {
                         ]
                     }
                 ]
+            },
+            galinhaCaipiraQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(-20),
+                y: utils.withGrid(21),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
             cavalo: {
                 type: "Person",
