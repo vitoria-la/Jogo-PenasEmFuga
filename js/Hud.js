@@ -167,6 +167,19 @@ class Hud {
     }
   }
 
+  removeHotbarSlotItem(slotIndex) {
+    const item = this.hotbarItems[slotIndex];
+    if (!item) return;
+
+    item.quantity -= 1;
+    if (item.quantity <= 0) {
+        this.hotbarItems[slotIndex] = null;
+        this.hotbarSlots[slotIndex].innerHTML = ""; // Limpa o slot visualmente
+    } else {
+        this.updateHotbarSlot(slotIndex, item); // Atualiza o slot visualmente com a nova quantidade
+    }
+}
+
   // Método para atualizar a lista de tarefas
   updateTasks(activeQuestId, playerState) {
     const listElement = this.taskListPanelElement.querySelector("ul");

@@ -8,10 +8,10 @@ class Overworld {
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
         this.playerState = {
-            items:[
-                // Para teste, vamos começar com algumas sementes
-                { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 },
-                { id: 4, name: "Semente de Milho (x5)", src: "./assets/img/milhoSemente.png", quantity: 5 },
+            items:[ 
+                // // Para teste, vamos começar com algumas sementes
+                // { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5, price: 2 },
+                // { id: 4, name: "Semente de Milho (x5)", src: "./assets/img/milhoSemente.png", quantity: 5, price: 4 },
                 null, null, null, null
             ],
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
