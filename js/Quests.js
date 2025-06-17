@@ -9,6 +9,19 @@ const QuestChecks = {
         const trigo = playerState.items.find(item => item && item.id === "trigo");
         return trigo && trigo.quantity >= 9;
     },
+    // --- LÓGICA PARA A QUEST 4 ---
+    // Verifica se o jogador falou com a Bernadette para iniciar a quest.
+    FALOU_COM_BERNADETTE_Q4(playerState) {
+        return playerState.storyFlags.SPOKEN_TO_BERNADETTE_FOR_Q4;
+    },
+    // Verifica se o jogador pegou o mingau com a Paova.
+    PEGOU_MINGAU_COM_PAOVA_Q4(playerState) {
+        return playerState.storyFlags.GOT_PORRIDGE_FROM_PAOVA_Q4;
+    },
+    // Verifica se o mingau foi entregue com sucesso.
+    ENTREGOU_MINGAU_Q4(playerState) {
+        return playerState.storyFlags.DELIVERED_PORRIDGE_Q4;
+    },
     ENTREGAR_MILHO_GALINACIA(playerState) {
         // A quest é completada quando a flag 'entregouMilho' for verdadeira
         return playerState.storyFlags.entregouMilho;
@@ -84,6 +97,31 @@ window.QuestList = [
         }
     },
     // ... Suas quests Q3 e Q4 aqui ...
+     {
+        id: "Q4.1",
+        name: "", // Sub-quest para iniciar a conversa
+        description: "Bernadette parece precisar de ajuda. Fale com ela.",
+        checkCompletion: QuestChecks.FALOU_COM_BERNADETTE_Q4,
+        progressKey: "SPOKEN_TO_BERNADETTE_FOR_Q4",
+        progressTarget: 1,
+    },
+    {
+        id: "Q4.2",
+        name: "", // Sub-quest para pegar o mingau
+        description: "Vá até a cozinha e pegue o mingau com a Paova.",
+        checkCompletion: QuestChecks.PEGOU_MINGAU_COM_PAOVA_Q4,
+        progressKey: "GOT_PORRIDGE_FROM_PAOVA_Q4",
+        progressTarget: 1,
+    },
+    {
+        id: "Q4",
+        name: "Entrega Quente",
+        description: "Leve o mingau para a Bernadette antes que esfrie!",
+        checkCompletion: QuestChecks.ENTREGOU_MINGAU_Q4,
+        progressKey: "DELIVERED_PORRIDGE_Q4",
+        progressTarget: 1,
+        reward: { type: "coins", amount: 35 }
+    },
     {
         id: "Q5",
         name: "Ajuda a Galinácia à alimentar suas galinhas!",

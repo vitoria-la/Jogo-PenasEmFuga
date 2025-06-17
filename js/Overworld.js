@@ -9,20 +9,19 @@ class Overworld {
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
         this.playerState = {
             items:[
-                // Para teste, vamos começar com algumas sementes
-                { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 },
-                { id: 4, name: "Semente de Milho (x5)", src: "./assets/img/milhoSemente.png", quantity: 5 },
-                null, null, null, null
+                null, null, null, null, null, null
             ],
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
             completedQuests: new Set(), // Um conjunto de IDs de quests já completadas
             currentQuestId: "Q1", // Começa com a primeira quest
             questFlags: {},
             frogsList: [],
+            porridgeTimerEndsAt: null, // Guarda o timestamp de quando o timer acaba
         };
         this.audioManager = new Audio();
         this.level = 1;
         this.coins = 100;
+        this.timer = null; // Para a instância do Timer visual
 
         this.plantingSystem = null; // Sistema de plantio, será inicializado depois
     }
@@ -93,6 +92,15 @@ class Overworld {
         }
     }
 
+     removeItemFromPlayer(itemId) {
+        const itemSlotIndex = this.playerState.items.findIndex(slot => slot && slot.id === itemId);
+    
+        if (itemSlotIndex > -1) {
+            this.playerState.items[itemSlotIndex] = null;
+            this.hud.updateHotbarSlot(itemSlotIndex, null); // Atualiza a HUD para mostrar o slot vazio
+            console.log(`Item ${itemId} removido.`);
+        }
+    }
     // Método principal para verificar o progresso da quest
     checkForQuestCompletion() {
         const questId = this.playerState.currentQuestId;
@@ -362,6 +370,15 @@ class Overworld {
 
         this.plantingSystem = new PlantingSystem(this);
         this.plantingSystem.init();
+        this.timer = new Timer({
+            overworld: this,
+            onTimeEnd: () => {
+                // Esta função é chamada quando o timer da classe Timer chega a zero
+                console.log("O tempo acabou! O mingau esfriou.");
+                this.removeItemFromPlayer("mingauQuente");
+                this.addItemToHotbar(window.Items.mingauFrio); // Adiciona o item "Mingau Frio"
+            }
+        });
         
         this.audioManager.startSoundtrack();
         // Inicializa a hotbar com os itens iniciais
