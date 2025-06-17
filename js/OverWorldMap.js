@@ -421,6 +421,15 @@ window.OverworldMaps = {
                             { type: "textMessage", faceHero: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
+                    },
+                    // Diálogo para a Quest 4.2: entregar o mingau.
+                    {
+                        events: [
+                            { type: "textMessage", faceHero: "Paova", text: "Mingau para a Bernadette? Acabou de sair do fogo!", quest: "Q4.2" },
+                            { type: "addItemToPlayer", item: window.Items.mingauQuente },
+                            { type: "startVisualTimer", duration: 20 },
+                            { type: "questProgress", flag: "GOT_PORRIDGE_FROM_PAOVA_Q4", counter: "GOT_PORRIDGE_FROM_PAOVA_Q4" }
+                        ]
                     }
                 ]
             },
@@ -566,8 +575,47 @@ window.OverworldMaps = {
                             { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     },
+                    // Diálogo para iniciar a Quest 4 (acionado durante a Q4.1)
                     {
                         events: [
+                            { type: "textMessage", faceHero: "Bernadette", text: "Meu querido, estou com uma fome...", quest: "Q4.1" },
+                            { type: "textMessage", faceHero: "Bernadette", text: "A Paova estava fazendo um mingau pra mim na cozinha.", quest: "Q4.1" },
+                            { type: "textMessage", faceHero: "Bernadette", text: "Você poderia ir lá buscar pra essa galinha velha?", quest: "Q4.1" },
+                            { type: "questProgress", flag: "SPOKEN_TO_BERNADETTE_FOR_Q4", counter: "SPOKEN_TO_BERNADETTE_FOR_Q4" }
+                        ]
+                    },
+                     {
+                        events: [
+                            { type: "textMessage", text: "Conseguiu trazer, meu bem?", faceHero: "Bernadette", quest: "Q4" },
+                            { 
+                                type: "handlePorridgeDelivery",
+                                
+                                // O que acontece se o jogador tiver o mingau QUENTE
+                                events_if_hot: [
+                                    { type: "stopVisualTimer" },
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Ah, muito obrigada! Chegou quentinho, que alegria!" },
+                                    { type: "removeItem", itemId: "mingauQuente" },
+                                    { type: "questProgress", flag: "DELIVERED_PORRIDGE_Q4", counter: "DELIVERED_PORRIDGE_Q4" }
+                                ],
+
+                                // O que acontece se o jogador tiver o mingau FRIO
+                                events_if_cold: [
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Oh, que pena, o mingau esfriou..." },
+                                    { type: "removeItem", itemId: "mingauFrio" },
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Por favor, pegue outro com a Paova." },
+                                    { type: "setQuest", questId: "Q4.2" }
+                                ],
+
+                                // O que acontece se o jogador não tiver NENHUM mingau
+                                events_if_none: [
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Ainda estou esperando o mingau, querido." }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado...", quest: "Q10.1"},
                             { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_3_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
