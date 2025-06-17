@@ -284,6 +284,13 @@ class OverworldEvent {
         resolve();
     }
 
+    openShop(resolve) {
+        // Simplesmente chama a função global openShop() do arquivo Shop.js
+        openShop();
+        // Resolve imediatamente, pois a loja em si já pausa o jogo com seu overlay
+        resolve();
+    }
+
     init() {
         return new Promise(resolve => {
             this[this.event.type](resolve) // this.event.type é o tipo de animação

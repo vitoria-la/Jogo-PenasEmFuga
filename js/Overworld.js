@@ -1,5 +1,5 @@
 class Overworld {
-    constructor(config){
+    constructor(config) {
         this.element = config.element;
         this.canvas = this.element.querySelector(".game-canvas");
         this.ctx = this.canvas.getContext("2d");
@@ -8,7 +8,7 @@ class Overworld {
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
         this.playerState = {
-            items:[
+            items: [
                 null, null, null, null, null, null
             ],
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
@@ -64,63 +64,71 @@ class Overworld {
     }
 
     removeItemFromHotbar(itemToRemove) {
-        let removed = false;
+        // --- ADICIONE ESTES CONSOLE.LOG PARA DEBUG ---
+        console.log("-----------------------------------------");
+        console.log("Iniciando removeItemFromHotbar...");
+        console.log("Item para remover:", JSON.stringify(itemToRemove));
+        console.log("Inventário ANTES:", JSON.stringify(this.playerState.items));
+
         for (let i = 0; i < this.playerState.items.length; i++) {
             const slot = this.playerState.items[i];
+
             if (slot && slot.id === itemToRemove.id) {
-                if (slot.quantity > 1) {
-                    slot.quantity -= 1;
-                } else {
+                console.log(`Encontrou o item no slot ${i}. Quantidade atual: ${slot.quantity}`);
+
+                slot.quantity -= itemToRemove.quantity;
+                console.log(`Quantidade APÓS subtração: ${slot.quantity}`);
+
+                if (slot.quantity <= 0) {
+                    console.log("Quantidade zerou. Removendo o item do slot.");
                     this.playerState.items[i] = null;
                 }
-                removed = true;
+
+                console.log("Chamando hud.updateHotbarSlot com o item:", JSON.stringify(this.playerState.items[i]));
+                this.hud.updateHotbarSlot(i, this.playerState.items[i]);
+                console.log("-----------------------------------------");
                 break;
             }
-        }
-        if (removed) {
-            this.playerState.items.forEach((item, i) => {
-                this.hud.updateHotbarSlot(i, item);
-            });
-        } else {
-            console.log("Item não encontrado na hotbar para remoção.");
         }
     }
 
     addItemToHotbar(itemToAdd) {
         let added = false;
         // 1. Tenta empilhar com um item existente
-        for (let i = 0; i < this.playerState.items.length; i++) { // Alterado de playerHotbar para playerState.items
+        for (let i = 0; i < this.playerState.items.length; i++) {
             const slot = this.playerState.items[i];
             if (slot && slot.id === itemToAdd.id) {
                 slot.quantity += itemToAdd.quantity;
                 added = true;
+                this.hud.updateHotbarSlot(i, slot); // Atualiza a HUD
                 break;
             }
         }
         // 2. Se não empilhou, procura um slot vazio
         if (!added) {
-            for (let i = 0; i < this.playerState.items.length; i++) { // Alterado de playerHotbar para playerState.items
+            for (let i = 0; i < this.playerState.items.length; i++) {
                 if (this.playerState.items[i] === null) {
-                    this.playerState.items[i] = itemToAdd;
+
+                    // --- A CORREÇÃO CRÍTICA ESTÁ AQUI ---
+                    // Cria uma CÓPIA do item em vez de usar a referência direta.
+                    // O '...' (spread operator) cria um novo objeto com as mesmas propriedades.
+                    this.playerState.items[i] = { ...itemToAdd };
+
                     added = true;
+                    this.hud.updateHotbarSlot(i, this.playerState.items[i]); // Atualiza a HUD
                     break;
                 }
             }
         }
 
-        if (added) {
-            // 3. Sincroniza a HUD com o novo estado do inventário
-            this.playerState.items.forEach((item, i) => { // Alterado de playerHotbar para playerState.items
-                this.hud.updateHotbarSlot(i, item);
-            });
-        } else {
+        if (!added) {
             console.log("Hotbar cheia! Não foi possível adicionar o item.");
         }
     }
 
-     removeItemFromPlayer(itemId) {
+    removeItemFromPlayer(itemId) {
         const itemSlotIndex = this.playerState.items.findIndex(slot => slot && slot.id === itemId);
-    
+
         if (itemSlotIndex > -1) {
             this.playerState.items[itemSlotIndex] = null;
             this.hud.updateHotbarSlot(itemSlotIndex, null); // Atualiza a HUD para mostrar o slot vazio
@@ -161,8 +169,8 @@ class Overworld {
             }
 
             // Para rodar o gif de quest concluída
-            if(document.getElementById("gif-screen"))return; 
-            
+            if (document.getElementById("gif-screen")) return;
+
 
             const finishedQuestGif = document.createElement("div");
             finishedQuestGif.id = "gif-screen";
@@ -180,14 +188,14 @@ class Overworld {
                 console.log(this.playerState.currentQuestId);
                 if (oldQuestId === "Q6") { // Se a quest que foi concluída era a 6, se for, o player recebe o easter egg da galinha da montanha
                     console.log("uai");
-                    const eventManager = new OverworldEvent ({
-                        event: {type: "foundEasterEgg", who: "galinhaDaMontanha"},
+                    const eventManager = new OverworldEvent({
+                        event: { type: "foundEasterEgg", who: "galinhaDaMontanha" },
                         map: this.map,
                     });
                     eventManager.init();
                 }
             }, 7800);
-            
+
             // Marca como completa e avança para a próxima
             this.playerState.completedQuests.add(questId);
             const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
@@ -218,7 +226,7 @@ class Overworld {
                     this.hud.updateCoins(this.coins);
                 }
             }
-            
+
             // Atualiza a HUD
             this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
         }
@@ -228,7 +236,7 @@ class Overworld {
         const step = () => {
 
             //Clear off the canvas
-            this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height); // Limpa todo o canvas para desenhar o próximo
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Limpa todo o canvas para desenhar o próximo
 
             //Estibiliza a camera no personagem
             const cameraPerson = this.map.gameObjects.hero;
@@ -253,7 +261,7 @@ class Overworld {
 
             // Desenha a layer de cima
             this.map.drawUpperImage(this.ctx, cameraPerson);
-         
+
             requestAnimationFrame(() => {
                 step();
             })
@@ -295,7 +303,7 @@ class Overworld {
                 if (e.detail.whoId === "frog3") {
                     flagFrog = "FOUND_FROG_3";
                 }
-                const eventManager = new OverworldEvent ({
+                const eventManager = new OverworldEvent({
                     event: { type: "questProgress", flag: flagFrog, counter: "FROGS_COLLECTED" },
                     map: this.map,
                 });
@@ -334,7 +342,7 @@ class Overworld {
                             })
                         }
                     }
-                } 
+                }
 
                 if (!dialogHappened) { // Se o diálogo não aconteceu
                     // Senão, usa o DialogManager para diálogos simples
@@ -342,22 +350,22 @@ class Overworld {
                     if (!this.map.dialogManager) {
                         this.map.dialogManager = new DialogManager();
                     }
-                        // Condição especial para a galinha da loja
+                    // Condição especial para a galinha da loja
                     if (npc.id === "galinhaPenosa") {
                         console.log("1")
                         this.map.dialogManager.startDialog(npc.id, this.map, () => {
-                                // Esta função será chamada QUANDO o diálogo terminar
-                            openShop(); 
+                            // Esta função será chamada QUANDO o diálogo terminar
+                            openShop();
                         });
                     } else {
                         console.log("1")
-                            // Para todos os outros NPCs simples
+                        // Para todos os outros NPCs simples
                         this.map.dialogManager.startDialog(npc.id, this.map);
                     }
                 }
             }
 
-            
+
 
 
         });
@@ -391,7 +399,7 @@ class Overworld {
             playerState: this.playerState,
         });
         this.map.overworld = this;
-        
+
         this.map.mountObjects();
         this.map.putQuestIcon();
     }
@@ -411,7 +419,7 @@ class Overworld {
                 this.addItemToHotbar(window.Items.mingauFrio); // Adiciona o item "Mingau Frio"
             }
         });
-        
+
         this.audioManager.startSoundtrack();
         // Inicializa a hotbar com os itens iniciais
         this.playerState.items.forEach((item, i) => {

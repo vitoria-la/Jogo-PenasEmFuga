@@ -58,6 +58,17 @@ const QuestChecks = {
     FALAR_COM_JUNINHO(playerState) {
         return playerState.questFlags.SPOKEN_TO_JUNINHO >= 1;
     },
+    SPOKE_TO_PENOSA_FOR_STOCK(playerState) {
+        return playerState.storyFlags.SPOKE_TO_PENOSA_FOR_STOCK;
+    },
+    VENDER_TRIGO_PENOSA(playerState) {
+        const trigoVendido = playerState.questFlags.WHEAT_SOLD || 0;
+        return trigoVendido >= 15;
+    },
+    VENDER_MILHO_PENOSA(playerState) {
+        const milhoVendido = playerState.questFlags.CORN_SOLD || 0;
+        return milhoVendido >= 15;
+    },
     // Adicione as funções de verificação para as outras quests aqui...
 }
 
@@ -68,7 +79,7 @@ window.QuestList = [
         name: "Primeiros Passos",
         description: "Explore o galinheiro e converse com pelo menos 3 galinhas.",
         checkCompletion: QuestChecks.FALAR_COM_GALINHAS,
-        progressKey: "CHICKENS_SPOKEN_TO", 
+        progressKey: "CHICKENS_SPOKEN_TO",
         progressTarget: 3,
         reward: {
             type: "item",
@@ -80,7 +91,7 @@ window.QuestList = [
         name: "",
         description: "Fale com a Galinha Caipira na fazenda",
         checkCompletion: QuestChecks.FALAR_COM_CAIPIRA,
-        progressKey: "SPOKEN_TO_CAIPIRA", 
+        progressKey: "SPOKEN_TO_CAIPIRA",
         progressTarget: 1,
         reward: {
             type: "item",
@@ -92,15 +103,15 @@ window.QuestList = [
         name: "Mãos à Obra",
         description: "Colete 9 trigos para a comunidade.",
         checkCompletion: QuestChecks.COLETAR_TRIGO,
-        progressKey: "WHEAT_COLLECTED", 
-        progressTarget: 9, 
+        progressKey: "WHEAT_COLLECTED",
+        progressTarget: 9,
         reward: {
             type: "coins",
             amount: 20
         }
     },
-    // ... Suas quests Q3 e Q4 aqui ...
-     {
+    // ... Suas quests Q3 aqui ...
+    {
         id: "Q4.1",
         name: "", // Sub-quest para iniciar a conversa
         description: "Bernadette parece precisar de ajuda. Fale com ela.",
@@ -139,7 +150,7 @@ window.QuestList = [
         name: "",
         description: "Fale com a Galinácia",
         checkCompletion: QuestChecks.FALAR_COM_GALINACIA,
-        progressKey: "SPOKEN_TO_GALINACIA", 
+        progressKey: "SPOKEN_TO_GALINACIA",
         progressTarget: 1,
         reward: { type: "coins", amount: 50 }
     },
@@ -148,7 +159,7 @@ window.QuestList = [
         name: "",
         description: "Pergunte a 3 galinhas sobre as 'galinhas da montanha'",
         checkCompletion: QuestChecks.FALAR_COM_3_GALINHAS_SAPO,
-        progressKey: "CHICKENS_SPOKEN_TO_FROG", 
+        progressKey: "CHICKENS_SPOKEN_TO_FROG",
         progressTarget: 3,
         reward: { type: "coins", amount: 50 }
     },
@@ -157,14 +168,41 @@ window.QuestList = [
         name: "Caça montanhosa!",
         description: "Colete as 3 galinhas da montanha para a Galinácia.",
         checkCompletion: QuestChecks.PEGAR_3_SAPOS,
-        progressKey: "FROGS_COLLECTED", 
-        progressTarget: 3, 
+        progressKey: "FROGS_COLLECTED",
+        progressTarget: 3,
         reward: {
             type: "coins",
             amount: 20
         }
     },
-    // ... Suas quests Q6, Q7, Q8 aqui ...
+    // ... Suas quests Q7, Q8 aqui ...
+    {
+        id: "Q8",
+        name: "Abastecendo o Estoque",
+        description: "Fale com a galinha Penosa para saber como ajudar a loja.",
+        checkCompletion: QuestChecks.SPOKE_TO_PENOSA_FOR_STOCK,
+        progressKey: "SPOKE_TO_PENOSA_FOR_STOCK",
+        progressTarget: 1,
+        reward: { type: "coins", amount: 20 } // Recompensa por iniciar a conversa
+    },
+    {
+        id: "Q8.1",
+        name: "", // Etapa interna
+        description: "Venda 15 trigos para a Penosa.",
+        checkCompletion: QuestChecks.VENDER_TRIGO_PENOSA,
+        progressKey: "WHEAT_SOLD",
+        progressTarget: 15,
+        reward: { type: "coins", amount: 100 }
+    },
+    {
+        id: "Q8.2",
+        name: "", // Etapa interna
+        description: "Agora, venda 15 milhos para a Penosa.",
+        checkCompletion: QuestChecks.VENDER_MILHO_PENOSA,
+        progressKey: "CORN_SOLD",
+        progressTarget: 15,
+        reward: { type: "coins", amount: 150 }
+    },
     {
         id: "Q9",
         name: "Segredos do Chef",
@@ -206,7 +244,7 @@ window.QuestList = [
         name: "", // Nome vazio
         description: "Fale com o chefe.",
         checkCompletion: QuestChecks.FALAR_COM_JUNINHO,
-        progressKey: "SPOKEN_TO_JUNINHO", 
+        progressKey: "SPOKEN_TO_JUNINHO",
         progressTarget: 1,
         reward: { type: "coins", amount: 150 }
     },

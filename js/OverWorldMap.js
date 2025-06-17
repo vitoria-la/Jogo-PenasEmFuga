@@ -731,6 +731,31 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaPenosa.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
+                ],
+                talking: [
+                    {events: [ 
+                            { type: "textMessage", text: "Ah, que bom que você veio! O estoque está um caos...", faceHero: "galinhaPenosa", quest: "Q8"},
+                            { type: "textMessage", text: "O chefe não tem saído muito, então não consigo repor minhas prateleiras.", faceHero: "galinhaPenosa", quest: "Q8"},
+                            { type: "textMessage", text: "Que tal começar me vendendo 15 trigos? Isso já ajudaria muito!", faceHero: "galinhaPenosa", quest: "Q8"},
+                            { type: "questProgress", flag: "SPOKE_TO_PENOSA_FOR_STOCK" },
+                            { type: "openShop" }
+                        ]
+                    },
+                    {events: [ 
+                            { type: "textMessage", text: "Qualquer trigo que você tiver, estou comprando!", faceHero: "galinhaPenosa", quest: "Q8.1"},
+                            { type: "openShop" }
+                        ]
+                    },
+                    {events: [ 
+                            { type: "textMessage", text: "Maravilha! O estoque de trigo está ótimo. Agora só preciso de 15 milhos para ficarmos perfeitos!", faceHero: "galinhaPenosa", quest: "Q8.2"},
+                            { type: "openShop" }
+                        ]
+                    },
+                    {events: [ 
+                            { type: "textMessage", text: "Oi, eu sou a Penosa! Dá uma olhada nos meus produtos!", faceHero: "galinhaPenosa" },
+                            { type: "openShop" }
+                        ]
+                    },
                 ]
             },
             JuninhoJunior: {
