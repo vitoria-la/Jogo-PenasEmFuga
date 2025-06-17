@@ -108,12 +108,12 @@ class PlantingSystem {
   
   // Tenta usar uma semente e plantar
   plantar(bloco) {
-    const sementeId = this.tipoPlantaSelecionado === 'trigo' ? 'Semente de Trigo (x5)' : 'Semente de Milho (x5)';
+    const sementeId = this.tipoPlantaSelecionado === 'trigo' ? 2 : 4; //passagem de iD
     const playerItems = this.overworld.playerState.items;
     
     let sementeSlot = -1;
     for (let i = 0; i < playerItems.length; i++) {
-        if (playerItems[i] && playerItems[i].name === sementeId) {
+        if (playerItems[i] && playerItems[i].id === sementeId) {
             sementeSlot = i;
             break;
         }

@@ -104,9 +104,9 @@ window.QuestList = [
         checkCompletion: QuestChecks.FALAR_COM_GALINHAS,
         progressKey: "CHICKENS_SPOKEN_TO",
         progressTarget: 3,
-        reward: {
-            type: "item",
-            item: { id: "semente_trigo", name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 }
+        reward:{
+            type: "coins",
+            amount: 10
         }
     },
     {

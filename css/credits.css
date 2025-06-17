@@ -1,0 +1,102 @@
+#credits-overlay {
+    position: fixed !important;
+    top: 0 !important; 
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0,0,0,0.7) !important; 
+    /* background: red; */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 10000 !important;
+}
+
+#credits-popup{
+    background: rgb(54, 3, 54)!important;
+    padding: 32px;
+    border-radius: 16px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    box-shadow: 0 0 32px #0008;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+#credits-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.credits-card{
+    background: violet;
+    border: 2px solid #DEB887;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 160px;
+    align-items: center;
+    box-shadow: 0 2px 8px #0002;
+}
+
+.credits-foto{
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}
+
+.credits-nome{
+    margin-bottom: 6px;
+}
+
+.credits-link {
+  display: inline-block;
+  margin: 6px 4px 0 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgb(221, 208, 208);
+  color: #222;
+  text-decoration: none;
+  font-size: 0.9em;
+  border: 1.5px solid #bbb;
+  transition: background 0.2s, color 0.2s;
+}
+
+.github { 
+    /* background: #24292e;  */
+    color: #fff; 
+    border-color: #24292e; 
+}
+
+.github:hover { 
+    background: #444; 
+}
+
+.github-img{
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+}
+
+.-linkedin { 
+    background: #0077b5; 
+    color: #fff; 
+    border-color: #0077b5; 
+}
+
+.linkedin:hover { 
+    background: #005983; 
+}
+
+.linkedin-img{
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+}
