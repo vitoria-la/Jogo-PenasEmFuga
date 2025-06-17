@@ -297,7 +297,9 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca", quest: "Q1"},
+                            { type: "textMessage", text: "O chefe não avisou nada sobre visita hoje…", faceHero: "galinhaBranca", quest: "Q1"},
+                            { type: "textMessage", text: "você tem autorização pra ciscar por aqui?", faceHero: "galinhaBranca", quest: "Q1"},
+                            { type: "textMessage", text: "… sugiro dar meia-volta antes que o galeto grande descubra.", faceHero: "galinhaBranca", quest: "Q1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
                         ]
                     },
@@ -378,7 +380,9 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1"},
+                            { type: "textMessage", text: "Hmm Você é parente da Glorinha? Não? Ah… deve ser só impressão então.", faceHero: "galinhaMarrom", quest: "Q1"},
+                            { type: "textMessage", text: "Não? ", faceHero: "galinhaMarrom", quest: "Q1"},
+                            { type: "textMessage", text: "Ah… deve ser só impressão então.", faceHero: "galinhaMarrom", quest: "Q1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
                         ]
                     }, {
@@ -518,7 +522,7 @@ window.OverworldMaps = {
                                 events_if_enough: [
                                     { type: "textMessage", faceHero: "Clotilde", text: "Certo...", quest: "Q10.5"},
                                     { type: "textMessage", faceHero: "Clotilde", text: "(tricô supersonico)", quest: "Q10.5"},
-                                    { type: "textMessage", faceHero: "Clotilde", text: "Aqui está 3 cobertores, coloque ele nos ovinhos!", quest: "Q10.5"},
+                                    { type: "textMessage", faceHero: "Clotilde", text: "Aqui está 3 cobertores, leve eles para a Bernadette!", quest: "Q10.5"},
                                     { type: "addItemToPlayer", item: window.Items.cobertores },
                                     { type: "questProgress", flag: "YARN_DELIVERED", counter: "YARN_DELIVERED_Q" } // Flag para completar a Quest 5
                                 ],
@@ -618,6 +622,12 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},
                 ],
                 talking: [
+                    {events: [ 
+                            { type: "textMessage", text: "Oi meu filho, você é novo por aqui?", faceHero: "Bernadette", quest: "Q1" },
+                            { type: "textMessage", text: "Você me lembra um franguinho que fugiu do galinheiro em 85… mas era mais bicudo", faceHero: "Bernadette", quest: "Q1" },
+                            { type: "questProgress", flag: "TALKED_TO_BERNADETTE_1", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    },
                     {
                         events: [
                             { type: "textMessage", faceHero: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui.", quest: "Q9" },
@@ -668,7 +678,26 @@ window.OverworldMaps = {
                             { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_3_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
-                    }
+                    },
+                    {
+                        events: [
+                            {
+                                type: "entregarItem",
+                                itemId: "cobertores",
+                                quantity: 3,
+                                quest: "Q10.6",
+                                events_if_enough: [
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Meu neto!", quest: "Q10.6"},
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Muito obrigado, os meus netinhos estão seguros!", quest: "Q10.6"},
+                                    { type: "questProgress", flag: "BLANKET_DELIVERED", counter: "BLANKET_DELIVERED_Q" } // Flag para completar a Quest 5
+                                ],
+                                events_if_not_enough: [
+                                    {type: "textMessage", faceHero: "Clotilde", text: "Hmm, recebi a informação que seriam 15 carretéis...", quest: "Q10.5"},
+                                    {type: "textMessage", faceHero: "Clotilde", text: "Com essa quantidade não consigo tricotar os cobertores.", quest: "Q10.5"}
+                                ]
+                            }
+                        ]
+                    },
                 ]
             },
             galinhaSegurancaMarrom: {
@@ -847,13 +876,6 @@ window.OverworldMaps = {
                     {type: "walk", direction: "left"},
                     {type: "stand", direction: "down", time: 9000},
                 ],
-                talking: [
-                    {events: [ 
-                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1" },
-                            { type: "questProgress", flag: "TALKED_TO_GALINHA__OVOS_DOURADOS", counter: "CHICKENS_SPOKEN_TO" }
-                        ]
-                    },
-                ]
             },
             frog1: {  // Sapo da sala de costura
                 type: "Person",
@@ -1624,10 +1646,31 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Guri, preciso de ajuda. Plante 9 trigos para a Paova assar os pães do cafézin", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "textMessage", text: "Guri, preciso de ajuda", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "textMessage", text: "Aquele trem da Paova fica inventando umas marmita diferenciada", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "textMessage", text: "e tá acabando com o trigo tudo!", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "textMessage", text: "Fiquei sabendo que você é do tipo prestativo...", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "textMessage", text: "Plante 9 trigos e me entregue!", faceHero: "galinhaCaipira", quest: "Q1.1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_CAIPIRA", counter: "SPOKEN_TO_CAIPIRA" }
                         ]
-                    }
+                    },
+                    {
+                        events: [
+                            {
+                                type: "entregarItem",
+                                itemId: "Trigo",
+                                quantity: 9,
+                                quest: "Q2",
+                                events_if_enough: [
+                                    { type: "textMessage", faceHero: "galinhaCaipira", text: "Eeeeee trem bão!!", quest: "Q2"},
+                                    { type: "questProgress", flag: "TALKED_TO_CAIPIRA_WHEAT", counter: "WHEAT_DELIVERED" } // Flag para completar a Quest 5
+                                ],
+                                events_if_not_enough: [
+                                    {type: "textMessage", faceHero: "galinhaCaipira", text: "Acha que eu não sei contar!? Não tem 9 trigos aí!", quest: "Q2"},
+                                ]
+                            }
+                        ]
+                    },
                 ]
             },
             galinhaCaipiraQuestIcon: {

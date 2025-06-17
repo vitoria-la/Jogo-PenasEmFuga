@@ -27,9 +27,8 @@ class DialogManager {
         "Qualquer coisa, basta conversar comigo!"
       ],
       "Bernadette": [ // Galinha velha, personalidade velha, meio velha, usa girias velhas
-        "Oi meu filho, você é novo por aqui?",
-        "Estou de olho nos meus novos netinhos, eles são f-OVO-finhos haha COF COF haha!",
-        "Você parece tão magrinho, estou fazendo uma pamonha quentinha!"
+        "Você parece tão magrinho, estou fazendo uma pamonha quentinha!",
+        "Deve estar na cozinha junto com o curau e a canjica"
       ],
       "galinhaSegurancaMarrom": [
         "Ei você! O que está fazendo aqui?",

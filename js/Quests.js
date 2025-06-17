@@ -6,8 +6,7 @@ const QuestChecks = {
     },
     COLETAR_TRIGO(playerState) {
         // O objetivo é ter 9 trigos ou mais no inventário
-        const trigo = playerState.items.find(item => item && item.id === 1 );
-        return trigo && trigo.quantity >= 9;
+        return playerState.storyFlags.TALKED_TO_GALINHA_CAIPIRA;
     },
     // --- LÓGICA PARA A QUEST 4 ---
     // Verifica se o jogador falou com a Bernadette para iniciar a quest.
@@ -77,7 +76,10 @@ const QuestChecks = {
     },
     LEVAR_LINHA(playerState) {
         return playerState.storyFlags.YARN_DELIVERED;
-    }
+    },
+    LEVAR_COBERTOR(playerState) {
+        return playerState.storyFlags.BLANKET_DELIVERED;
+    },
     // Adicione as funções de verificação para as outras quests aqui...
 }
 
@@ -116,16 +118,16 @@ window.QuestList = [
         progressTarget: 1,
         reward: {
             type: "item",
-            item: { id: 2 , name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
+            item: { id: "semente_trigo", name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 }
         }
     },
     {
         id: "Q2",
         name: "Mãos à Obra",
-        description: "Colete 9 trigos para a comunidade.",
+        description: "Colete 9 trigos para a comunidade e entregue a Galinha Caipira.",
         checkCompletion: QuestChecks.COLETAR_TRIGO,
-        progressKey: "WHEAT_COLLECTED",
-        progressTarget: 9,
+        progressKey: "WHEAT_DELIVERED",
+        progressTarget: 1,
         reward: {
             type: "coins",
             amount: 20
@@ -290,9 +292,9 @@ window.QuestList = [
     {
         id: "Q10.6",
         name: "", // Nome vazio
-        description: "Coloque o cobertor nos ovinhos",
+        description: "Leve os cobertores para a Bernadette",
         checkCompletion: QuestChecks.LEVAR_LINHA,
-        progressKey: "YARN_DELIVERED_Q",
+        progressKey: "BLANKET_DELIVERED_Q",
         progressTarget: 1,
         reward: { type: "coins", amount: 20 }
     },
