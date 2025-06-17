@@ -6,7 +6,7 @@ const QuestChecks = {
     },
     COLETAR_TRIGO(playerState) {
         // O objetivo é ter 9 trigos ou mais no inventário
-        const trigo = playerState.items.find(item => item && item.id === "trigo");
+        const trigo = playerState.items.find(item => item && item.id === 1 );
         return trigo && trigo.quantity >= 9;
     },
     // --- LÓGICA PARA A QUEST 4 ---
