@@ -151,7 +151,7 @@ class Overworld {
         if (quest.checkCompletion(this.playerState)) {
             console.log(`Quest ${quest.name} completada!`);
             console.log(questId);
-            if (questId.includes(".")) {
+            if (questId.includes(".") && questId !== "Q10.7") {
                 if (questId === "Q0.1") {
                     this.map.hideQuestIcon("ClotildeQuestIcon", "Clotilde");
                 }
@@ -245,6 +245,11 @@ class Overworld {
                     this.coins += quest.reward.amount;
                     this.hud.updateCoins(this.coins);
                 }
+            }
+
+            if (quest.onComplete) {
+                console.log("Função onComplete encontrada! Tentando executar a cutscene...");
+                quest.onComplete(); // Chama a função, que no caso é showCutscene
             }
 
             // Atualiza a HUD

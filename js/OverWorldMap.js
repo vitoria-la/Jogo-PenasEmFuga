@@ -522,7 +522,7 @@ window.OverworldMaps = {
                                 events_if_enough: [
                                     { type: "textMessage", faceHero: "Clotilde", text: "Certo...", quest: "Q10.5"},
                                     { type: "textMessage", faceHero: "Clotilde", text: "(tricô supersonico)", quest: "Q10.5"},
-                                    { type: "textMessage", faceHero: "Clotilde", text: "Aqui está 3 cobertores, leve eles para a Bernadette!", quest: "Q10.5"},
+                                    { type: "textMessage", faceHero: "Clotilde", text: "Aqui está os cobertores, leve eles para a Bernadette!", quest: "Q10.5"},
                                     { type: "addItemToPlayer", item: window.Items.cobertores },
                                     { type: "questProgress", flag: "YARN_DELIVERED", counter: "YARN_DELIVERED_Q" } // Flag para completar a Quest 5
                                 ],
@@ -684,16 +684,17 @@ window.OverworldMaps = {
                             {
                                 type: "entregarItem",
                                 itemId: "cobertores",
-                                quantity: 3,
+                                quantity: 1,
                                 quest: "Q10.6",
                                 events_if_enough: [
                                     { type: "textMessage", faceHero: "Bernadette", text: "Meu neto!", quest: "Q10.6"},
                                     { type: "textMessage", faceHero: "Bernadette", text: "Muito obrigado, os meus netinhos estão seguros!", quest: "Q10.6"},
-                                    { type: "questProgress", flag: "BLANKET_DELIVERED", counter: "BLANKET_DELIVERED_Q" } // Flag para completar a Quest 5
+                                    { type: "questProgress", flag: "BLANKET_DELIVERED", counter: "BLANKET_DELIVERED" } // Flag para completar a Quest 5
                                 ],
                                 events_if_not_enough: [
-                                    {type: "textMessage", faceHero: "Clotilde", text: "Hmm, recebi a informação que seriam 15 carretéis...", quest: "Q10.5"},
-                                    {type: "textMessage", faceHero: "Clotilde", text: "Com essa quantidade não consigo tricotar os cobertores.", quest: "Q10.5"}
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Meu neto!", quest: "Q10.6"},
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Muito obrigado, os meus netinhos estão seguros!", quest: "Q10.6"},
+                                    { type: "questProgress", flag: "BLANKET_DELIVERED", counter: "BLANKET_DELIVERED" }
                                 ]
                             }
                         ]
@@ -1933,6 +1934,15 @@ window.OverworldMaps = {
                                 { type: "questProgress", flag: "TALKED_TO_JUNINHO", counter: "SPOKEN_TO_JUNINHO" }
                             ]
                         },
+                        {
+                            events: [
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Certo...", quest: "Q10.7"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Você provou a sua honra.", quest: "Q10.7"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Não precisa de passagem de trem, eu ajeito as coisas.", quest: "Q10.7"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Obrigado, Pingo.", quest: "Q10.7"},
+                                { type: "questProgress", flag: "TALKED_TO_JUNINHO2", counter: "SPOKEN_TO_JUNINHO2" }
+                            ]
+                        },
                     ]
                 },
                 chickenNorris: {
@@ -1963,6 +1973,16 @@ window.OverworldMaps = {
                     type: "EasterEgg",
                     isEasterEgg: true,
                     name: "Foto rasgada...2!?",
+                    description: "Plot Twist",
+                    mapName: "Galinheiro",
+                    x: utils.withGrid(50),
+                    y: utils.withGrid(0),
+                    src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+                },
+                foto1: { // É um objeto de easter egg do álbum, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                    type: "EasterEgg",
+                    isEasterEgg: true,
+                    name: "Foto rasgada",
                     description: "Plot Twist",
                     mapName: "Galinheiro",
                     x: utils.withGrid(50),
@@ -2076,6 +2096,9 @@ window.OverworldMaps = {
                     ],
                     [utils.asGridCoord(-1,33)] : [
                         {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+                    [utils.asGridCoord(-3,14)] : [ // Achou o álbum da galinha pintadinha
+                        {events: [{type: "foundEasterEgg", who: "foto1"},]}
                     ],
                     [utils.asGridCoord(0,11)] : [ // Achou o álbum da galinha pintadinha
                         {events: [{type: "foundEasterEgg", who: "foto2"},]}
