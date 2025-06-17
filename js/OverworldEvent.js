@@ -170,12 +170,52 @@ class OverworldEvent {
         resolve();
     }
 
-    // OverworldEvent.js
-    // ADICIONE O MÉTODO ABAIXO
     startPlanting(resolve) {
         this.map.overworld.plantingSystem.open(() => {
             resolve();
         });
+    }
+    startVisualTimer(resolve) {
+        this.map.overworld.timer.start(this.event.duration);
+        resolve();
+    }
+
+    stopVisualTimer(resolve) {
+        this.map.overworld.timer.stop();
+        resolve();
+    }
+
+    removeItem(resolve) {
+        this.map.overworld.removeItemFromPlayer(this.event.itemId);
+        resolve();
+    }
+    
+    async handlePorridgeDelivery(resolve) {
+        const playerItems = this.map.overworld.playerState.items;
+        const hasHotPorridge = playerItems.some(item => item && item.id === "mingauQuente");
+        const hasColdPorridge = playerItems.some(item => item && item.id === "mingauFrio");
+        
+        // Define qual bloco de eventos rodar com base no que o jogador tem
+        let eventsToRun;
+        if (hasHotPorridge) {
+            eventsToRun = this.event.events_if_hot;
+        } else if (hasColdPorridge) {
+            eventsToRun = this.event.events_if_cold;
+        } else {
+            eventsToRun = this.event.events_if_none;
+        }
+
+        // Inicia a cutscene apropriada
+        await this.map.startCutscene(eventsToRun);
+        resolve();
+    }
+
+    setQuest(resolve) {
+        const questId = this.event.questId;
+        this.map.overworld.playerState.currentQuestId = questId;
+        this.map.overworld.hud.updateTasks(questId, this.map.overworld.playerState);
+        console.log(`Quest alterada para: ${questId}`);
+        resolve();
     }
 
     textMessage(resolve) {
@@ -241,6 +281,13 @@ class OverworldEvent {
             await this.map.startCutscene(events_if_not_enough);
         }
         
+        resolve();
+    }
+
+    openShop(resolve) {
+        // Simplesmente chama a função global openShop() do arquivo Shop.js
+        openShop();
+        // Resolve imediatamente, pois a loja em si já pausa o jogo com seu overlay
         resolve();
     }
 

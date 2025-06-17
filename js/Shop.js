@@ -1,5 +1,6 @@
 const itens_loja = [
-    {   id: 1,
+    {
+        id: 1,
         name: "Trigo",
         price: 1,
         description: "Trigo fresco e saudável!",
@@ -7,7 +8,8 @@ const itens_loja = [
         quantity: 0,
         itemPorCompra: 1, // Quantidade comprada por vez
     },
-    {   id: 2,
+    {
+        id: 2,
         name: "Semente de Trigo (x5)",
         price: 2,
         description: "Sementes de trigo para plantar!",
@@ -15,7 +17,8 @@ const itens_loja = [
         quantity: 0,
         itemPorCompra: 5,
     },
-    {   id: 3,    
+    {
+        id: 3,
         name: "Milho",
         price: 2,
         description: "Milho fresco e saboroso! Favorito das galinhas!",
@@ -23,7 +26,8 @@ const itens_loja = [
         quantity: 0,
         itemPorCompra: 1,
     },
-    {   id: 4,
+    {
+        id: 4,
         name: "Semente de Milho (x5)",
         price: 4,
         description: "Sementes de milho para plantar!",
@@ -31,7 +35,8 @@ const itens_loja = [
         quantity: 0,
         itemPorCompra: 5,
     },
-    {   id: 5,
+    {
+        id: 5,
         name: "Carretel de linha",
         price: 4,
         description: "Carretel de linha para fazer roupas e outros itens!",
@@ -39,7 +44,8 @@ const itens_loja = [
         quantity: 0,
         itemPorCompra: 1,
     },
-    {   id: 6,
+    {
+        id: 6,
         name: "Passe de Saída",
         price: 100,
         description: "Um passe especial que permite a saída do galinheiro!",
@@ -51,16 +57,9 @@ const itens_loja = [
 
 function openShop() {
     const overworld = window.overworld; // Obtém a instância do Overworld
-    if(document.getElementById("shop-menu"))return; 
-// Verifica se o menu da loja já está aberto
+    if (document.getElementById("shop-menu")) return;
 
-    // const MostrarPasse = itens_loja.filter(item => {
-    //     if (item.id === 6) {
-    //         return overworld.playerState.storyFlags.descobriuGalinha === true;
-    //     }
-    //     return true;
-    // });
-
+    // --- CRIAÇÃO DA ESTRUTURA DO MENU (sem alterações) ---
     const tabs = document.createElement("div");
     tabs.className = "shop-tabs";
     const buyTab = document.createElement("button");
@@ -69,26 +68,29 @@ function openShop() {
     const sellTab = document.createElement("button");
     sellTab.innerText = "Vender";
     sellTab.className = "shop-tab";
-
     tabs.appendChild(buyTab);
     tabs.appendChild(sellTab);
 
-    const overlay =  document.createElement("div");
+    const overlay = document.createElement("div");
     overlay.id = "shop-overlay";
     overlay.onclick = () => {
-        overlay.remove(); // Remove o overlay quando clicado
-    }
+        overlay.remove();
+        shopMenu.remove();
+    };
 
     const shopMenu = document.createElement("div");
     shopMenu.id = "shop-menu";
-    const ShopUl = document.createElement("ul");
-    ShopUl.className = "ul";
     const BuyUl = document.createElement("ul");
     BuyUl.className = "ul";
+    const sellList = document.createElement("ul");
+    sellList.className = "ul";
+    sellList.style.display = "none";
+
     shopMenu.appendChild(tabs);
+    shopMenu.appendChild(BuyUl);
+    shopMenu.appendChild(sellList);
 
-
-    // Função para alternar abas
+    // --- LÓGICA DAS ABAS (sem alterações) ---
     buyTab.onclick = () => {
         buyTab.classList.add("active");
         sellTab.classList.remove("active");
@@ -102,98 +104,135 @@ function openShop() {
         sellList.style.display = "";
     };
 
-    // Cria a lista de venda (vazia por enquanto)
-    const sellList = document.createElement("ul");
-    sellList.className = "ul";
-    sellList.style.display = "none";
-    shopMenu.appendChild(BuyUl);
-    shopMenu.appendChild(sellList);
-
+    // --- LAÇO PARA CRIAR ITENS DE COMPRA (CORRIGIDO) ---
     itens_loja.forEach(item => {
         const li = document.createElement("li");
         const img = document.createElement("img");
         img.src = item.Image;
         const desc = document.createElement("span");
-        desc.innerText =  `${item.name} - ${item.description}`;
+        desc.innerText = `${item.name} - ${item.description}`;
         const btn = document.createElement("button");
-            btn.innerText = `Comprar (${item.price} moedas)`;
-            btn.onclick = () => {
-                //Sistema de Compra e redução de moedas
-                if(overworld.coins >= item.price){
-                    overworld.coins -= item.price; // Desconta o preço do item das moedas do jogador
-                    item.quantity += 1; // Aumenta a quantidade do item comprado
-                    overworld.hud.updateCoins(overworld.coins); // Atualiza a HUD com as novas moedas
-                } else {
-                    alert("Moedas insuficientes para comprar este item!"); // Alerta se não tiver moedas suficientes
-                    return; // Sai da função se não tiver moedas suficientes
-                }
-                //-----------------------------------------------------------------------
-                //Sistema de Adição de Itens ao Inventário
+        btn.innerText = `Comprar (${item.price} moedas)`;
+
+        btn.onclick = () => {
+            if (overworld.coins >= item.price) {
+                overworld.coins -= item.price;
+                overworld.hud.updateCoins(overworld.coins);
                 const itemParaHotbar = {
                     id: item.id,
                     name: item.name,
                     src: item.Image,
                     quantity: item.itemPorCompra,
                 };
-                window.overworld.addItemToHotbar(itemParaHotbar); // Adiciona o item à hotbar do jogador
-                //-----------------------------------------------------------------------
-            };
-        img.className = "foto-item"; // Para estilizar a imagem do item    
-        desc.className = "descricao-item"; // Para estilizar a descrição do item
-        li.className = "cada-item"; // Para estilizar o item
-        btn.className = "compra-btn"; //Para estilizar o botão
-        li.appendChild(img); // Adiciona a imagem do item
-        li.appendChild(desc);  // Adiciona a descrição do item
-        li.appendChild(btn);  // Adiciona o botão de compra
+                window.overworld.addItemToHotbar(itemParaHotbar);
+            } else {
+                alert("Moedas insuficientes para comprar este item!");
+            }
+        };
+
+        img.className = "foto-item";
+        desc.className = "descricao-item";
+        li.className = "cada-item";
+        btn.className = "compra-btn";
+        li.appendChild(img);
+        li.appendChild(desc);
+        li.appendChild(btn);
         BuyUl.appendChild(li);
     });
 
+    // --- LAÇO PARA CRIAR ITENS DE VENDA (AGORA SEPARADO E CORRETO) ---
     overworld.playerState.items.forEach((item, idx) => {
-        if (!item || item.quantity <= 0) return; 
+        if (!item || item.quantity <= 0) return;
+
+        const shopItemData = itens_loja.find(i => i.id === item.id);
+        if (!shopItemData) {
+            return;
+        }
 
         const li = document.createElement("li");
         const img = document.createElement("img");
-        img.src = itens_loja.find(i => i.id === item.id).Image; // Obtém a imagem do item
+        img.src = shopItemData.Image;
         const desc = document.createElement("span");
-        desc.innerText =  `${item.name} `;
+        desc.innerText = `${item.name}`;
         const Sellbtn = document.createElement("button");
-            Sellbtn.innerText = ` Vender por: (${itens_loja.find(i => i.id === item.id).price} moedas)`;
-            Sellbtn.onclick = () => {
-                overworld.coins += itens_loja.find(i => i.id === item.id).price;
+        Sellbtn.innerText = ` Vender por: (${shopItemData.price} moedas)`;
 
-                const ItemRemove = {
-                    id: item.id,
-                    name: item.name,
-                    src: item.src,
-                    quantity: item.quantity,
-                };
-                // //essa é para a quest de vender itens 
-                // playerState.questFlags.ITENS_VENDIDOS = (playerState.questFlags.ITENS_VENDIDOS || 0) + 1;
-                // //----------------------------------------------------
-                window.overworld.removeItemFromHotbar(ItemRemove);
-                window.overworld.hud.updateCoins(overworld.coins); // Atualiza a HUD com as novas moedas
+        Sellbtn.onclick = () => {
+            const maxQuantity = item.quantity;
+            const quantityToSellStr = prompt(`Quantos ${item.name} você quer vender? (Máx: ${maxQuantity})`, maxQuantity);
+
+            if (quantityToSellStr === null) {
+                return;
+            }
+
+            const quantityToSell = parseInt(quantityToSellStr);
+
+            if (isNaN(quantityToSell) || quantityToSell <= 0) {
+                alert("Por favor, insira um número válido.");
+                return;
+            }
+            if (quantityToSell > maxQuantity) {
+                alert("Você não tem essa quantidade para vender!");
+                return;
+            }
+
+            // Calcula moedas com a quantidade correta
+            const salePrice = shopItemData.price * quantityToSell;
+            overworld.coins += salePrice;
+
+            // Atualiza a quest com a quantidade correta
+            const soldQuantity = quantityToSell;
+            if (overworld.playerState.currentQuestId === "Q8.1" && item.id === 1) {
+                const currentWheatSold = overworld.playerState.questFlags.WHEAT_SOLD || 0;
+                overworld.playerState.questFlags.WHEAT_SOLD = currentWheatSold + soldQuantity;
+                overworld.hud.updateTasks(overworld.playerState.currentQuestId, overworld.playerState);
+                overworld.checkForQuestCompletion();
+            }
+            if (overworld.playerState.currentQuestId === "Q8.2" && item.id === 3) {
+                const currentCornSold = overworld.playerState.questFlags.CORN_SOLD || 0;
+                overworld.playerState.questFlags.CORN_SOLD = currentCornSold + soldQuantity;
+                overworld.hud.updateTasks(overworld.playerState.currentQuestId, overworld.playerState);
+                overworld.checkForQuestCompletion();
+            }
+
+            // --- A CORREÇÃO CRÍTICA ESTÁ AQUI ---
+            // O objeto para remoção deve usar 'quantityToSell' (do prompt), e não 'item.quantity' (a pilha toda).
+            const ItemRemove = {
+                id: item.id,
+                name: item.name,
+                src: item.src,
+                quantity: quantityToSell, // <<<<<<<<<<<<<<< ESSA LINHA É A CHAVE
             };
-        img.className = "foto-item"; // Para estilizar a imagem do item    
-        desc.className = "descricao-item"; //Para estilizar a descrição do item
-        li.className = "cada-item"; // Para estilizar o item
-        Sellbtn.className = "venda-btn"; //Para estilizar o botão
-        li.appendChild(img); // Adiciona a imagem do item
-        li.appendChild(desc);  // Adiciona a descrição do item
-        li.appendChild(Sellbtn);  // Adiciona o botão de compra
+
+            // Agora a função em Overworld.js receberá a quantidade correta
+            window.overworld.removeItemFromHotbar(ItemRemove);
+            window.overworld.hud.updateCoins(overworld.coins);
+
+            // Força a recriação da lista de venda para atualizar a quantidade restante
+            buyTab.click();
+            sellTab.click();
+        };
+
+        img.className = "foto-item";
+        desc.className = "descricao-item";
+        li.className = "cada-item";
+        Sellbtn.className = "venda-btn";
+        li.appendChild(img);
+        li.appendChild(desc);
+        li.appendChild(Sellbtn);
         sellList.appendChild(li);
-});
+    });
 
-
+    // --- BOTÃO DE FECHAR (sem alterações) ---
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "Fechar";
     closeBtn.style.marginTop = "16px";
     closeBtn.onclick = () => {
-        overlay.remove(); // Remove o overlay
-        shopMenu.remove(); // Remove o menu da loja
-    }
+        overlay.remove();
+        shopMenu.remove();
+    };
     shopMenu.appendChild(closeBtn);
 
-    document.body.appendChild(overlay); // Adiciona o overlay ao body
-    document.body.appendChild(shopMenu); // Adiciona o menu da loja ao body
-
+    document.body.appendChild(overlay);
+    document.body.appendChild(shopMenu);
 }

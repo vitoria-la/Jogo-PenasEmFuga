@@ -73,7 +73,7 @@ class Hud {
     `;
     this.levelTextElement = this.levelContainerElement.querySelector(".level-text");
     gameContainerElement.appendChild(this.levelContainerElement);
-    
+
     // --- PAINEL DE EASTER EGGS ---
     this.easterEggIconElement = document.createElement("div");
     this.easterEggIconElement.classList.add("easter-egg-icon");
@@ -91,7 +91,7 @@ class Hud {
     // --- LÓGICA DOS EVENT LISTENERS ---
     this.taskListIconElement.addEventListener('click', () => this.taskListPanelElement.classList.toggle('visible'));
     this.taskListPanelElement.querySelector('.task-list-close-button').addEventListener('click', () => this.taskListPanelElement.classList.remove('visible'));
-    
+
     this.easterEggIconElement.addEventListener('click', () => this.easterEggPanelElement.classList.toggle('visible'));
     this.easterEggPanelElement.querySelector('.easter-egg-close-button').addEventListener('click', () => this.easterEggPanelElement.classList.remove('visible'));
 
@@ -112,7 +112,7 @@ class Hud {
 
   updateEasterEggs(foundEggs) {
     const listElement = this.easterEggPanelElement.querySelector(".easter-egg-list");
-    
+
     // Limpa a lista atual
     listElement.innerHTML = "";
 
@@ -121,7 +121,7 @@ class Hud {
       listElement.innerHTML = `<li>Nenhum segredo encontrado ainda...</li>`;
       return;
     }
-    
+
     // Para cada easter egg encontrado, cria um item na lista
     foundEggs.forEach(eggId => {
       const li = document.createElement("li");
@@ -130,34 +130,13 @@ class Hud {
     });
   }
 
-  updateCoins(count){
+  updateCoins(count) {
     this.coinTextElement.innerHTML = count;
   }
 
   updateLevel(count) {
     this.levelTextElement.innerText = count;
   }
-
-  // removeHotbarSlotItem(slotIndex) {
-  //   const slotElement = this.hotbarSlots[slotIndex];
-  //   if (!slotElement) return;
-
-  //   // Supondo que você armazene os itens em um array hotbarItems
-  //   if (!this.playerState.items) this.playerState.items = [];
-  //   const item = this.playerState.items[slotIndex];
-  //   if (!item) return;
-
-  //   // Diminui a quantidade
-  //   item.quantity -= 1;
-
-  //   // Atualiza visualmente ou limpa o slot se acabou
-  //   if (item.quantity <= 0) {
-  //     this.playerState.items[slotIndex] = null;
-  //     slotElement.innerHTML = "";
-  //   } else {
-  //     this.updateHotbarSlot(slotIndex, item);
-  //   }
-  // }
 
   updateHotbarSlot(slotIndex, item) {
     const slotElement = this.hotbarSlots[slotIndex];
@@ -192,7 +171,7 @@ class Hud {
   // Método para atualizar a lista de tarefas
   updateTasks(activeQuestId, playerState) {
     const listElement = this.taskListPanelElement.querySelector("ul");
-    listElement.innerHTML = ""; // Limpa a lista
+    listElement.innerHTML = "";
 
     if (!activeQuestId) {
       listElement.innerHTML = `<li>Nenhuma tarefa no momento.</li>`;
@@ -202,13 +181,11 @@ class Hud {
     const quest = window.QuestList.find(q => q.id === activeQuestId);
     if (quest) {
       const li = document.createElement("li");
-        
-      // Pega o progresso atual do estado do jogador
+
+      // Lógica padrão que agora funciona para Q8.1 e Q8.2
       const currentProgress = playerState.questFlags[quest.progressKey] || 0;
-        
-      // Monta o texto com o progresso
-      li.textContent = `${quest.description} (${currentProgress}/${quest.progressTarget})`;
-        
+      li.textContent = `${quest.description} (${Math.min(currentProgress, quest.progressTarget)}/${quest.progressTarget})`;
+
       listElement.appendChild(li);
     }
   }
