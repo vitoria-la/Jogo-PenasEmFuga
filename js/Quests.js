@@ -127,7 +127,7 @@ window.QuestList = [
         progressTarget: 1,
         reward: {
             type: "item",
-            item: { id: "semente_trigo", name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 }
+            item: { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 }
         }
     },
     {
