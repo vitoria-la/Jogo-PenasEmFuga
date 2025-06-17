@@ -170,6 +170,17 @@ class Overworld {
                 const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
                 const nextQuest = window.QuestList[currentQuestIndex + 1];
                 this.playerState.currentQuestId = nextQuest ? nextQuest.id : null;
+                
+                if (quest.reward) {
+                    if (quest.reward.type === "item") {
+                        this.addItemToHotbar(quest.reward.item);
+                    }
+                    if (quest.reward.type === "coins") {
+                        this.coins += quest.reward.amount;
+                        this.hud.updateCoins(this.coins);
+                    }
+                }
+
                 this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
                 return;
             }
