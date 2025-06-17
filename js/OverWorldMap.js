@@ -137,6 +137,9 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             if (this.playerState.currentQuestId === "Q5.1" && key === "galinhaGalinaciaQuestIcon") {
                 this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
             }
+            if (this.playerState.currentQuestId === "Q10.1" && key === "galinhaSegurancaQuestIcon") {
+                this.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+            }
             
             if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
                 this.gameObjects[key].y = utils.withGrid(-50);
@@ -183,6 +186,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 questIconObj.x = utils.withGrid(objectNpc.x);
                 questIconObj.y = utils.withGrid(objectNpc.y) - utils.withGrid(2);
                 console.log("teste")
+                console.log(questIconObj.x)
+                console.log(questIconObj.y)
             }
         })
     }
@@ -303,7 +308,7 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", text: "O enigma do chefe? Hmm... 'Onde o grão descansa'... talvez seja um lugar de armazenamento, mas que leva a outro lugar?", faceHero: "galinhaBranca", quest: "Q10.1"},
+                            { type: "textMessage", text: "O enigma do chefe? Hmm... 'Onde o grão descansa'... talvez seja um lugar de armazenamento, mas que leva a outro lugar?", faceHero: "galinhaBranca", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_1_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
@@ -315,6 +320,7 @@ window.OverworldMaps = {
                 y: utils.withGrid(17),
                 src: "./assets/img/questIcon.png",
                 isQuestIcon: true,
+                isVisible: false,
             },
             galinhaMarrom: {
                 type: "Person",
@@ -478,7 +484,7 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", text: "Aquele enigma... 'a jornada não cessa' me soa como uma passagem. Já procurou nos cantos mais esquecidos do galinheiro?", faceHero: "Clotilde", quest: "Q10.1"},
+                            { type: "textMessage", text: "Aquele enigma... 'a jornada não cessa' me soa como uma passagem. Já procurou nos cantos mais esquecidos do galinheiro?", faceHero: "Clotilde", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_2_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
@@ -610,6 +616,7 @@ window.OverworldMaps = {
                     {
                         events: [
                             { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado...", quest: "Q10.1"},
+                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_3_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
@@ -620,6 +627,7 @@ window.OverworldMaps = {
                 x: utils.withGrid(30),
                 y: utils.withGrid(16),
                 src: "./assets/img/galinhaSegurancaMarrom.png",
+                haveQuestIcon: true,
                 behaviorLoop: [  
                    {type: "stand", direction: "left", time: 2800},
                 ],
@@ -632,13 +640,21 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", text: "Então você quer ver o chefe? Ha! Muitos tentam, poucos conseguem.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
-                            { type: "textMessage", text: "Ele só recebe quem resolve seu enigma: 'Onde o grão descansa, mas a jornada não cessa'.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
-                            { type: "textMessage", text: "Se for esperto, talvez outras galinhas por aí possam te dar um norte. Agora, circule!", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "textMessage", text: "Então você quer ver o chefe? Ha! Muitos tentam, poucos conseguem.", faceHero: "galinhaSegurancaMarrom", quest: "Q10.1"},
+                            { type: "textMessage", text: "Ele só recebe quem resolve seu enigma: 'Onde o grão descansa, mas a jornada não cessa'.", faceHero: "galinhaSegurancaMarrom", quest: "Q10.1"},
+                            { type: "textMessage", text: "Se for esperto, talvez outras galinhas por aí possam te dar um norte. Agora, circule!", faceHero: "galinhaSegurancaMarrom", quest: "Q10.1"},
                             { type: "questProgress", flag: "SPOKEN_TO_SECURITY_FOR_CHIEF", counter: "SPOKEN_TO_SECURITY_FOR_CHIEF" }
                         ]
                     }
                 ]
+            },
+            galinhaSegurancaQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(30),
+                y: utils.withGrid(14),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
              galinhaGalinacia: {
                 type: "Person",
@@ -1451,14 +1467,14 @@ window.OverworldMaps = {
             [utils.asGridCoord(11,16)] : [ // 
                 {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
             ],
-            [utils.asGridCoord(-1, 27)]: [
+            [utils.asGridCoord(-3, 31)]: [
                 {
                     events: [
                         { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
                     ]
                 }
             ],
-            [utils.asGridCoord(-1, 28)]: [
+            [utils.asGridCoord(-4, 31)]: [
                 {
                     events: [
                         { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
@@ -1655,7 +1671,24 @@ window.OverworldMaps = {
                         {type: "stand", direction: "down", time: 2800},
                     ],
                     talking: [
-
+                        {
+                            events: [
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Você realmente achou... que eu era só mais um pintinho comum?", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Cada milho, cada grão, cada plano… passa por mim.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Eu sou a gema por trás da casca", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Mas isso não é só sobre poder. Aqui... a gente protege o galinheiro. Ovos primeiro, sempre.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "A proxima geração depende de nós. De você.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Você quer fugir? Quer sua passagem no trenzinho da liberdade?", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Então me prove. Uma última missão...", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Os ovinhos. Nosso futuro. Aqui no litoral é frio demais para eles", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Proteja eles, garanta que cresçam sem medo, sem rachaduras..", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Leve 15 carretéis de linha para a Clotilde", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Ela saberá.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Faça isso, e o trilho se abre. Falhe… ", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "E você não verá os seus amigos do frio tão cedo", quest: "Q10.4"},
+                                { type: "questProgress", flag: "TALKED_TO_JUNINHO", counter: "SPOKEN_TO_JUNINHO" }
+                            ]
+                        },
                     ]
                 },
                 chickenNorris: {
@@ -1682,6 +1715,16 @@ window.OverworldMaps = {
 
                     ]
                 },
+                foto2: { // É um objeto de easter egg do álbum, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                    type: "EasterEgg",
+                    isEasterEgg: true,
+                    name: "Foto rasgada...2!?",
+                    description: "Plot Twist",
+                    mapName: "Galinheiro",
+                    x: utils.withGrid(50),
+                    y: utils.withGrid(0),
+                    src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+                },
             },
             // ...restante do mapa...
                 walls: {
@@ -1694,6 +1737,9 @@ window.OverworldMaps = {
                     ],
                     [utils.asGridCoord(-1,33)] : [
                         {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+                    [utils.asGridCoord(0,11)] : [ // Achou o álbum da galinha pintadinha
+                        {events: [{type: "foundEasterEgg", who: "foto2"},]}
                     ],
 
             }    

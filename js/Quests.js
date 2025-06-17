@@ -54,7 +54,10 @@ const QuestChecks = {
     ENCONTRAR_SALA_CHEFE(playerState) {
         // A quest é completada quando a flag 'FOUND_CHIEF_ROOM' for verdadeira
         return playerState.storyFlags.FOUND_CHIEF_ROOM;
-    }
+    },
+    FALAR_COM_JUNINHO(playerState) {
+        return playerState.questFlags.SPOKEN_TO_JUNINHO >= 1;
+    },
     // Adicione as funções de verificação para as outras quests aqui...
 }
 
@@ -172,7 +175,7 @@ window.QuestList = [
         reward: { type: "coins", amount: 100 }
     },
     {
-        id: "Q10",
+        id: "Q10.1",
         name: "O Grande Chefe",
         description: "Fale com a galinha segurança para saber como encontrar o 'chefe'.",
         checkCompletion: QuestChecks.FALAR_COM_SEGURANCA_CHEFE,
@@ -181,7 +184,7 @@ window.QuestList = [
         reward: { type: "coins", amount: 10 }
     },
     {
-        id: "Q10.1",
+        id: "Q10.2",
         name: "", // Nome vazio para ser uma etapa interna
         description: "Procure por pistas. Converse com 3 galinhas para obter dicas sobre o enigma do chefe.",
         checkCompletion: QuestChecks.JUNTAR_PISTAS_CHEFE,
@@ -190,12 +193,21 @@ window.QuestList = [
         reward: { type: "coins", amount: 40 }
     },
     {
-        id: "Q10.2",
+        id: "Q10.3",
         name: "", // Nome vazio
         description: "Resolva o enigma e encontre a sala do chefe.",
         checkCompletion: QuestChecks.ENCONTRAR_SALA_CHEFE,
         progressKey: "FOUND_CHIEF_ROOM", // Usa uma flag, não um contador
         progressTarget: 1,
         reward: { type: "coins", amount: 150 }
-    }
+    },
+    {
+        id: "Q10.4",
+        name: "", // Nome vazio
+        description: "Fale com o chefe.",
+        checkCompletion: QuestChecks.FALAR_COM_JUNINHO,
+        progressKey: "SPOKEN_TO_JUNINHO", 
+        progressTarget: 1,
+        reward: { type: "coins", amount: 150 }
+    },
 ];

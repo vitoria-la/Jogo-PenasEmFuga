@@ -138,6 +138,27 @@ class Hud {
     this.levelTextElement.innerText = count;
   }
 
+  // removeHotbarSlotItem(slotIndex) {
+  //   const slotElement = this.hotbarSlots[slotIndex];
+  //   if (!slotElement) return;
+
+  //   // Supondo que você armazene os itens em um array hotbarItems
+  //   if (!this.playerState.items) this.playerState.items = [];
+  //   const item = this.playerState.items[slotIndex];
+  //   if (!item) return;
+
+  //   // Diminui a quantidade
+  //   item.quantity -= 1;
+
+  //   // Atualiza visualmente ou limpa o slot se acabou
+  //   if (item.quantity <= 0) {
+  //     this.playerState.items[slotIndex] = null;
+  //     slotElement.innerHTML = "";
+  //   } else {
+  //     this.updateHotbarSlot(slotIndex, item);
+  //   }
+  // }
+
   updateHotbarSlot(slotIndex, item) {
     const slotElement = this.hotbarSlots[slotIndex];
     if (!slotElement) {
@@ -166,6 +187,7 @@ class Hud {
       slotElement.appendChild(quantityText);
     }
   }
+
 
   // Método para atualizar a lista de tarefas
   updateTasks(activeQuestId, playerState) {

@@ -44,6 +44,9 @@ class Overworld {
         if (questId === "Q5.1") {
             this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
         }
+        if (questId === "Q10.1") {
+            this.map.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+        }
 
         // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
         // (Opcional, mas recomendado para quests com contadores)
@@ -58,6 +61,29 @@ class Overworld {
         this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
 
         console.log(`Pulou para a Quest: ${questExists.name} (${questId})`);
+    }
+
+    removeItemFromHotbar(itemToRemove) {
+        let removed = false;
+        for (let i = 0; i < this.playerState.items.length; i++) {
+            const slot = this.playerState.items[i];
+            if (slot && slot.id === itemToRemove.id) {
+                if (slot.quantity > 1) {
+                    slot.quantity -= 1;
+                } else {
+                    this.playerState.items[i] = null;
+                }
+                removed = true;
+                break;
+            }
+        }
+        if (removed) {
+            this.playerState.items.forEach((item, i) => {
+                this.hud.updateHotbarSlot(i, item);
+            });
+        } else {
+            console.log("Item não encontrado na hotbar para remoção.");
+        }
     }
 
     addItemToHotbar(itemToAdd) {
@@ -121,6 +147,9 @@ class Overworld {
                 if (questId === "Q5.1") {
                     this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
                 }
+                if (questId === "Q10.1") {
+                    this.map.hideQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+                }
 
                 console.log("foi")
                 this.playerState.completedQuests.add(questId);
@@ -170,6 +199,9 @@ class Overworld {
             }
             if (this.playerState.currentQuestId === "Q5.1") {
                 this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
+            if (this.playerState.currentQuestId === "Q10.1") {
+                this.map.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
             }
 
             // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
