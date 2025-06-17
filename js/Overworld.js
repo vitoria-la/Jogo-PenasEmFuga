@@ -45,6 +45,9 @@ class Overworld {
         if (questId === "Q5.1") {
             this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
         }
+        if (questId === "Q10.1") {
+            this.map.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+        }
 
         // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
         // (Opcional, mas recomendado para quests com contadores)
@@ -113,6 +116,9 @@ class Overworld {
                 if (questId === "Q5.1") {
                     this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
                 }
+                if (questId === "Q10.1") {
+                    this.map.hideQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+                }
 
                 console.log("foi")
                 this.playerState.completedQuests.add(questId);
@@ -162,6 +168,9 @@ class Overworld {
             }
             if (this.playerState.currentQuestId === "Q5.1") {
                 this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
+            if (this.playerState.currentQuestId === "Q10.1") {
+                this.map.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
             }
 
             // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
