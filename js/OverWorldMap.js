@@ -236,7 +236,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         if (eventConfig.type === "foundEasterEgg" && eventConfig.who === "galinhaDouradaEG") {
             const galinhaDourada = this.gameObjects.galinhaDosOvosDourados;
             // Apenas ativa a cutscene se a galinha estiver visível no mapa
-            if (galinhaDourada && galinhaDourada.isVisible !== false) {
+            if (galinhaDourada && galinhaDourada.isVisible !== false && !this.easterEggsFoundID.includes(eventConfig.who)) {
                 this.startCutscene(match[0].events);
             }
             return; // Impede que o código abaixo seja executado para este caso
@@ -267,8 +267,8 @@ window.OverworldMaps = {
             },
             galinhaBranca: {
                 type: "Person",
-                x: utils.withGrid(19),
-                y: utils.withGrid(19),
+                x: utils.withGrid(8),
+                y: utils.withGrid(13),
                 src: "./assets/img/galinhaBranca.png",
                 haveQuestIcon: true, // Significa que essa galinha pode ter um questIcon
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
@@ -1357,8 +1357,8 @@ window.OverworldMaps = {
             [utils.asGridCoord(31,17)] : [
                 {events: [{type: "changeMap", map: "Fazenda"},]}
             ],
-            [utils.asGridCoord(31,18)] : [
-                {events: [{type: "changeMap", map: "Fazenda"},]}
+            [utils.asGridCoord(-3,32)] : [
+                {events: [{type: "changeMap", map: "SalaChefe"},]}
             ],
             [utils.asGridCoord(-15,17)] : [ // Espaço acima do sapo da sala de costura
                 {events: [{type: "foundFrog", who: "frog1", x: -15, y: 17},]}
@@ -1575,5 +1575,80 @@ window.OverworldMaps = {
             ],
 
     }    
-}
+},
+    SalaChefe: {
+            name: "SalaChefe",
+            lowerSrc: "./assets/img/salaChefeMapa.png",
+            upperSrc: "./assets/img/salaChefeMapaUpper.png",
+            configObjects: {
+                hero: {
+                    type: "Person",
+                    isPlayerControlled: true,
+                    x: utils.withGrid(0),
+                    y: utils.withGrid(31),
+                },
+                lukeEggwalker: {
+                    type: "Person",
+                    x: utils.withGrid(2),
+                    y: utils.withGrid(20),
+                    src: "./assets/img/galinhaSegurancaMarrom.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+                JuninhoJuniorOChefe: {
+                    type: "Person",
+                    x: utils.withGrid(0),
+                    y: utils.withGrid(12),
+                    src: "./assets/img/juninhoJrChefe.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+                chickenNorris: {
+                    type: "Person",
+                    x: utils.withGrid(2),
+                    y: utils.withGrid(11),
+                    src: "./assets/img/galinhaSegurancaMarrom.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+                galinhaSegurancaGenérica: {
+                    type: "Person",
+                    x: utils.withGrid(-2),
+                    y: utils.withGrid(11),
+                    src: "./assets/img/galinhaSegurancaMarrom.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+            },
+            // ...restante do mapa...
+                walls: {
+                    //define as coordenadas das colisoes do mapa
+                },
+                // Espaços em que acontece cutscenes
+                cutsceneSpaces: {
+                    [utils.asGridCoord(0,33)] : [
+                        {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+                    [utils.asGridCoord(-1,33)] : [
+                        {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+
+            }    
+        }
 }
