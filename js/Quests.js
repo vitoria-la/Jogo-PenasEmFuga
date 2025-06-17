@@ -6,7 +6,7 @@ const QuestChecks = {
     },
     COLETAR_TRIGO(playerState) {
         // O objetivo é ter 9 trigos ou mais no inventário
-        const trigo = playerState.items.find(item => item && item.id === "trigo");
+        const trigo = playerState.items.find(item => item && item.id === 1 );
         return trigo && trigo.quantity >= 9;
     },
     // --- LÓGICA PARA A QUEST 4 ---
@@ -84,9 +84,9 @@ window.QuestList = [
         checkCompletion: QuestChecks.FALAR_COM_GALINHAS,
         progressKey: "CHICKENS_SPOKEN_TO",
         progressTarget: 3,
-        reward: {
-            type: "item",
-            item: { id: "semente_trigo", name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
+        reward:{
+            type: "coins",
+            amount: 10
         }
     },
     {
@@ -98,7 +98,7 @@ window.QuestList = [
         progressTarget: 1,
         reward: {
             type: "item",
-            item: { id: "semente_trigo", name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
+            item: { id: 2 , name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
         }
     },
     {
