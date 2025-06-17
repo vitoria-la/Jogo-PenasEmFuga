@@ -23,6 +23,9 @@ class Audio {
             src: "./assets/audio/soundEffects/easterEggSoundEffect.ogg",
             volume: 0.5,
         });
+        this.frogSoundEffect = new Howl ({
+            src: "./assets/audio/soundEffects/frogSoundEffect.ogg",
+        })
     }
 
     startSoundtrack() {
@@ -98,6 +101,10 @@ class Audio {
                 this.currentSong.fade(0.3, 1, 1000); 
             }
         });
+    }
+
+    playFrogSoundEffect() {
+        this.frogSoundEffect.play();
     }
 
     getRandomSong(currentSongIndex) {

@@ -72,6 +72,12 @@ class OverworldEvent {
 
     foundFrog(resolve) {  // Evento caso o player tenha achado um sapo (galinha da montanha)
         const who = this.event.who; // pega o objeto do NPC
+
+        if (this.map.overworld.playerState.currentQuestId != "Q6") {
+            resolve();
+            return;
+        }
+
         //console.log(who);
         Object.values(this.map.gameObjects).forEach(obj => { // Passa por todos os objetos do mapa
             if (obj.id === who) { //  Se achar o sapo dentre os objetos
@@ -149,6 +155,7 @@ class OverworldEvent {
                 const counterName = this.event.counter;
                 if (!state.questFlags[counterName]) {
                     state.questFlags[counterName] = 0;
+                    console.log("uai")
                 }
                 state.questFlags[counterName] += 1;
             }
@@ -173,18 +180,27 @@ class OverworldEvent {
     }
 
     textMessage(resolve) {
-        // O bloco que fazia o NPC virar foi removido.
+        const state = this.map.overworld.playerState; // constante que abriga o estado atual do player
 
         // Cria a instância da caixa de diálogo
         const message = new TextMessage({
-            text: this.event.text,
-            npc: this.map.gameObjects[this.event.who] || this.map.gameObjects[this.event.faceHero],
+            npc: this.map.gameObjects[this.event.faceHero],
             map: this.map,
             onComplete: () => {
                 resolve(); // Resolve a promise quando a mensagem é fechada pelo jogador
             }
         });
-        message.init(); // Inicia a exibição da mensagem
+
+        if (state.currentQuestId === this.event.quest) { // Se a quest atual for a mesma desse diálogo, passa ele para o text message
+            message.text = this.event.text;
+            message.init();
+        } else { // Se não, cria um dialog manager e faz o diálogo genérico da galinha
+            const dialogoMan = new DialogManager();
+            dialogoMan.startDialog(this.event.faceHero, this.map, () => {
+                resolve();
+            });
+            
+        }
     }
 
 

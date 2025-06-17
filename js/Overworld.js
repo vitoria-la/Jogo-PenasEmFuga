@@ -17,7 +17,8 @@ class Overworld {
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
             completedQuests: new Set(), // Um conjunto de IDs de quests já completadas
             currentQuestId: "Q1", // Começa com a primeira quest
-            questFlags: {}
+            questFlags: {},
+            frogsList: [],
         };
         this.audioManager = new Audio();
         this.level = 1;
@@ -37,6 +38,13 @@ class Overworld {
 
         // 2. Atualiza o estado do jogador para a nova quest
         this.playerState.currentQuestId = questId;
+
+        if (questId === "Q1.1") {
+            this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+        }
+        if (questId === "Q5.1") {
+            this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+        }
 
         // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
         // (Opcional, mas recomendado para quests com contadores)
@@ -112,7 +120,7 @@ class Overworld {
     checkForQuestCompletion() {
         const questId = this.playerState.currentQuestId;
         if (!questId) return; // Se não houver quest ativa, não faz nada.
-
+        console.log("ue")
         // Encontra a quest atual na lista de quests
         const quest = window.QuestList.find(q => q.id === questId);
         if (!quest) return;
@@ -120,9 +128,27 @@ class Overworld {
         // Chama a função de verificação da quest
         if (quest.checkCompletion(this.playerState)) {
             console.log(`Quest ${quest.name} completada!`);
+            console.log(questId);
+            if (questId.includes(".")) {
+                if (questId === "Q1.1") {
+                    this.map.hideQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+                }
+                if (questId === "Q5.1") {
+                    this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+                }
+
+                console.log("foi")
+                this.playerState.completedQuests.add(questId);
+                const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
+                const nextQuest = window.QuestList[currentQuestIndex + 1];
+                this.playerState.currentQuestId = nextQuest ? nextQuest.id : null;
+                this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
+                return;
+            }
 
             // Para rodar o gif de quest concluída
             if(document.getElementById("gif-screen"))return; 
+            
 
             const finishedQuestGif = document.createElement("div");
             finishedQuestGif.id = "gif-screen";
@@ -132,8 +158,20 @@ class Overworld {
             finishedQuestGif.appendChild(gif);
 
             document.querySelector(".game-container").appendChild(finishedQuestGif);
+
+            let oldQuestId = this.playerState.currentQuestId;
+
             setTimeout(() => {
                 finishedQuestGif.remove();
+                console.log(this.playerState.currentQuestId);
+                if (oldQuestId === "Q6") { // Se a quest que foi concluída era a 6, se for, o player recebe o easter egg da galinha da montanha
+                    console.log("uai");
+                    const eventManager = new OverworldEvent ({
+                        event: {type: "foundEasterEgg", who: "galinhaDaMontanha"},
+                        map: this.map,
+                    });
+                    eventManager.init();
+                }
             }, 7800);
             
             // Marca como completa e avança para a próxima
@@ -141,6 +179,13 @@ class Overworld {
             const currentQuestIndex = window.QuestList.findIndex(q => q.id === questId);
             const nextQuest = window.QuestList[currentQuestIndex + 1];
             this.playerState.currentQuestId = nextQuest ? nextQuest.id : null;
+
+            if (this.playerState.currentQuestId === "Q1.1") {
+                this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+            }
+            if (this.playerState.currentQuestId === "Q5.1") {
+                this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
 
             // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
             this.level += 1; // Aumenta o nível do jogador
@@ -219,6 +264,27 @@ class Overworld {
             if (e.detail.whoId === "frog3" && this.map.name === "Galinheiro") {
                 this.foundFrog3 = true;
             }
+            if (!this.playerState.frogsList.includes(e.detail.whoId)) {
+                this.audioManager.playFrogSoundEffect();
+                this.playerState.frogsList.push(e.detail.whoId);
+
+                let flagFrog;
+                if (e.detail.whoId === "frog1") {
+                    flagFrog = "FOUND_FROG_1";
+                }
+                if (e.detail.whoId === "frog2") {
+                    flagFrog = "FOUND_FROG_2";
+                }
+                if (e.detail.whoId === "frog3") {
+                    flagFrog = "FOUND_FROG_3";
+                }
+                const eventManager = new OverworldEvent ({
+                    event: { type: "questProgress", flag: flagFrog, counter: "FROGS_COLLECTED" },
+                    map: this.map,
+                });
+                eventManager.init();
+                this.checkForQuestCompletion();
+            }
         })
     }
 
@@ -226,29 +292,57 @@ class Overworld {
         new KeypressListener("KeyE", () => {
             const hero = this.map.gameObjects.hero;
             const npc = hero.currentInteractingNpc;
+            let dialogHappened = false;
 
             if (npc && !this.map.isCutscenePlaying) {
+                console.log("1")
                 // Se o NPC tem eventos de quest, inicia a cutscene
                 if (npc.talking && npc.talking.length > 0) {
-                    this.map.startCutscene(npc.talking[0].events);
-                } else {
+                    console.log("1")
+                    if (npc.talking[0].events[0].type === "startPlanting") {
+                        console.log("1")
+                        this.map.startCutscene(npc.talking[0].events);
+                        dialogHappened = true;
+                    } else {
+                        console.log("1")
+                        for (let x = 0; x < npc.talking.length; x++) { // Passa por todos os eventos de fala do NPC
+                            console.log(npc.talking[x].events);
+                            npc.talking[x].events.forEach(event => { // Para cada evento
+                                console.log(event);
+                                if (event.type === "textMessage" && event.quest === this.playerState.currentQuestId && !dialogHappened) { // Se o tipo do evento for textMessage e a quest do evento for a quest atual do player
+                                    console.log("hmm")
+                                    this.map.startCutscene(npc.talking[x].events); // Começa a cutscene
+                                    dialogHappened = true; // Marca que já ouve o diálogo
+                                }
+                            })
+                        }
+                    }
+                } 
+
+                if (!dialogHappened) { // Se o diálogo não aconteceu
                     // Senão, usa o DialogManager para diálogos simples
+                    console.log("1")
                     if (!this.map.dialogManager) {
                         this.map.dialogManager = new DialogManager();
                     }
-
-                    // Condição especial para a galinha da loja
+                        // Condição especial para a galinha da loja
                     if (npc.id === "galinhaPenosa") {
+                        console.log("1")
                         this.map.dialogManager.startDialog(npc.id, this.map, () => {
-                            // Esta função será chamada QUANDO o diálogo terminar
+                                // Esta função será chamada QUANDO o diálogo terminar
                             openShop(); 
                         });
                     } else {
-                        // Para todos os outros NPCs simples
+                        console.log("1")
+                            // Para todos os outros NPCs simples
                         this.map.dialogManager.startDialog(npc.id, this.map);
                     }
                 }
             }
+
+            
+
+
         });
     }
 
@@ -277,6 +371,7 @@ class Overworld {
             foundFrog3: this.foundFrog3,
             easterEggsFound: this.easterEggsFound, // Passa a lista do nome de easter-eggs encontrados
             easterEggsFoundID: this.easterEggsFoundID, // Passa a lista do id dos de easter-eggs encontrados
+            playerState: this.playerState,
         });
         this.map.overworld = this;
         
@@ -301,7 +396,6 @@ class Overworld {
         this.hud.updateCoins(this.coins);
 
         this.startMap(window.OverworldMaps.Galinheiro);
-
         this.directionInput = new DirectionInput(); // gerencia as entradas do teclado para o movimento do personagem
         this.directionInput.init();
         //this.directionInput.direction;

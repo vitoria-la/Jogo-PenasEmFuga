@@ -6,37 +6,47 @@ class DialogManager {
   constructor() {
     this.npcDialogs = {
       // Diálogos para cada NPC do jogo
-      // "galinhaBranca": [
-      //   "Olá! Bem-vindo ao galinheiro.",
-      //   "Estamos planejando uma fuga em breve.",
-      //   "Você vai nos ajudar?"
-      // ],
-      // "galinhaMarrom": [
-      //   "Psiu! Não deixe os guardas te verem.",
-      //   "Eles estão de olho em todos nós."
-      // ],
-      "Paova": [
-        "Eu sou a Paova, a galinha mais velha daqui.",
-        "Já vi muitas tentativas de fuga fracassarem.",
-        "Mas dessa vez, acho que temos uma chance real!"
+      "galinhaBranca": [
+        "Olá! Bem-vindo ao galinheiro.",
+        "Estamos planejando uma fuga em breve.",
+        "Você vai nos ajudar?"
       ],
-      "Clotilde": [
-        "Olá, eu sou a Clotilde!",
-        "Estou cansada de botar ovos todos os dias.",
-        "Quero conhecer o mundo lá fora!"
+      "galinhaMarrom": [
+        "Psiu! Não deixe os guardas te verem.",
+        "Eles estão de olho em todos nós."
       ],
-      "Bernadette": [
-        "Bernadette ao seu dispor!",
-        "Dizem que existe um lugar onde as galinhas são livres.",
-        "Você acredita nisso?"
+      "Paova": [ // Personalidade parecida com a do Érick jacquin
+        "(Essa galinha não parece ter tempo para conversar)",
+        "Tá achando que tô brincando!?",
+        "Isso aqui é uma cozinha, não um galinheiro!",
+        "... ah, espera..."
+      ],
+      "Clotilde": [ // Galinha costureira, personalidade materna, meio doce mas não passa a mão
+        "Eu sei que você deve estar bem confuso",
+        "Mas essas galinhas não bicam não hahahaha",
+        "Qualquer coisa, basta conversar comigo!"
+      ],
+      "Bernadette": [ // Galinha velha, personalidade velha, meio velha, usa girias velhas
+        "Oi meu filho, você é novo por aqui?",
+        "Estou de olho nos meus novos netinhos, eles são f-OVO-finhos haha COF COF haha!",
+        "Você parece tão magrinho, estou fazendo uma pamonha quentinha!"
       ],
       "galinhaSegurancaMarrom": [
         "Ei você! O que está fazendo aqui?",
         "Estou de olho em você...",
         "Não tente nada suspeito!"
       ],
+      "frog1": [
+        "Programar é... ok... (-)-_-(-)"
+      ],
       "frog2": [
         "Eu amo programar hahaha HAHAHAHAHAHA"
+      ],
+      "frog3": [
+        "Eu odeio programar :("
+      ],
+      "cavalo": [
+        "C A V A L O"
       ],
       "galinhaPenosa": [
         "Oi, eu sou a Penosa!",
@@ -44,10 +54,20 @@ class DialogManager {
         "Tenho os melhores produtos do galinheiro!",
         "Dá uma olhada!",
       ],
+      "galinhaCaipira": [
+        "...Toda vez que eu viajava",
+        "pela estrada de ouro fino...",
+      ],
       "galinhaBrancaQuestIcon": [
         "Hmmmm",
         "Não era para isso ter acontecido...",
         "Isso não aconteceu, ok?",
+      ],
+      "galinhaGalinacia": [
+        "Ue cachoeira!?",
+      ],
+      "JuninhoJunior": [
+        "Oi tio!",
       ],
       
     };
