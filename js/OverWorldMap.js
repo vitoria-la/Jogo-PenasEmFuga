@@ -223,19 +223,33 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         //Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
     }
 
-    checkForFootstepCutscene() { // Método que percebe se o pinguim entrou na coordenada que inicia alguma cutscene
-        const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
-        const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
+    checkForFootstepCutscene() {
+    const hero = this.gameObjects["hero"];
+    const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
 
-        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando nenhuma cutscene e o player estiver no lugar que inicia uma
+    if (this.isCutscenePlaying === false && match) {
+        const eventConfig = match[0].events[0];
 
-            // A cutscene começa se: Não for do tipo "foundEasterEgg" OU se ela for do tipo "foundEasterEgg" e o easterEgg encontrado já não tinha sido encontrado
-            if ((match[0].events[0].type === "foundEasterEgg" && !this.easterEggsFoundID.includes(match[0].events[0].who)) || match[0].events[0].type != "foundEasterEgg") {
+        // --- INÍCIO DA MODIFICAÇÃO ---
+
+        // Condição especial para o Easter Egg da Galinha Dourada
+        if (eventConfig.type === "foundEasterEgg" && eventConfig.who === "galinhaDouradaEG") {
+            const galinhaDourada = this.gameObjects.galinhaDosOvosDourados;
+            // Apenas ativa a cutscene se a galinha estiver visível no mapa
+            if (galinhaDourada && galinhaDourada.isVisible !== false) {
                 this.startCutscene(match[0].events);
             }
+            return; // Impede que o código abaixo seja executado para este caso
         }
 
+        // --- FIM DA MODIFICAÇÃO ---
+
+        // Lógica original para todas as outras cutscenes
+        if ((eventConfig.type === "foundEasterEgg" && !this.easterEggsFoundID.includes(eventConfig.who)) || eventConfig.type !== "foundEasterEgg") {
+            this.startCutscene(match[0].events);
+        }
     }
+}
 
 }
 
@@ -1341,6 +1355,9 @@ window.OverworldMaps = {
         // Espaços em que acontece cutscenes
         cutsceneSpaces: {
             [utils.asGridCoord(31,17)] : [
+                {events: [{type: "changeMap", map: "Fazenda"},]}
+            ],
+            [utils.asGridCoord(31,18)] : [
                 {events: [{type: "changeMap", map: "Fazenda"},]}
             ],
             [utils.asGridCoord(-15,17)] : [ // Espaço acima do sapo da sala de costura
