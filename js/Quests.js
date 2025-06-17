@@ -28,6 +28,19 @@ const QuestChecks = {
     },
     PEGAR_3_SAPOS(playerState) {
         return playerState.questFlags.FROGS_COLLECTED >= 3;
+    },
+    // --- ADIÇÕES PARA A QUEST 10 ---
+    FALAR_COM_SEGURANCA_CHEFE(playerState) {
+        // Verifica se o jogador já falou com o segurança sobre o chefe
+        return playerState.questFlags.SPOKEN_TO_SECURITY_FOR_CHIEF >= 1;
+    },
+    JUNTAR_PISTAS_CHEFE(playerState) {
+        // Verifica se o jogador já coletou 3 pistas
+        return playerState.questFlags.CHIEF_CLUES_GATHERED >= 3;
+    },
+    ENCONTRAR_SALA_CHEFE(playerState) {
+        // A quest é completada quando a flag 'FOUND_CHIEF_ROOM' for verdadeira
+        return playerState.storyFlags.FOUND_CHIEF_ROOM;
     }
     // Adicione as funções de verificação para as outras quests aqui...
 }
@@ -119,6 +132,32 @@ window.QuestList = [
         progressKey: "CHEF_INFO_GATHERED",
         progressTarget: 4,
         reward: { type: "coins", amount: 100 }
+    },
+    {
+        id: "Q10",
+        name: "O Grande Chefe",
+        description: "Fale com a galinha segurança para saber como encontrar o 'chefe'.",
+        checkCompletion: QuestChecks.FALAR_COM_SEGURANCA_CHEFE,
+        progressKey: "SPOKEN_TO_SECURITY_FOR_CHIEF",
+        progressTarget: 1,
+        reward: { type: "coins", amount: 10 }
+    },
+    {
+        id: "Q10.1",
+        name: "", // Nome vazio para ser uma etapa interna
+        description: "Procure por pistas. Converse com 3 galinhas para obter dicas sobre o enigma do chefe.",
+        checkCompletion: QuestChecks.JUNTAR_PISTAS_CHEFE,
+        progressKey: "CHIEF_CLUES_GATHERED",
+        progressTarget: 3,
+        reward: { type: "coins", amount: 40 }
+    },
+    {
+        id: "Q10.2",
+        name: "", // Nome vazio
+        description: "Resolva o enigma e encontre a sala do chefe.",
+        checkCompletion: QuestChecks.ENCONTRAR_SALA_CHEFE,
+        progressKey: "FOUND_CHIEF_ROOM", // Usa uma flag, não um contador
+        progressTarget: 1,
+        reward: { type: "coins", amount: 150 }
     }
-    // Adicione as quests 3 a 10 aqui...
 ];

@@ -287,6 +287,12 @@ window.OverworldMaps = {
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     },
+                    {
+                        events: [
+                            { type: "textMessage", text: "O enigma do chefe? Hmm... 'Onde o grão descansa'... talvez seja um lugar de armazenamento, mas que leva a outro lugar?", faceHero: "galinhaBranca", quest: "Q10.1"},
+                            { type: "questProgress", flag: "TALKED_CHICKEN_1_CLUE", counter: "CHIEF_CLUES_GATHERED" }
+                        ]
+                    }
                 ] 
             },  
             galinhaBrancaQuestIcon: {
@@ -421,6 +427,12 @@ window.OverworldMaps = {
                             { type: "textMessage", text: "Parece até que consigo ouvi-los...", faceHero: "Clotilde", quest: "Q5.2"},
                             { type: "questProgress", flag: "TALKED_TO_CLOTILDE", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Aquele enigma... 'a jornada não cessa' me soa como uma passagem. Já procurou nos cantos mais esquecidos do galinheiro?", faceHero: "Clotilde", quest: "Q10.1"},
+                            { type: "questProgress", flag: "TALKED_CHICKEN_2_CLUE", counter: "CHIEF_CLUES_GATHERED" }
+                        ]
                     }
                 ]
             },
@@ -508,6 +520,12 @@ window.OverworldMaps = {
                             { type: "textMessage", who: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
                             { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.1"},
+                            { type: "questProgress", flag: "TALKED_CHICKEN_3_CLUE", counter: "CHIEF_CLUES_GATHERED" }
+                        ]
                     }
                 ]
             },
@@ -524,6 +542,14 @@ window.OverworldMaps = {
                         events: [
                             { type: "textMessage", who: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
                             { type: "questProgress", flag: "TALKED_TO_SEGURANCA_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Então você quer ver o chefe? Ha! Muitos tentam, poucos conseguem.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "textMessage", text: "Ele só recebe quem resolve seu enigma: 'Onde o grão descansa, mas a jornada não cessa'.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "textMessage", text: "Se for esperto, talvez outras galinhas por aí possam te dar um norte. Agora, circule!", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "questProgress", flag: "SPOKEN_TO_SECURITY_FOR_CHIEF", counter: "SPOKEN_TO_SECURITY_FOR_CHIEF" }
                         ]
                     }
                 ]
@@ -1315,6 +1341,20 @@ window.OverworldMaps = {
             ],
             [utils.asGridCoord(11,16)] : [ // 
                 {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
+            ],
+            [utils.asGridCoord(-1, 27)]: [
+                {
+                    events: [
+                        { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
+                    ]
+                }
+            ],
+            [utils.asGridCoord(-1, 28)]: [
+                {
+                    events: [
+                        { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
+                    ]
+                }
             ],
         }
     },
