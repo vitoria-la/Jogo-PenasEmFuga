@@ -54,9 +54,9 @@ window.QuestList = [
         checkCompletion: QuestChecks.FALAR_COM_GALINHAS,
         progressKey: "CHICKENS_SPOKEN_TO", 
         progressTarget: 3,
-        reward: {
-            type: "item",
-            item: { id: "semente_trigo", name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
+        reward:{
+            type: "coins",
+            amount: 10
         }
     },
     {
@@ -68,7 +68,7 @@ window.QuestList = [
         progressTarget: 1,
         reward: {
             type: "item",
-            item: { id: "semente_trigo", name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
+            item: { id: 2 , name: "Semente de Trigo", src: "./assets/img/trigoSemente.png", quantity: 5 }
         }
     },
     {
@@ -78,11 +78,20 @@ window.QuestList = [
         checkCompletion: QuestChecks.COLETAR_TRIGO,
         progressKey: "WHEAT_COLLECTED", 
         progressTarget: 9, 
-        reward: {
-            type: "coins",
-            amount: 20
-        }
+        reward: {} //O Prêmio está na subquest Q2.1
     },
+    // {
+    //     id: "Q2.1",
+    //     name: "Ops, errei a conta...",
+    //     description: "Vender 3 trigos na vendinha da Galinha Penosa",
+    //     checkCompletion: QuestChecks.VENDER_TRIGO,
+    //     progressKey: "ITENS_VENDIDOS", 
+    //     progressTarget: 3, 
+    //     reward: {
+    //         type: "coins",
+    //         amount: 20
+    //     }
+    // },
     // ... Suas quests Q3 e Q4 aqui ...
     {
         id: "Q5",
@@ -123,7 +132,7 @@ window.QuestList = [
             amount: 20
         }
     },
-    // ... Suas quests Q6, Q7, Q8 aqui ...
+    // ... Suas quests Q7, Q8 aqui ...
     {
         id: "Q9",
         name: "Segredos do Chef",

@@ -167,6 +167,9 @@ function openShop() {
                     src: item.src,
                     quantity: item.quantity,
                 };
+                // //essa é para a quest de vender itens 
+                // playerState.questFlags.ITENS_VENDIDOS = (playerState.questFlags.ITENS_VENDIDOS || 0) + 1;
+                // //----------------------------------------------------
                 window.overworld.removeItemFromHotbar(ItemRemove);
                 window.overworld.hud.updateCoins(overworld.coins); // Atualiza a HUD com as novas moedas
             };

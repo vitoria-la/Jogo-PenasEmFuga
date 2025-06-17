@@ -136,6 +136,9 @@ class Overworld {
                 if (questId === "Q5.1") {
                     this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
                 }
+                // if (questId === "Q2.1"){
+                //     this.playerState.questFlags["ITENS_VENDIDOS"] = 0; // Reseta o contador de galinhas faladas
+                // }
 
                 console.log("foi")
                 this.playerState.completedQuests.add(questId);
