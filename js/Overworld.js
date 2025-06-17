@@ -8,10 +8,10 @@ class Overworld {
         this.easterEggsFound = config.easterEggsFound || []; // Lista de easter eggs encontrados
         this.easterEggsFoundID = config.easterEggsFoundID || []; // Lista do id dos easter eggs encontrados
         this.playerState = {
-            items:[
-                // Para teste, vamos começar com algumas sementes
-                { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5 },
-                { id: 4, name: "Semente de Milho (x5)", src: "./assets/img/milhoSemente.png", quantity: 5 },
+            items:[ 
+                // // Para teste, vamos começar com algumas sementes
+                // { id: 2, name: "Semente de Trigo (x5)", src: "./assets/img/trigoSemente.png", quantity: 5, price: 2 },
+                // { id: 4, name: "Semente de Milho (x5)", src: "./assets/img/milhoSemente.png", quantity: 5, price: 4 },
                 null, null, null, null
             ],
             storyFlags: {}, // Para eventos únicos, como "FALOU_COM_GALINHA_BRANCA"
@@ -59,6 +59,29 @@ class Overworld {
         this.hud.updateTasks(this.playerState.currentQuestId, this.playerState);
 
         console.log(`Pulou para a Quest: ${questExists.name} (${questId})`);
+    }
+
+    removeItemFromHotbar(itemToRemove) {
+        let removed = false;
+        for (let i = 0; i < this.playerState.items.length; i++) {
+            const slot = this.playerState.items[i];
+            if (slot && slot.id === itemToRemove.id) {
+                if (slot.quantity > 1) {
+                    slot.quantity -= 1;
+                } else {
+                    this.playerState.items[i] = null;
+                }
+                removed = true;
+                break;
+            }
+        }
+        if (removed) {
+            this.playerState.items.forEach((item, i) => {
+                this.hud.updateHotbarSlot(i, item);
+            });
+        } else {
+            console.log("Item não encontrado na hotbar para remoção.");
+        }
     }
 
     addItemToHotbar(itemToAdd) {
