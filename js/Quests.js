@@ -1,4 +1,7 @@
 // Objeto que contém a lógica para verificar a conclusão de cada quest
+import { showCutscene } from './cutscene.js';
+
+
 const QuestChecks = {
     FALAR_COM_GALINHAS(playerState) {
         // O objetivo é ter falado com 3 galinhas ou mais
@@ -60,6 +63,9 @@ const QuestChecks = {
     FALAR_COM_JUNINHO(playerState) {
         return playerState.questFlags.SPOKEN_TO_JUNINHO >= 1;
     },
+    FALAR_COM_JUNINHO2(playerState) {
+        return playerState.questFlags.SPOKEN_TO_JUNINHO2 >= 1;
+    },
     SPOKE_TO_PENOSA_FOR_STOCK(playerState) {
         return playerState.storyFlags.SPOKE_TO_PENOSA_FOR_STOCK;
     },
@@ -79,6 +85,9 @@ const QuestChecks = {
     },
     LEVAR_COBERTOR(playerState) {
         return playerState.storyFlags.BLANKET_DELIVERED;
+    },
+    ASSISTIR_CUTSCENE_FINAL(playerState) {
+        return playerState.questFlags.WATCHED_FINAL_CUTSCENE >= 1;
     },
     // Adicione as funções de verificação para as outras quests aqui...
 }
@@ -293,9 +302,26 @@ window.QuestList = [
         id: "Q10.6",
         name: "", // Nome vazio
         description: "Leve os cobertores para a Bernadette",
-        checkCompletion: QuestChecks.LEVAR_LINHA,
-        progressKey: "BLANKET_DELIVERED_Q",
+        checkCompletion: QuestChecks.LEVAR_COBERTOR,
+        progressKey: "BLANKET_DELIVERED",
         progressTarget: 1,
         reward: { type: "coins", amount: 20 }
+    },
+    {
+        id: "Q10.7",
+        name: "", // Nome vazio
+        description: "Fale com o chefe.",
+        checkCompletion: QuestChecks.FALAR_COM_JUNINHO2,
+        progressKey: "SPOKEN_TO_JUNINHO2",
+        progressTarget: 1,
+        reward: { type: "coins", amount: 150 },
+        onComplete: () => {
+            // Exibe cutscene ao completar Q10.4
+            showCutscene({
+            background: './assets/img/Despedida.png',      // imagem de fundo
+            imageFicar: './assets/img/FinalFicar.png', // imagem para opção 'Ficar'Add commentMore actions
+            imageSair: './assets/img/FinalSair.png'   // imagem para opção 'Sair'
+            });
+        }
     },
 ];
