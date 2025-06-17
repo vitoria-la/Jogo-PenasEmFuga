@@ -137,8 +137,11 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             if (this.playerState.currentQuestId === "Q5.1" && key === "galinhaGalinaciaQuestIcon") {
                 this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
             }
-            if (this.playerState.currentQuestId === "Q10.1" && key === "galinhaSegurancaQuestIcon") {
-                this.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+            if (this.playerState.currentQuestId === "Q4.5" && key === "galinhaGalinaciaQuestIcon") {
+                this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
+            if (this.playerState.currentQuestId === "Q10.1" && key === "galinhaSegurancaMarromQuestIcon") {
+                this.showQuestIcon("galinhaSegurancaMarromQuestIcon", "galinhaSegurancaMarrom");
             }
             
             if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
@@ -166,6 +169,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 questIconsList.forEach(name => { // Percorre a lista de questIcons
                     if (name.includes(key)) { // Se o nome desse questIcon tiver o nome do NPC
                         object.questIcon = this.gameObjects[name]; // Vincula os dois
+                        console.log(object.questIcon);
                     }
                 })
             }
@@ -211,6 +215,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
     async startCutscene(events) { // método para começar uma cutscene
         this.isCutscenePlaying = true;
+        console.log(events);
 
         // começa um loop de eventos assíncronos
         // espera cada um
@@ -626,10 +631,13 @@ window.OverworldMaps = {
                 type: "Person",
                 x: utils.withGrid(30),
                 y: utils.withGrid(16),
-                src: "./assets/img/galinhaSegurancaMarrom.png",
                 haveQuestIcon: true,
+                src: "./assets/img/galinhaSegurancaMarrom.png",
                 behaviorLoop: [  
-                   {type: "stand", direction: "left", time: 2800},
+                   {type: "stand", direction: "left", time: 7000},
+                   {type: "stand", direction: "down", time: 3000},
+                   {type: "stand", direction: "left", time: 7000},
+                   {type: "stand", direction: "up", time: 3000},
                 ],
                 talking: [
                     {
@@ -648,9 +656,9 @@ window.OverworldMaps = {
                     }
                 ]
             },
-            galinhaSegurancaQuestIcon: {
+            galinhaSegurancaMarromQuestIcon: {
                 type:"Person",
-                x: utils.withGrid(30),
+                x: utils.withGrid(29),
                 y: utils.withGrid(14),
                 src: "./assets/img/questIcon.png",
                 isQuestIcon: true,
@@ -687,16 +695,25 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Moço...", quest: "Q4.5"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Preciso alimentar as minhas galinhas!", quest: "Q4.5"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Elas amam milho, traga 20!", quest: "Q4.5"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINACIA_CORN", counter: "SPOKEN_TO_GALINACIA_CORN" }
+                        ]
+                    },
+                    {
+                        events: [
                             {
                                 type: "entregarItem",
                                 itemId: "Milho",
                                 quantity: 20,
+                                quest: "Q5",
                                 events_if_enough: [
-                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!", quest: "Q5"},
+                                    { type: "textMessage", faceHero: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!", quest: "Q5"},
                                     { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
                                 ],
                                 events_if_not_enough: [
-                                    {type: "textMessage", who: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor."}
+                                    {type: "textMessage", faceHero: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor.", quest: "Q5"}
                                 ]
                             }
                         ]

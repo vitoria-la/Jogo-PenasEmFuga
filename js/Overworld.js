@@ -41,11 +41,11 @@ class Overworld {
         if (questId === "Q1.1") {
             this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
         }
-        if (questId === "Q5.1") {
+        if (questId === "Q5.1" || questId === "Q4.5") {
             this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
         }
         if (questId === "Q10.1") {
-            this.map.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+            this.map.showQuestIcon("galinhaSegurancaMarromQuestIcon", "galinhaSegurancaMarrom");
         }
 
         // 3. Limpa flags de progresso da quest anterior para evitar contagens erradas
@@ -152,11 +152,11 @@ class Overworld {
                 if (questId === "Q1.1") {
                     this.map.hideQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
                 }
-                if (questId === "Q5.1") {
+                if (questId === "Q5.1" || questId === "Q4.5") {
                     this.map.hideQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
                 }
                 if (questId === "Q10.1") {
-                    this.map.hideQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+                    this.map.hideQuestIcon("galinhaSegurancaMarromQuestIcon", "galinhaSegurancaMarrom");
                 }
 
                 console.log("foi")
@@ -205,11 +205,11 @@ class Overworld {
             if (this.playerState.currentQuestId === "Q1.1") {
                 this.map.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
             }
-            if (this.playerState.currentQuestId === "Q5.1") {
+            if (this.playerState.currentQuestId === "Q5.1" || questId === "Q4.5") {
                 this.map.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
             }
             if (this.playerState.currentQuestId === "Q10.1") {
-                this.map.showQuestIcon("galinhaSegurancaQuestIcon", "galinhaSegurancaMarrom");
+                this.map.showQuestIcon("galinhaSegurancaMarromQuestIcon", "galinhaSegurancaMarrom");
             }
 
             // --- LÓGICA DE NÍVEL ADICIONADA AQUI ---
@@ -324,6 +324,13 @@ class Overworld {
                 // Se o NPC tem eventos de quest, inicia a cutscene
                 if (npc.talking && npc.talking.length > 0) {
                     console.log("1")
+
+                    if (npc.talking[0].events[0].type === "entregarItem"  && npc.talking[0].events[0].quest === this.playerState.currentQuestId) {
+                        // Dependendo do resultado, inicia a cutscene apropriada
+                        this.map.startCutscene(npc.talking[0].events);
+                        dialogHappened = true;
+                    }
+                    
                     if (npc.talking[0].events[0].type === "startPlanting") {
                         console.log("1")
                         this.map.startCutscene(npc.talking[0].events);

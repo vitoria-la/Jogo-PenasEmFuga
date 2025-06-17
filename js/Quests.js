@@ -39,6 +39,9 @@ const QuestChecks = {
     FALAR_COM_GALINACIA(playerState) {
         return playerState.questFlags.SPOKEN_TO_GALINACIA >= 1;
     },
+    FALAR_COM_GALINACIA_CORN(playerState) {
+        return playerState.questFlags.SPOKEN_TO_GALINACIA_CORN >= 1;
+    },
     PEGAR_3_SAPOS(playerState) {
         return playerState.questFlags.FROGS_COLLECTED >= 3;
     },
@@ -135,6 +138,15 @@ window.QuestList = [
         progressKey: "DELIVERED_PORRIDGE_Q4",
         progressTarget: 1,
         reward: { type: "coins", amount: 35 }
+    },
+    {
+        id: "Q4.5",
+        name: "",
+        description: "Fale com a Galinácia",
+        checkCompletion: QuestChecks.FALAR_COM_GALINACIA_CORN,
+        progressKey: "SPOKEN_TO_GALINACIA_CORN",
+        progressTarget: 1,
+        reward: { type: "coins", amount: 50 }
     },
     {
         id: "Q5",
