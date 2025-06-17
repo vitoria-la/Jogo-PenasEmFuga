@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/Zoom.css">
     <link rel="stylesheet" href="css/shop.css">
     <link rel="stylesheet" href="css/PlantingSystem.css">
+    <link rel="stylesheet" href="css/Timer.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,12 +31,11 @@
             <img src="assets/img/Telainicial.png" id="Telainicial">
             <div class="wrapper">
                 <button id="start-button" class="titlescreen-button" onclick="document.getElementById('homeSong').pause()">Jogar</button>
-                <button id="credits-button" class="titlescreen-button">Créditos</button>
+                <button id="credits-button" class="titlescreen-button" onclick="creditos_show()">Créditos</button>
                 <button id="settings-button" class="titlescreen-button">Configurações</button>
             </div>
         </div>
         <canvas class="game-canvas"></canvas>
-        <!-- <button onclick="openShop()">loja</button> -->
          <div id="plantacao-popup" class="popup-plantacao" style="display: none;">
           <div class="popup-content">
             <h2>Plantação</h2>
@@ -59,6 +59,7 @@
           </div>
         </div>    </div>
     
+    <script src="js/Creditos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>    <!-- Utilitários básicos - Carregados primeiro pois outras classes dependem deles -->
     <script src="js/utils.js"></script>
     <script src="js/DirectionInput.js"></script>
@@ -66,6 +67,8 @@
 
     <!-- Classes base - Implementam funcionalidades fundamentais do jogo -->
     <script src="js/Sprite.js"></script>
+    <script src="js/Items.js"></script> 
+    <script src="js/Timer.js"></script>
     <script src="js/GameObject.js"></script>
     <script src="js/Person.js"></script>
 

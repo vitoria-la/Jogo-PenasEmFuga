@@ -103,6 +103,10 @@ class Person extends GameObject {
 
         if (this.movingProgressRemaining === 0) {
             this.intentPosition = null;
+            if (this.isPlayerControlled) {
+            // Divide as coordenadas por 16 para obter a posição no grid
+                console.log(`Posição em Grid: x=${this.x / 16}, y=${this.y / 16}`);
+            }
             utils.emitEvent("PersonWalkingComplete", {
                 whoId: this.id
             });

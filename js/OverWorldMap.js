@@ -137,6 +137,12 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             if (this.playerState.currentQuestId === "Q5.1" && key === "galinhaGalinaciaQuestIcon") {
                 this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
             }
+            if (this.playerState.currentQuestId === "Q4.5" && key === "galinhaGalinaciaQuestIcon") {
+                this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
+            if (this.playerState.currentQuestId === "Q10.1" && key === "galinhaSegurancaMarromQuestIcon") {
+                this.showQuestIcon("galinhaSegurancaMarromQuestIcon", "galinhaSegurancaMarrom");
+            }
             
             if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
                 this.gameObjects[key].y = utils.withGrid(-50);
@@ -163,6 +169,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 questIconsList.forEach(name => { // Percorre a lista de questIcons
                     if (name.includes(key)) { // Se o nome desse questIcon tiver o nome do NPC
                         object.questIcon = this.gameObjects[name]; // Vincula os dois
+                        console.log(object.questIcon);
                     }
                 })
             }
@@ -183,6 +190,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 questIconObj.x = utils.withGrid(objectNpc.x);
                 questIconObj.y = utils.withGrid(objectNpc.y) - utils.withGrid(2);
                 console.log("teste")
+                console.log(questIconObj.x)
+                console.log(questIconObj.y)
             }
         })
     }
@@ -206,6 +215,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
     async startCutscene(events) { // método para começar uma cutscene
         this.isCutscenePlaying = true;
+        console.log(events);
 
         // começa um loop de eventos assíncronos
         // espera cada um
@@ -303,7 +313,7 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", text: "O enigma do chefe? Hmm... 'Onde o grão descansa'... talvez seja um lugar de armazenamento, mas que leva a outro lugar?", faceHero: "galinhaBranca", quest: "Q10.1"},
+                            { type: "textMessage", text: "O enigma do chefe? Hmm... 'Onde o grão descansa'... talvez seja um lugar de armazenamento, mas que leva a outro lugar?", faceHero: "galinhaBranca", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_1_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
@@ -315,6 +325,7 @@ window.OverworldMaps = {
                 y: utils.withGrid(17),
                 src: "./assets/img/questIcon.png",
                 isQuestIcon: true,
+                isVisible: false,
             },
             galinhaMarrom: {
                 type: "Person",
@@ -415,6 +426,15 @@ window.OverworldMaps = {
                             { type: "textMessage", faceHero: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
+                    },
+                    // Diálogo para a Quest 4.2: entregar o mingau.
+                    {
+                        events: [
+                            { type: "textMessage", faceHero: "Paova", text: "Mingau para a Bernadette? Acabou de sair do fogo!", quest: "Q4.2" },
+                            { type: "addItemToPlayer", item: window.Items.mingauQuente },
+                            { type: "startVisualTimer", duration: 20 },
+                            { type: "questProgress", flag: "GOT_PORRIDGE_FROM_PAOVA_Q4", counter: "GOT_PORRIDGE_FROM_PAOVA_Q4" }
+                        ]
                     }
                 ]
             },
@@ -469,7 +489,7 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", text: "Aquele enigma... 'a jornada não cessa' me soa como uma passagem. Já procurou nos cantos mais esquecidos do galinheiro?", faceHero: "Clotilde", quest: "Q10.1"},
+                            { type: "textMessage", text: "Aquele enigma... 'a jornada não cessa' me soa como uma passagem. Já procurou nos cantos mais esquecidos do galinheiro?", faceHero: "Clotilde", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_2_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
@@ -560,9 +580,48 @@ window.OverworldMaps = {
                             { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     },
+                    // Diálogo para iniciar a Quest 4 (acionado durante a Q4.1)
                     {
                         events: [
-                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.1"},
+                            { type: "textMessage", faceHero: "Bernadette", text: "Meu querido, estou com uma fome...", quest: "Q4.1" },
+                            { type: "textMessage", faceHero: "Bernadette", text: "A Paova estava fazendo um mingau pra mim na cozinha.", quest: "Q4.1" },
+                            { type: "textMessage", faceHero: "Bernadette", text: "Você poderia ir lá buscar pra essa galinha velha?", quest: "Q4.1" },
+                            { type: "questProgress", flag: "SPOKEN_TO_BERNADETTE_FOR_Q4", counter: "SPOKEN_TO_BERNADETTE_FOR_Q4" }
+                        ]
+                    },
+                     {
+                        events: [
+                            { type: "textMessage", text: "Conseguiu trazer, meu bem?", faceHero: "Bernadette", quest: "Q4" },
+                            { 
+                                type: "handlePorridgeDelivery",
+                                
+                                // O que acontece se o jogador tiver o mingau QUENTE
+                                events_if_hot: [
+                                    { type: "stopVisualTimer" },
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Ah, muito obrigada! Chegou quentinho, que alegria!" },
+                                    { type: "removeItem", itemId: "mingauQuente" },
+                                    { type: "questProgress", flag: "DELIVERED_PORRIDGE_Q4", counter: "DELIVERED_PORRIDGE_Q4" }
+                                ],
+
+                                // O que acontece se o jogador tiver o mingau FRIO
+                                events_if_cold: [
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Oh, que pena, o mingau esfriou..." },
+                                    { type: "removeItem", itemId: "mingauFrio" },
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Por favor, pegue outro com a Paova." },
+                                    { type: "setQuest", questId: "Q4.2" }
+                                ],
+
+                                // O que acontece se o jogador não tiver NENHUM mingau
+                                events_if_none: [
+                                    { type: "textMessage", faceHero: "Bernadette", text: "Ainda estou esperando o mingau, querido." }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado...", quest: "Q10.1"},
+                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.2"},
                             { type: "questProgress", flag: "TALKED_CHICKEN_3_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
@@ -572,9 +631,13 @@ window.OverworldMaps = {
                 type: "Person",
                 x: utils.withGrid(30),
                 y: utils.withGrid(16),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaSegurancaMarrom.png",
                 behaviorLoop: [  
-                   {type: "stand", direction: "left", time: 2800},
+                   {type: "stand", direction: "left", time: 7000},
+                   {type: "stand", direction: "down", time: 3000},
+                   {type: "stand", direction: "left", time: 7000},
+                   {type: "stand", direction: "up", time: 3000},
                 ],
                 talking: [
                     {
@@ -585,13 +648,21 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", text: "Então você quer ver o chefe? Ha! Muitos tentam, poucos conseguem.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
-                            { type: "textMessage", text: "Ele só recebe quem resolve seu enigma: 'Onde o grão descansa, mas a jornada não cessa'.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
-                            { type: "textMessage", text: "Se for esperto, talvez outras galinhas por aí possam te dar um norte. Agora, circule!", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "textMessage", text: "Então você quer ver o chefe? Ha! Muitos tentam, poucos conseguem.", faceHero: "galinhaSegurancaMarrom", quest: "Q10.1"},
+                            { type: "textMessage", text: "Ele só recebe quem resolve seu enigma: 'Onde o grão descansa, mas a jornada não cessa'.", faceHero: "galinhaSegurancaMarrom", quest: "Q10.1"},
+                            { type: "textMessage", text: "Se for esperto, talvez outras galinhas por aí possam te dar um norte. Agora, circule!", faceHero: "galinhaSegurancaMarrom", quest: "Q10.1"},
                             { type: "questProgress", flag: "SPOKEN_TO_SECURITY_FOR_CHIEF", counter: "SPOKEN_TO_SECURITY_FOR_CHIEF" }
                         ]
                     }
                 ]
+            },
+            galinhaSegurancaMarromQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(29),
+                y: utils.withGrid(14),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
              galinhaGalinacia: {
                 type: "Person",
@@ -624,16 +695,25 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Moço...", quest: "Q4.5"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Preciso alimentar as minhas galinhas!", quest: "Q4.5"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Elas amam milho, traga 20!", quest: "Q4.5"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINACIA_CORN", counter: "SPOKEN_TO_GALINACIA_CORN" }
+                        ]
+                    },
+                    {
+                        events: [
                             {
                                 type: "entregarItem",
                                 itemId: "Milho",
                                 quantity: 20,
+                                quest: "Q5",
                                 events_if_enough: [
-                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!", quest: "Q5"},
+                                    { type: "textMessage", faceHero: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!", quest: "Q5"},
                                     { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
                                 ],
                                 events_if_not_enough: [
-                                    {type: "textMessage", who: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor."}
+                                    {type: "textMessage", faceHero: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor.", quest: "Q5"}
                                 ]
                             }
                         ]
@@ -668,6 +748,31 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaPenosa.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
+                ],
+                talking: [
+                    {events: [ 
+                            { type: "textMessage", text: "Ah, que bom que você veio! O estoque está um caos...", faceHero: "galinhaPenosa", quest: "Q8"},
+                            { type: "textMessage", text: "O chefe não tem saído muito, então não consigo repor minhas prateleiras.", faceHero: "galinhaPenosa", quest: "Q8"},
+                            { type: "textMessage", text: "Que tal começar me vendendo 15 trigos? Isso já ajudaria muito!", faceHero: "galinhaPenosa", quest: "Q8"},
+                            { type: "questProgress", flag: "SPOKE_TO_PENOSA_FOR_STOCK" },
+                            { type: "openShop" }
+                        ]
+                    },
+                    {events: [ 
+                            { type: "textMessage", text: "Qualquer trigo que você tiver, estou comprando!", faceHero: "galinhaPenosa", quest: "Q8.1"},
+                            { type: "openShop" }
+                        ]
+                    },
+                    {events: [ 
+                            { type: "textMessage", text: "Maravilha! O estoque de trigo está ótimo. Agora só preciso de 15 milhos para ficarmos perfeitos!", faceHero: "galinhaPenosa", quest: "Q8.2"},
+                            { type: "openShop" }
+                        ]
+                    },
+                    {events: [ 
+                            { type: "textMessage", text: "Oi, eu sou a Penosa! Dá uma olhada nos meus produtos!", faceHero: "galinhaPenosa" },
+                            { type: "openShop" }
+                        ]
+                    },
                 ]
             },
             JuninhoJunior: {
@@ -1404,14 +1509,14 @@ window.OverworldMaps = {
             [utils.asGridCoord(11,16)] : [ // 
                 {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
             ],
-            [utils.asGridCoord(-1, 27)]: [
+            [utils.asGridCoord(-3, 31)]: [
                 {
                     events: [
                         { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
                     ]
                 }
             ],
-            [utils.asGridCoord(-1, 28)]: [
+            [utils.asGridCoord(-4, 31)]: [
                 {
                     events: [
                         { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
@@ -1558,6 +1663,93 @@ window.OverworldMaps = {
         // ...restante do mapa...
         walls: {
             //define as coordenadas das colisoes do mapa
+            [utils.asGridCoord(-28,14)] : true,
+            [utils.asGridCoord(-28,13)] : true,
+            [utils.asGridCoord(-27,12)] : true,
+            [utils.asGridCoord(-26,12)] : true,
+            [utils.asGridCoord(-25,12)] : true,
+            [utils.asGridCoord(-24,12)] : true,
+            [utils.asGridCoord(-23,12)] : true,
+            [utils.asGridCoord(-22,12)] : true,
+            [utils.asGridCoord(-21,12)] : true,
+            [utils.asGridCoord(-20,12)] : true,
+            [utils.asGridCoord(-19,12)] : true,
+            [utils.asGridCoord(-18,12)] : true,
+            [utils.asGridCoord(-17,12)] : true,
+            [utils.asGridCoord(-16,12)] : true,
+            [utils.asGridCoord(-15,12)] : true,
+            [utils.asGridCoord(-14,12)] : true,
+            [utils.asGridCoord(-13,12)] : true,
+            [utils.asGridCoord(-12,12)] : true,
+            [utils.asGridCoord(-11,12)] : true,
+            [utils.asGridCoord(-10,12)] : true,
+            [utils.asGridCoord(-9,12)] : true,
+            [utils.asGridCoord(-8,12)] : true,
+            [utils.asGridCoord(-7,12)] : true,
+            [utils.asGridCoord(-6,12)] : true,
+            [utils.asGridCoord(-5,12)] : true,
+
+            [utils.asGridCoord(-6,13)] : true,
+            [utils.asGridCoord(-6,14)] : true,
+            [utils.asGridCoord(-6,15)] : true,
+            [utils.asGridCoord(-6,16)] : true,
+            [utils.asGridCoord(-6,17)] : true,
+            [utils.asGridCoord(-6,18)] : true,
+            [utils.asGridCoord(-6,19)] : true,
+            [utils.asGridCoord(-6,20)] : true,
+            [utils.asGridCoord(-6,21)] : true,
+            [utils.asGridCoord(-6,22)] : true,
+            [utils.asGridCoord(-6,23)] : true,
+            [utils.asGridCoord(-6,24)] : true,
+            [utils.asGridCoord(-6,25)] : true,
+
+            [utils.asGridCoord(-7,24)] : true,
+            [utils.asGridCoord(-8,24)] : true,
+            [utils.asGridCoord(-9,24)] : true,
+            [utils.asGridCoord(-10,24)] : true,
+            [utils.asGridCoord(-11,24)] : true,
+            [utils.asGridCoord(-12,24)] : true,
+            [utils.asGridCoord(-13,24)] : true,
+            [utils.asGridCoord(-14,24)] : true,
+            [utils.asGridCoord(-15,24)] : true,
+            [utils.asGridCoord(-16,24)] : true,
+            [utils.asGridCoord(-17,24)] : true,
+            [utils.asGridCoord(-18,24)] : true,
+            [utils.asGridCoord(-19,24)] : true,
+
+            [utils.asGridCoord(-19,26)] : true,
+            [utils.asGridCoord(-19,27)] : true,
+            [utils.asGridCoord(-19,28)] : true,
+            [utils.asGridCoord(-19,29)] : true,
+
+            [utils.asGridCoord(-20,29)] : true,
+            [utils.asGridCoord(-21,29)] : true,
+            [utils.asGridCoord(-22,29)] : true,
+            [utils.asGridCoord(-23,29)] : true,
+            [utils.asGridCoord(-24,29)] : true,
+            [utils.asGridCoord(-25,29)] : true,
+            [utils.asGridCoord(-26,29)] : true,
+            [utils.asGridCoord(-27,29)] : true,
+            [utils.asGridCoord(-28,29)] : true,
+
+            [utils.asGridCoord(-28,29)] : true,
+            [utils.asGridCoord(-28,28)] : true,
+            [utils.asGridCoord(-28,27)] : true,
+            [utils.asGridCoord(-28,26)] : true,
+            [utils.asGridCoord(-28,25)] : true,
+            [utils.asGridCoord(-28,24)] : true,
+            [utils.asGridCoord(-28,23)] : true,
+            [utils.asGridCoord(-28,22)] : true,
+            [utils.asGridCoord(-28,21)] : true,
+            [utils.asGridCoord(-28,20)] : true,
+            [utils.asGridCoord(-28,19)] : true,
+
+            [utils.asGridCoord(-24,27)] : true,
+            [utils.asGridCoord(-25,27)] : true,
+            [utils.asGridCoord(-24,26)] : true,
+            [utils.asGridCoord(-25,26)] : true,
+            [utils.asGridCoord(-24,25)] : true,
+            [utils.asGridCoord(-25,25)] : true,
         },
         // Espaços em que acontece cutscenes
         cutsceneSpaces: {
@@ -1608,7 +1800,24 @@ window.OverworldMaps = {
                         {type: "stand", direction: "down", time: 2800},
                     ],
                     talking: [
-
+                        {
+                            events: [
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Você realmente achou... que eu era só mais um pintinho comum?", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Cada milho, cada grão, cada plano… passa por mim.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Eu sou a gema por trás da casca", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Mas isso não é só sobre poder. Aqui... a gente protege o galinheiro. Ovos primeiro, sempre.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "A proxima geração depende de nós. De você.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Você quer fugir? Quer sua passagem no trenzinho da liberdade?", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Então me prove. Uma última missão...", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Os ovinhos. Nosso futuro. Aqui no litoral é frio demais para eles", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Proteja eles, garanta que cresçam sem medo, sem rachaduras..", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Leve 15 carretéis de linha para a Clotilde", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Ela saberá.", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "Faça isso, e o trilho se abre. Falhe… ", quest: "Q10.4"},
+                                { type: "textMessage", faceHero: "JuninhoJuniorOChefe", text: "E você não verá os seus amigos do frio tão cedo", quest: "Q10.4"},
+                                { type: "questProgress", flag: "TALKED_TO_JUNINHO", counter: "SPOKEN_TO_JUNINHO" }
+                            ]
+                        },
                     ]
                 },
                 chickenNorris: {
@@ -1635,18 +1844,126 @@ window.OverworldMaps = {
 
                     ]
                 },
+                foto2: { // É um objeto de easter egg do álbum, ele não aparece no mapa, só é usado para mostrar o gif ao entrar na sala 
+                    type: "EasterEgg",
+                    isEasterEgg: true,
+                    name: "Foto rasgada...2!?",
+                    description: "Plot Twist",
+                    mapName: "Galinheiro",
+                    x: utils.withGrid(50),
+                    y: utils.withGrid(0),
+                    src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+                },
             },
             // ...restante do mapa...
                 walls: {
                     //define as coordenadas das colisoes do mapa
+                    [utils.asGridCoord(1,33)] : true,
+                    [utils.asGridCoord(2,33)] : true,
+                    [utils.asGridCoord(-2,33)] : true,
+                    [utils.asGridCoord(-3,33)] : true,
+                    [utils.asGridCoord(-4,33)] : true,
+
+                    [utils.asGridCoord(3,33)] : true,
+                    [utils.asGridCoord(3,32)] : true,
+                    [utils.asGridCoord(3,31)] : true,
+                    [utils.asGridCoord(3,30)] : true,
+                    [utils.asGridCoord(3,29)] : true,
+                    [utils.asGridCoord(3,28)] : true,
+                    [utils.asGridCoord(3,27)] : true,
+                    [utils.asGridCoord(3,26)] : true,
+                    [utils.asGridCoord(3,25)] : true,
+                    [utils.asGridCoord(3,24)] : true,
+                    [utils.asGridCoord(3,23)] : true,
+                    [utils.asGridCoord(3,22)] : true,
+                    [utils.asGridCoord(3,21)] : true,
+                    [utils.asGridCoord(3,20)] : true,
+                    [utils.asGridCoord(3,19)] : true,
+                    [utils.asGridCoord(3,18)] : true,
+                    [utils.asGridCoord(3,17)] : true,
+
+                    [utils.asGridCoord(-4,32)] : true,
+                    [utils.asGridCoord(-4,31)] : true,
+                    [utils.asGridCoord(-4,30)] : true,
+                    [utils.asGridCoord(-4,29)] : true,
+                    [utils.asGridCoord(-4,28)] : true,
+                    [utils.asGridCoord(-4,27)] : true,
+                    [utils.asGridCoord(-4,26)] : true,
+                    [utils.asGridCoord(-4,25)] : true,
+                    [utils.asGridCoord(-4,24)] : true,
+                    [utils.asGridCoord(-4,23)] : true,
+                    [utils.asGridCoord(-4,22)] : true,
+                    [utils.asGridCoord(-4,21)] : true,
+                    [utils.asGridCoord(-4,20)] : true,
+                    [utils.asGridCoord(-4,19)] : true,
+                    [utils.asGridCoord(-4,18)] : true,
+                    [utils.asGridCoord(-4,17)] : true,
+
+                    [utils.asGridCoord(-3,20)] : true,
+                    [utils.asGridCoord(-2,20)] : true,
+                    [utils.asGridCoord(1,20)] : true,
+                    [utils.asGridCoord(1,19)] : true,
+                    [utils.asGridCoord(2,19)] : true,
+                    [utils.asGridCoord(-2,19)] : true,
+                    [utils.asGridCoord(-3,19)] : true,
+                    [utils.asGridCoord(-2,18)] : true,
+                    [utils.asGridCoord(-3,18)] : true,
+
+                    [utils.asGridCoord(4,17)] : true,
+                    [utils.asGridCoord(5,17)] : true,
+                    [utils.asGridCoord(6,17)] : true,
+                    [utils.asGridCoord(7,17)] : true,
+
+                    [utils.asGridCoord(7,16)] : true,
+                    [utils.asGridCoord(7,15)] : true,
+                    [utils.asGridCoord(7,14)] : true,
+                    [utils.asGridCoord(7,13)] : true,
+                    [utils.asGridCoord(7,12)] : true,
+                    [utils.asGridCoord(7,11)] : true,
+                    [utils.asGridCoord(7,10)] : true,
+
+                    [utils.asGridCoord(6,10)] : true,
+                    [utils.asGridCoord(-6,10)] : true,
+                    [utils.asGridCoord(5,10)] : true,
+                    [utils.asGridCoord(4,10)] : true,
+                    [utils.asGridCoord(4,11)] : true,
+                    [utils.asGridCoord(3,11)] : true,
+                    [utils.asGridCoord(2,10)] : true,
+                    [utils.asGridCoord(1,10)] : true,
+                    [utils.asGridCoord(0,10)] : true,
+                    [utils.asGridCoord(-1,10)] : true,
+                    [utils.asGridCoord(-2,10)] : true,
+                    [utils.asGridCoord(-3,10)] : true,
+                    [utils.asGridCoord(-4,10)] : true,
+                    [utils.asGridCoord(-5,10)] : true,
+                    [utils.asGridCoord(-7,12)] : true,
+                    [utils.asGridCoord(-7,10)] : true,
+                    [utils.asGridCoord(-8,11)] : true,
+                    [utils.asGridCoord(-8,12)] : true,
+                    [utils.asGridCoord(-7,13)] : true,
+                    [utils.asGridCoord(-7,14)] : true,
+                    [utils.asGridCoord(-7,15)] : true,
+                    [utils.asGridCoord(-7,16)] : true,
+                    [utils.asGridCoord(-6,17)] : true,
+                    [utils.asGridCoord(-5,17)] : true,
+                    [utils.asGridCoord(-2,17)] : true,
+                    [utils.asGridCoord(-3,17)] : true,
+
+                    [utils.asGridCoord(6,16)] : true,
+                    [utils.asGridCoord(6,15)] : true,
+                    [utils.asGridCoord(6,14)] : true,
                 },
                 // Espaços em que acontece cutscenes
+                
                 cutsceneSpaces: {
                     [utils.asGridCoord(0,33)] : [
                         {events: [{type: "changeMap", map: "Galinheiro"},]}
                     ],
                     [utils.asGridCoord(-1,33)] : [
                         {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+                    [utils.asGridCoord(0,11)] : [ // Achou o álbum da galinha pintadinha
+                        {events: [{type: "foundEasterEgg", who: "foto2"},]}
                     ],
 
             }    
