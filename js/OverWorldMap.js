@@ -1729,9 +1729,7 @@ window.OverworldMaps = {
             // ...restante do mapa...
                 walls: {
                     //define as coordenadas das colisoes do mapa
-                },
-                // Espaços em que acontece cutscenes
-                [utils.asGridCoord(1,33)] : true,
+                    [utils.asGridCoord(1,33)] : true,
                     [utils.asGridCoord(2,33)] : true,
                     [utils.asGridCoord(-2,33)] : true,
                     [utils.asGridCoord(-3,33)] : true,
@@ -1825,6 +1823,9 @@ window.OverworldMaps = {
                     [utils.asGridCoord(6,16)] : true,
                     [utils.asGridCoord(6,15)] : true,
                     [utils.asGridCoord(6,14)] : true,
+                },
+                // Espaços em que acontece cutscenes
+                
                 cutsceneSpaces: {
                     [utils.asGridCoord(0,33)] : [
                         {events: [{type: "changeMap", map: "Galinheiro"},]}
