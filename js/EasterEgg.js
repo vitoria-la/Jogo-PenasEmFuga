@@ -12,6 +12,9 @@ class EasterEgg extends GameObject {
             "frog2": "./assets/img/easterEggs/gifs/sapoG.gif",
             "bolaPixar": "./assets/img/easterEggs/gifs/bolaPixarG.gif",
             "albumGalinha": "./assets/img/easterEggs/gifs/albumGalinhaPintadinhaG.gif",
+            "baldePenas": "./assets/img/easterEggs/gifs/baldePenasG.gif",
+            "aviao": "./assets/img/easterEggs/gifs/aviaoG.gif",
+            "foto2": "./assets/img/easterEggs/gifs/foto2G.gif",
         }
     }
 

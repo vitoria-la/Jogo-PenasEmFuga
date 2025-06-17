@@ -11,6 +11,7 @@ class GameObject {
             isFrog: config.isFrog || false, // Para saber se é um sapo ou não. Caso não seja definido, ele assume que é falso
             isEasterEgg: config.isEasterEgg || false,
             isHorse: config.isHorse || false,
+            isQuestIcon: config.isQuestIcon || false,
         }); 
         this.behaviorLoop = config.behaviorLoop || [];  // é um array que vai ser usado para definir os comportamentos normais dos NPCs
         this.behaviorLoopIndex = 0; // serve para saber qual comportamento está acontecendo
@@ -21,6 +22,7 @@ class GameObject {
         
         // Armazena o estado atual da animação
         this.currentAnimationState = null;
+        this.isQuestIcon = config.isQuestIcon || false;
     }
 
     mount(map){ // metodo responsável por montar o objeto no mapa

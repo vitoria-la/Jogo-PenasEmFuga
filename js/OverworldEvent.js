@@ -58,6 +58,13 @@ class OverworldEvent {
         const sceneTransition = new SceneTransition(); // sceneTransition é uma instância da classe SceneTransition
         sceneTransition.init(document.querySelector(".game-container"), () => { // Começa a transição de mapa
             this.map.overworld.startMap(window.OverworldMaps[this.event.map]); // Muda de mapa
+            let gameBody = document.getElementById("body");
+            let currentColor = getComputedStyle(gameBody).backgroundColor;
+            if (currentColor === "rgb(42, 24, 24)") {
+                gameBody.style.backgroundColor = "#409F53";
+            } else {
+                gameBody.style.backgroundColor = "#2A1818";
+            }
             resolve();
             sceneTransition.fadeOut(); // Tira a cor sólida da tela e mostra o novo mapa
         });
@@ -118,14 +125,107 @@ class OverworldEvent {
         const audioManager = this.map.overworld.audioManager;
         const newSong = this.event.song;
 
-        // Se a música da área JÁ ESTÁ tocando...
+        // Se a música da área já estiver tocando, volte para a padrão.
         if (audioManager.currentAreaSong === newSong) {
-            // ...paramos ela e retomamos a trilha sonora padrão.
             audioManager.resumeSoundtrack();
         } else {
-            // Senão, a música padrão está tocando, então mudamos para a da área.
+            // Senão, toque a música da área.
             audioManager.playMusic(newSong);
         }
+        resolve();
+    }
+
+    // Evento para progredir flags de quests
+    questProgress(resolve) {
+        const flag = this.event.flag;
+        const state = this.map.overworld.playerState;
+
+        // Verifica se o jogador já interagiu com este NPC antes
+        if (!state.storyFlags[flag]) {
+            // Se for a primeira vez, define a flag e atualiza o progresso
+            state.storyFlags[flag] = true;
+
+            if (this.event.counter) {
+                const counterName = this.event.counter;
+                if (!state.questFlags[counterName]) {
+                    state.questFlags[counterName] = 0;
+                }
+                state.questFlags[counterName] += 1;
+            }
+    
+            // Atualiza a HUD com o novo progresso
+            this.map.overworld.hud.updateTasks(state.currentQuestId, state);
+    
+            // Verifica se a quest foi completada
+            this.map.overworld.checkForQuestCompletion();
+        }
+
+        // Resolve o evento de qualquer maneira para a cutscene continuar
+        resolve();
+    }
+
+    // OverworldEvent.js
+    // ADICIONE O MÉTODO ABAIXO
+    startPlanting(resolve) {
+        this.map.overworld.plantingSystem.open(() => {
+            resolve();
+        });
+    }
+
+    textMessage(resolve) {
+        // O bloco que fazia o NPC virar foi removido.
+
+        // Cria a instância da caixa de diálogo
+        const message = new TextMessage({
+            text: this.event.text,
+            npc: this.map.gameObjects[this.event.who] || this.map.gameObjects[this.event.faceHero],
+            map: this.map,
+            onComplete: () => {
+                resolve(); // Resolve a promise quando a mensagem é fechada pelo jogador
+            }
+        });
+        message.init(); // Inicia a exibição da mensagem
+    }
+
+
+    pinguimZoom(resolve) {
+        const zoom = document.createElement("div");
+        zoom.id = "zoom-screen";
+        const zoomGif = document.createElement("img");
+        zoomGif.src = this.event.who;
+        zoom.appendChild(zoomGif);
+
+        document.querySelector(".game-container").appendChild(zoom);
+
+        setTimeout(() => {
+            zoom.remove();// Caso acabe o fade-out, remove o elemento;
+            resolve();
+        }, 7600);
+
+    }
+
+    async entregarItem(resolve) {
+        const { itemId, quantity, events_if_enough, events_if_not_enough } = this.event;
+        const playerItems = this.map.overworld.playerState.items;
+
+        // Verifica se o jogador tem o item na quantidade necessária
+        const itemSlot = playerItems.findIndex(slot => slot && slot.name === itemId && slot.quantity >= quantity);
+
+        if (itemSlot > -1) {
+            // Se tiver, remove os itens
+            playerItems[itemSlot].quantity -= quantity;
+            if (playerItems[itemSlot].quantity <= 0) {
+                playerItems[itemSlot] = null; // Remove o item se a quantidade for zero
+            }
+            this.map.overworld.hud.updateHotbarSlot(itemSlot, playerItems[itemSlot]);
+            
+            // Inicia a cutscene de sucesso
+        await this.map.startCutscene(events_if_enough);
+        } else {
+            // Se não tiver, inicia a cutscene de falha
+            await this.map.startCutscene(events_if_not_enough);
+        }
+        
         resolve();
     }
 

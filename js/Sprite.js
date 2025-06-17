@@ -39,6 +39,9 @@ class Sprite { //animações
         this.isFrog = config.isFrog || false;
         this.isEasterEgg = config.isEasterEgg || false; // Para saber se é um easter egg
         this.isHorse = config.isHorse || false;
+      
+        this.isInvisible = config.isInvisible || false; // Para saber se o sprite não deve ser renderizado
+        this.isQuestIcon = config.isQuestIcon || false;
 
         if (this.isHorse) {
             this.animations = {
@@ -84,10 +87,14 @@ class Sprite { //animações
     }
 
     draw(ctx, cameraPerson){
+        // Se for invisível, não desenha nada.
+        if (this.isInvisible) {
+            return;
+        }
         let x, y;
         
         // Calcula a posição X e Y real no canvas, levando em conta a posição do gameObject
-        if (this.isFrog) { // Se for o sapo, ele, por ser 16x16, é calculado diferente
+        if (this.isFrog || this.isQuestIcon) { // Se for o sapo, ele, por ser 16x16, é calculado diferente
             x = this.gameObject.x - (-16) + utils.withGrid(8) - cameraPerson.x;
             y = this.gameObject.y - 16 + utils.withGrid(5) - cameraPerson.y;
         } else if (this.isHorse) { // Se for o cavalo, ele, por ser 84x84, é calculado diferente
@@ -98,13 +105,13 @@ class Sprite { //animações
             y = this.gameObject.y - 32 + utils.withGrid(5) - cameraPerson.y;
         }
 
-        if (!this.isFrog && !this.isHorse) { // Se não for um sapo, pode colocar a sombra
+        if (!this.isFrog && !this.isHorse && !this.isQuestIcon) { // Se não for um sapo, pode colocar a sombra
             this.isShadowLoaded && ctx.drawImage(this.shadow, x, y); // Se a sombra estiver carregada, ela é desenhada nas coordenadas calculadas
         }
 
         const[frameX, frameY] = this.frame; // Obtém as coordenadas (x,y) do frame atual da animação
 
-        if (this.isFrog) { // Se for o sapo, é 16x16
+        if (this.isFrog || this.isQuestIcon) { // Se for o sapo, é 16x16
             this.isLoaded && ctx.drawImage(this.image,
                 frameX * 16, frameY * 16,
                 16,16,

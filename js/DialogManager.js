@@ -6,15 +6,15 @@ class DialogManager {
   constructor() {
     this.npcDialogs = {
       // Diálogos para cada NPC do jogo
-      "galinhaBranca": [
-        "Olá! Bem-vindo ao galinheiro.",
-        "Estamos planejando uma fuga em breve.",
-        "Você vai nos ajudar?"
-      ],
-      "galinhaMarrom": [
-        "Psiu! Não deixe os guardas te verem.",
-        "Eles estão de olho em todos nós."
-      ],
+      // "galinhaBranca": [
+      //   "Olá! Bem-vindo ao galinheiro.",
+      //   "Estamos planejando uma fuga em breve.",
+      //   "Você vai nos ajudar?"
+      // ],
+      // "galinhaMarrom": [
+      //   "Psiu! Não deixe os guardas te verem.",
+      //   "Eles estão de olho em todos nós."
+      // ],
       "Paova": [
         "Eu sou a Paova, a galinha mais velha daqui.",
         "Já vi muitas tentativas de fuga fracassarem.",
@@ -43,7 +43,12 @@ class DialogManager {
         "Você veio conhecer minha vendinha né??",
         "Tenho os melhores produtos do galinheiro!",
         "Dá uma olhada!",
-      ]
+      ],
+      "galinhaBrancaQuestIcon": [
+        "Hmmmm",
+        "Não era para isso ter acontecido...",
+        "Isso não aconteceu, ok?",
+      ],
       
     };
     
@@ -58,36 +63,6 @@ class DialogManager {
   getDialogsForNpc(npcId) {
     return this.npcDialogs[npcId] || ["..."];
   }
-  
-  // Método para salvar o estado de todos os NPCs antes do diálogo
-  // saveAllNpcStates(map) {
-  //   this.npcStates = {};
-    
-  //   // Percorre todos os objetos do mapa
-  //   Object.values(map.gameObjects).forEach(object => {
-  //     // Verifica se é um NPC (Person) com behaviorLoop definido
-  //     if (object instanceof Person && 
-  //         !object.isPlayerControlled && 
-  //         object.behaviorLoop.length > 0) {
-        
-  //       // Salva o estado atual do NPC de forma mais completa
-  //       this.npcStates[object.id] = {
-  //         behaviorLoopIndex: object.behaviorLoopIndex,
-  //         behaviorLoopActive: object.behaviorLoopActive,
-  //         currentAnimationState: object.currentAnimationState,
-  //         direction: object.direction,
-  //         isStanding: object.isStanding,
-  //         retryTimeout: object.retryTimeout ? true : false
-  //       };
-        
-  //       // Se houver um timeout ativo, limpa para evitar conflitos
-  //       if (object.retryTimeout) {
-  //         clearTimeout(object.retryTimeout);
-  //         object.retryTimeout = null;
-  //       }
-  //     }
-  //   });
-  // }
 
   // Método para iniciar um diálogo com um NPC
   async startDialog(npcId, map, onDialogEnd) {
@@ -130,51 +105,4 @@ class DialogManager {
     }
   }
   
-  // Método para forçar a retomada dos behaviorLoops de TODOS os NPCs após o diálogo
-  // forceResumeAllNpcBehaviors(map) {
-  //   // Pequeno delay para garantir que o mapa já não está mais em cutscene
-  //   setTimeout(() => {
-  //     // Percorre todos os objetos do mapa
-  //     Object.values(map.gameObjects).forEach(object => {
-  //       // Verifica se é um NPC (Person) com behaviorLoop definido e está montado
-  //       if (object instanceof Person && 
-  //           !object.isPlayerControlled && 
-  //           object.behaviorLoop.length > 0 && 
-  //           object.isMounted) {
-          
-  //         // Restaura o estado salvo do NPC, se disponível
-  //         if (this.npcStates[object.id]) {
-  //           const savedState = this.npcStates[object.id];
-            
-  //           // Restaura o índice do behaviorLoop
-  //           object.behaviorLoopIndex = savedState.behaviorLoopIndex;
-            
-  //           // Restaura a direção do NPC
-  //           if (savedState.direction) {
-  //             object.direction = savedState.direction;
-  //           }
-            
-  //           // Restaura o estado da animação
-  //           if (savedState.currentAnimationState) {
-  //             object.currentAnimationState = savedState.currentAnimationState;
-  //           }
-            
-  //           // Restaura o estado de isStanding
-  //           object.isStanding = false;
-  //         }
-          
-  //         // Força a retomada do behaviorLoop para TODOS os NPCs
-  //         if (object.forceBehaviorLoop) {
-  //           object.forceBehaviorLoop(map);
-  //         } else if (object.doBehaviorEvent) {
-  //           // Fallback para o método padrão se forceBehaviorLoop não existir
-  //           object.doBehaviorEvent(map);
-  //         }
-  //       }
-  //     });
-      
-  //     // Limpa os estados salvos após restaurá-los
-  //     this.npcStates = {};
-  //   }, 100);
-  // }
 }

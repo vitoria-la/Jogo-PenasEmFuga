@@ -5,6 +5,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.cutsceneSpaces = config.cutsceneSpaces || {};
         this.walls = config.walls || {}; // Armazena um objeto que representa as áreas de colisão ("paredes") no mapa. As chaves são coordenadas no formato "x,y", e o valor true indica que há uma parede. O padrão é um objeto vazio
         this.configObjects = config.configObjects;
+
+        this.groundDecals = {}; // Para armazenar as imagens de detalhe do chão
         
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc; // cria a camada inferior do mapa
@@ -18,6 +20,20 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.easterEggsFound = state.easterEggsFound || [];
         this.easterEggsFoundID = state.easterEggsFoundID || [];
         this.name = config.name; // Serve para saber em qual mapa se está
+
+        const groundDecalsConfig = config.groundDecals || {};
+        Object.keys(groundDecalsConfig).forEach(key => {
+            const decalConfig = groundDecalsConfig[key];
+            const image = new Image();
+            image.src = decalConfig.src;
+            image.onload = () => {
+                this.groundDecals[key] = {
+                    ...decalConfig,
+                    image: image,
+                    isLoaded: true,
+                };
+            };
+        });
     }
 
     drawLowerImage(ctx, cameraPerson){
@@ -25,7 +41,17 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
             this.lowerImage,
             utils.withGrid(-20) - cameraPerson.x,
             utils.withGrid(3) - cameraPerson.y // são deslocamentos para centralizar a câmera
-        )
+        );
+        // Desenha os detalhes do chão (como a área de plantação)
+        Object.values(this.groundDecals).forEach(decal => {
+            if (decal.isLoaded) {
+                ctx.drawImage(
+                    decal.image,
+                    decal.x + utils.withGrid(-20) - cameraPerson.x,
+                    decal.y + utils.withGrid(3) - cameraPerson.y
+                );
+            }
+        });
     }
     drawUpperImage(ctx, cameraPerson){
         ctx.drawImage(
@@ -44,6 +70,11 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
 
         // Ver se tem algum objeto do jogo, tipo uma galinha, nessa opção
         return Object.values(this.gameObjects).find(obj => {
+
+            if (obj.isQuestIcon) {
+                return false;
+            }
+
             if (obj.x === x && obj.y === y) { // Se as coordenadas desse objeto forem as mesmas do pinguim
                 return true; 
             } else {
@@ -54,8 +85,8 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         })
 
         //return this.walls[`${x},${y}`] || false;
-    }
-
+    }    
+    
     mountObjects() { 
         Object.keys(this.configObjects).forEach(key => {
             let object = this.configObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
@@ -66,9 +97,10 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 instance = new Person(object);
             } else if (object.type === "EasterEgg") {
                 instance = new EasterEgg(object);
-                
-            } else if (object.type === "Gif"){
+            } else if (object.type === "Gif") {
                 instance = new Gif(object);
+            } else if (object.type === "PlantableSpot") {
+                instance = new PlantableSpot(object);
             }
 
             this.gameObjects[key] = instance;
@@ -90,18 +122,42 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                 this.gameObjects[key].y = utils.withGrid(5);
             }
 
-            if (key === "galinhaDourada") { // Se o objeto é a galinha dos ovos dourados
+            if (key === "galinhaDosOvosDourados") { // Se o objeto é a galinha dos ovos dourados
                 const num = Math.floor(Math.random() * 5) + 1; // Sorteia um número
                 console.log(num);
                 if (num%2 === 0) { // Se ele for par, coloca ela para fora do mapa
-                    this.gameObjects[key].x = utils.withGrid(33);
+                    instance.isVisible = false;
                 }
             }
             
+            if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
+                this.gameObjects[key].x = utils.withGrid(50);
+            }
+
             instance.mount(this);
 
             //Determina se o objeto realmente poderia ser montado
             //object.mount(this)
+        })
+    }
+
+    putQuestIcon() { // Vincula os objetos de questIcon com suas respectivas galinhas
+        let questIconsList = []; // Lista de questIcon
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos 
+            let object = this.gameObjects[key];  // essa key é o nome do objeto, tipo galinhaMarrom
+            if (object.isQuestIcon) { // Se for um questIcon
+                questIconsList.push(key); // Coloca na lista
+            }
+        })
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos
+            let object = this.gameObjects[key]; 
+            if (object.haveQuestIcon) { // Se esse objeto tem um questIcon
+                questIconsList.forEach(name => { // Percorre a lista de questIcons
+                    if (name.includes(key)) { // Se o nome desse questIcon tiver o nome do NPC
+                        object.questIcon = this.gameObjects[name]; // Vincula os dois
+                    }
+                })
+            }
         })
     }
 
@@ -149,14 +205,15 @@ window.OverworldMaps = {
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(14),
-                y: utils.withGrid(16),
+                x: utils.withGrid(19), // 14
+                y: utils.withGrid(28), // 16
             },
             galinhaBranca: {
                 type: "Person",
                 x: utils.withGrid(19),
                 y: utils.withGrid(19),
                 src: "./assets/img/galinhaBranca.png",
+                haveQuestIcon: true, // Significa que essa galinha pode ter um questIcon
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
                     {type: "walk", direction: "left",time: 800},  
                     {type: "walk", direction: "left",time: 800},
@@ -166,12 +223,28 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right", time: 800},
                     {type: "walk", direction: "right", time: 800},
                     {type: "stand", direction: "down", time: 300}
-                ]
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    },
+                ] 
+            },  
+            galinhaBrancaQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(19),
+                y: utils.withGrid(17),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
             },
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
                 y: utils.withGrid(14),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -186,7 +259,23 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
+            },
+            galinhaMarromQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(21),
+                y: utils.withGrid(12),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
             Paova: {
                 type: "Person",
@@ -211,6 +300,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"},
                     {type: "walk", direction: "right"}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", who: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto." },
+                            { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
             Clotilde: {
@@ -246,6 +343,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", who: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
+                            { type: "questProgress", flag: "TALKED_TO_CLOTILDE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
             Bernadette: {
@@ -297,7 +402,7 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"},  
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"},  
-                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
@@ -325,6 +430,14 @@ window.OverworldMaps = {
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "right"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", who: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
+                            { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
             galinhaSegurancaMarrom: {
@@ -334,6 +447,14 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaSegurancaMarrom.png",
                 behaviorLoop: [  
                    {type: "stand", direction: "left", time: 2800},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", who: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
+                            { type: "questProgress", flag: "TALKED_TO_SEGURANCA_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    }
                 ]
             },
              galinhaGalinacia: {
@@ -362,6 +483,24 @@ window.OverworldMaps = {
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
                     {type: "walk", direction: "right"}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            {
+                                type: "entregarItem",
+                                itemId: "Milho",
+                                quantity: 20,
+                                events_if_enough: [
+                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!" },
+                                { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
+                                ],
+                                events_if_not_enough: [
+                                    {type: "textMessage", who: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor."}
+                                ]
+                            }
+                        ]
+                    }
                 ]
             },
             galinhaPenosa: {
@@ -380,6 +519,14 @@ window.OverworldMaps = {
                 src: "./assets/img/galinhaOvosDourados.png",
                 behaviorLoop: [ 
                     //{type: "stand", direction: "bottom", time: 5200}, 
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA__OVOS_DOURADOS", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }
                 ]
             },
             frog1: {  // Sapo da sala de costura
@@ -448,7 +595,17 @@ window.OverworldMaps = {
                 name: "Álbum da Galinha Pintadinha",
                 description: "O item mais cobiçado do galinheiro",
                 mapName: "Galinheiro",
-                x: utils.withGrid(33),
+                x: utils.withGrid(50),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+            },
+            baldePenas: { 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Balde de penas",
+                description: "Não sabia que era possível costurar com penas",
+                mapName: "Galinheiro",
+                x: utils.withGrid(50),
                 y: utils.withGrid(0),
                 src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
             },
@@ -492,6 +649,20 @@ window.OverworldMaps = {
             [utils.asGridCoord(29,23)] : true,
             [utils.asGridCoord(30,23)] : true,
             [utils.asGridCoord(31,23)] : true,
+
+
+            [utils.asGridCoord(20,27)] : true,
+            [utils.asGridCoord(21,27)] : true,
+            [utils.asGridCoord(21,26)] : true,
+            [utils.asGridCoord(22,26)] : true,
+            [utils.asGridCoord(23,26)] : true,
+            [utils.asGridCoord(29,26)] : true,
+            [utils.asGridCoord(30,26)] : true,
+            [utils.asGridCoord(28,32)] : true,
+            [utils.asGridCoord(29,31)] : true,
+            [utils.asGridCoord(29,32)] : true,
+            [utils.asGridCoord(30,32)] : true,
+            [utils.asGridCoord(30,31)] : true,
 
             //------------------------------------------//
 
@@ -1031,31 +1202,57 @@ window.OverworldMaps = {
                     ]
                 }
             ],
-            [utils.asGridCoord(7,14)] : [ // Achou os pintinhos fingindo ser adultos
+            [utils.asGridCoord(7,14)] : [ // Achou q galinha douradas
                 {events: [{type: "foundEasterEgg", who: "galinhaDouradaEG"},]}
             ],
-            [utils.asGridCoord(21,32)] : [ // Achou os pintinhos fingindo ser adultos
+            [utils.asGridCoord(21,32)] : [ // Achou o álbum da galinha pintadinha
                 {events: [{type: "foundEasterEgg", who: "albumGalinha"},]}
+            ],
+            [utils.asGridCoord(-15,13)] : [ // Achou o balde de penas
+                {events: [{type: "foundEasterEgg", who: "baldePenas"},]}
+            ],
+            [utils.asGridCoord(11,16)] : [ // 
+                {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
             ],
         }
     },
     // Mapa da parte da fazenda
-    Fazenda: { // mapa
+    Fazenda: {
         name: "Fazenda",
-        lowerSrc: "./assets/img/fazendaMapa.png", // layer de base do mapa (chão do mapa)
-        upperSrc: "", // layer superior do mapa (se precisa de algo acima do player)
-        configObjects: { // define os personagens/objetos que o mapa vai ter
-            hero: ({ // personagem principal
+        lowerSrc: "./assets/img/fazendaMapa.png",
+        upperSrc: "",
+        configObjects: {
+            hero: {
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(16),
-                y: utils.withGrid(14),
-            }),
+                x: utils.withGrid(-25),
+                y: utils.withGrid(17),
+            },
             galinhaMarrom: {
                 type: "Person",
                 x: utils.withGrid(21),
                 y: utils.withGrid(14),
                 src: "./assets/img/galinhaMarrom.png",
+                behaviorLoop: [
+                    {type: "walk", direction: "left"},  
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"}, 
+                    {type: "walk", direction: "down"},  
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "up"},
+                ]
+            },
+            galinhaCaipira: {
+                type: "Person",
+                x: utils.withGrid(0),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaCaipira.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},
@@ -1092,19 +1289,70 @@ window.OverworldMaps = {
                     {type: "walk", direction: "left"},
                 ]
             },
+
+            // Tiles de plantação FUNCIONAIS            plantTile1: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile2: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile3: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile4: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile5: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile6: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(15), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile7: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile8: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile9: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile10: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile11: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile12: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(16), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile13: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile14: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile15: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile16: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile17: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile18: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(17), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile19: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile20: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile21: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile22: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile23: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile24: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(18), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile25: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile26: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile27: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile28: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile29: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile30: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(19), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile31: { type: "PlantableSpot", x: utils.withGrid(-15), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile32: { type: "PlantableSpot", x: utils.withGrid(-14), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile33: { type: "PlantableSpot", x: utils.withGrid(-13), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile34: { type: "PlantableSpot", x: utils.withGrid(-12), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile35: { type: "PlantableSpot", x: utils.withGrid(-11), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
+            plantTile36: { type: "PlantableSpot", x: utils.withGrid(-10), y: utils.withGrid(20), talking: [{ events: [{ type: "startPlanting" }] }] },
         },
+        groundDecals: {
+            plantingArea: {
+                src: "./assets/img/terreno.png",
+                x: utils.withGrid(-15),
+                y: utils.withGrid(15)
+            }
+        },
+        // ...restante do mapa...
         walls: {
             //define as coordenadas das colisoes do mapa
         },
         // Espaços em que acontece cutscenes
         cutsceneSpaces: {
-            [utils.asGridCoord(32,17)] : [
-                {
-                    events: [
-                        {type: "changeMap", map: "Galinheiro"},
-                    ]
-                }
-            ]
-        }
-    } 
+            [utils.asGridCoord(-28,15)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+            [utils.asGridCoord(-28,16)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+            [utils.asGridCoord(-28,17)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+            [utils.asGridCoord(-28,18)] : [
+                {events: [{type: "changeMap", map: "Galinheiro"},]}
+            ],
+
+    }    
+}
 }

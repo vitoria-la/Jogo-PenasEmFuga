@@ -1,0 +1,189 @@
+/* Estilo geral para o pop-up de plantação */
+.popup-plantacao {
+    display: none; /* Começa escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.popup-content {
+    background: linear-gradient(to bottom, #4a9c2d, #407e1c);
+    padding: 32px 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 780px;
+    min-height: 600px;
+    max-height: 90vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    position: relative;
+    border: 3px solid #388e3c;
+    color: white;
+}
+
+.popup-content h2 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.popup-flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    gap: 40px;
+    margin-bottom: 32px;
+}
+
+/* Grid de plantação */
+.grid-plantacao {
+    margin: 24px 0 0 0;
+    width: min(320px, 50vw);
+    height: min(320px, 50vw);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.bloco-plantacao {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transition: filter 0.4s;
+    image-rendering: pixelated;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.img-estagio-plantacao {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+
+/* Botões */
+.botoes-tipo-planta {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-left: 32px;
+    align-items: stretch;
+    justify-content: flex-start;
+    height: 320px;
+}
+
+.btn-tipo-planta, #colher-tudo, #fechar-popup {
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#fechar-popup {
+    margin-top: 32px;
+    padding: 12px 32px;
+    font-size: 1.1rem;
+    background: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+#fechar-popup:hover {
+    background: #f4511e;
+    transform: translateY(-2px);
+}
+
+.btn-tipo-planta {
+    height: 48px;
+    min-width: 120px;
+    font-size: 18px;
+    padding: 0 16px;
+    background: #4caf50;
+    color: #333;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+}
+.btn-tipo-planta.selected {
+    background: #fff;
+    color: #333;
+    border: 2px solid #388e3c;
+}
+.btn-tipo-planta:hover:not(.selected) {
+    background: #388e3c;
+}
+
+
+#colher-tudo {
+    margin-top: auto;
+    height: 70px;
+    font-size: 1.3rem;
+    padding: 0 24px;
+    background: #ff9800;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    min-width: 180px;
+}
+#colher-tudo:hover {
+    background: #e65100;
+}
+
+/* Inventário dentro do Pop-up */
+.popup-inventario {
+    width: 100%;
+    padding: 24px;
+    background: none;
+    border-radius: 16px;
+    margin-top: 32px;
+    border-top: 2px solid rgba(255,255,255,0.1);
+}
+.popup-inventario .hotbar-container {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 0;
+    padding: 10px;
+    width: auto;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+
+/* Efeito de colheita */
+.span-colheita {
+    animation: float-up 1.2s ease-out forwards;
+}
+
+@keyframes float-up {
+    from {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -60px);
+    }
+}

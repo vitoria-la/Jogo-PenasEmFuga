@@ -21,143 +21,93 @@ class Hud {
     this.hotbarElement.classList.add("hotbar");
   }
 
-  init(gameContainerElement) {
-    // Cria o contêiner principal que vai segurar todas as hotbars
+  init(gameContainerElement, overworld) {
+    // --- HOTBAR ---
     this.hotbarContainerElement = document.createElement("div");
     this.hotbarContainerElement.classList.add("hotbar-container");
-
-    // Cria 5 hotbars individuais
     for (let i = 0; i < 6; i++) {
       const singleHotbar = document.createElement("div");
-      singleHotbar.classList.add("hotbar"); // Usa a mesma classe que você já tem
-      // Você pode adicionar um ID ou data-attribute se precisar diferenciar no futuro
-      // singleHotbar.id = `hotbar-item-${i + 1}`;
-      this.hotbarContainerElement.appendChild(singleHotbar); // Adiciona a hotbar ao contêiner
-
+      singleHotbar.classList.add("hotbar");
+      this.hotbarContainerElement.appendChild(singleHotbar);
       this.hotbarSlots.push(singleHotbar);
     }
     gameContainerElement.appendChild(this.hotbarContainerElement);
 
-    // Adiciona o contêiner principal (com todas as hotbars dentro) ao contêiner do jogo
-    if (gameContainerElement) {
-      gameContainerElement.appendChild(this.hotbarContainerElement);
-    } else {
-      // Fallback se o gameContainerElement não for passado corretamente
-      document.body.appendChild(this.hotbarContainerElement);
-      console.warn("HUD container foi adicionado ao body.");
-    }
-
+    // --- PAINEL DE TAREFAS (CRIADO APENAS UMA VEZ) ---
     this.taskListIconElement = document.createElement("div");
     this.taskListIconElement.classList.add("task-list-icon");
-    if (gameContainerElement) {
-      gameContainerElement.appendChild(this.taskListIconElement);
-    } else {
-      document.body.appendChild(this.taskListIconElement);
-      console.warn("Ícone da lista de tarefas foi adicionado ao body.");
-    }
+    gameContainerElement.appendChild(this.taskListIconElement);
 
     this.taskListPanelElement = document.createElement("div");
     this.taskListPanelElement.classList.add("task-list-panel");
-
     this.taskListPanelElement.innerHTML = `
-            <h3>Minhas tarefas</h3>
-            <ul>
-              <li>Encontrar item X</li>
-              <li>Falar com galinha Y</li>
-              <li>Plantar trigo</li>
-              <li>Colher milho</li>
+        <h3>Minhas tarefas</h3>
+        <ul>
             </ul>
-            <button class="task-list-close-button">Fechar</button>
+        <div class="debug-quest-container">
+            <hr>
+            <h4>Pular para Quest (Debug)</h4>
+            <input type="text" id="quest-id-input" placeholder="ID da Quest (ex: Q5)">
+            <button id="skip-quest-button">Pular</button>
+        </div>
+        <button class="task-list-close-button">Fechar</button>
     `;
-    
-    if(gameContainerElement){
-      gameContainerElement.appendChild(this.taskListPanelElement);
-    } else {
-      document.body.appendChild(this.taskListPanelElement);
-      console.warn("Painel da lista de tarefa foi adicionado ao body.");
-    }
+    gameContainerElement.appendChild(this.taskListPanelElement);
 
-    this.taskListIconElement.addEventListener('click', () => {
-      this.taskListPanelElement.classList.toggle('visible');
-    });
-
-    const taskCloseButton  = this.taskListPanelElement.querySelector('.task-list-close-button');
-      if(taskCloseButton){
-        taskCloseButton.addEventListener('click', () => {
-        this.taskListPanelElement.classList.remove('visible');
-      })
-    }
-
-    // Medidor de moedas
+    // --- MEDIDOR DE MOEDAS ---
     this.coinContainerElement = document.createElement("div");
     this.coinContainerElement.classList.add("coin-container");
-
-    //cria o ícone da moeda
-    const coinIcon = document.createElement("div");
-    coinIcon.classList.add("coin-icon");
-
-    // Cria o texto para contagem das moedas
-    this.coinTextElement = document.createElement("div");
-    this.coinTextElement.classList.add("coin-text");
-    this.coinTextElement.innerText = "0"; // Valor inicial
-
-    // Adiciona o ícone e o texto ao contêiner de moedas
-    this.coinContainerElement.appendChild(coinIcon);
-    this.coinContainerElement.appendChild(this.coinTextElement);
-    
-    // Adiciona o contêiner de moedas ao contêiner principal do jogo
+    this.coinContainerElement.innerHTML = `
+      <div class="coin-icon"></div>
+      <div class="coin-text">0</div>
+    `;
+    this.coinTextElement = this.coinContainerElement.querySelector(".coin-text");
     gameContainerElement.appendChild(this.coinContainerElement);
 
-    // --- CRIAÇÃO DO MEDIDOR DE NÍVEL ---
+    // --- MEDIDOR DE NÍVEL ---
     this.levelContainerElement = document.createElement("div");
     this.levelContainerElement.classList.add("level-container");
-    
-    // Cria o ícone do nível (reutilizando a classe do ícone de moeda para estilo)
-    const levelIcon = document.createElement("div");
-    levelIcon.classList.add("level-icon");
-
-    // Cria o texto para a contagem de nível
-    this.levelTextElement = document.createElement("div");
-    this.levelTextElement.classList.add("level-text");
-    this.levelTextElement.innerText = "1"; // Nível inicial
-
-    // Adiciona o ícone e o texto ao contêiner de nível
-    this.levelContainerElement.appendChild(levelIcon);
-    this.levelContainerElement.appendChild(this.levelTextElement);
-    
-    // Adiciona o contêiner de nível ao contêiner principal do jogo
+    this.levelContainerElement.innerHTML = `
+      <div class="level-icon"></div>
+      <div class="level-text">1</div>
+    `;
+    this.levelTextElement = this.levelContainerElement.querySelector(".level-text");
     gameContainerElement.appendChild(this.levelContainerElement);
-
-    // Cria o ícone de easter egg
+    
+    // --- PAINEL DE EASTER EGGS ---
     this.easterEggIconElement = document.createElement("div");
     this.easterEggIconElement.classList.add("easter-egg-icon");
     gameContainerElement.appendChild(this.easterEggIconElement);
 
-    // Cria o painel de easter egg
     this.easterEggPanelElement = document.createElement("div");
     this.easterEggPanelElement.classList.add("easter-egg-panel");
     this.easterEggPanelElement.innerHTML = `
       <h3>Segredos Encontrados</h3>
-      <ul class="easter-egg-list">
-        <li>Nenhum segredo encontrado ainda...</li>
-      </ul>
+      <ul class="easter-egg-list"></ul>
       <button class="easter-egg-close-button">Fechar</button>
     `;
     gameContainerElement.appendChild(this.easterEggPanelElement);
 
-    // Adiciona o evento para abrir/fechar o painel ao clicar no ícone
-    this.easterEggIconElement.addEventListener('click', () => {
-      this.easterEggPanelElement.classList.toggle('visible');
-    });
+    // --- LÓGICA DOS EVENT LISTENERS ---
+    this.taskListIconElement.addEventListener('click', () => this.taskListPanelElement.classList.toggle('visible'));
+    this.taskListPanelElement.querySelector('.task-list-close-button').addEventListener('click', () => this.taskListPanelElement.classList.remove('visible'));
+    
+    this.easterEggIconElement.addEventListener('click', () => this.easterEggPanelElement.classList.toggle('visible'));
+    this.easterEggPanelElement.querySelector('.easter-egg-close-button').addEventListener('click', () => this.easterEggPanelElement.classList.remove('visible'));
 
-    // Adiciona o evento para o botão de fechar
-    const easterEggCloseButton = this.easterEggPanelElement.querySelector('.easter-egg-close-button');
-    if (easterEggCloseButton) {
-      easterEggCloseButton.addEventListener('click', () => {
-        this.easterEggPanelElement.classList.remove('visible');
+    const skipButton = this.taskListPanelElement.querySelector("#skip-quest-button");
+    const questInput = this.taskListPanelElement.querySelector("#quest-id-input");
+
+    if (skipButton && questInput && overworld) {
+      skipButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const questId = questInput.value.trim().toUpperCase();
+        if (questId) {
+          overworld.skipToQuest(questId);
+          questInput.value = "";
+        }
       });
     }
-
   }
 
   updateEasterEggs(foundEggs) {
@@ -188,6 +138,27 @@ class Hud {
     this.levelTextElement.innerText = count;
   }
 
+  // removeHotbarSlotItem(slotIndex) {
+  //   const slotElement = this.hotbarSlots[slotIndex];
+  //   if (!slotElement) return;
+
+  //   // Supondo que você armazene os itens em um array hotbarItems
+  //   if (!this.playerState.items) this.playerState.items = [];
+  //   const item = this.playerState.items[slotIndex];
+  //   if (!item) return;
+
+  //   // Diminui a quantidade
+  //   item.quantity -= 1;
+
+  //   // Atualiza visualmente ou limpa o slot se acabou
+  //   if (item.quantity <= 0) {
+  //     this.playerState.items[slotIndex] = null;
+  //     slotElement.innerHTML = "";
+  //   } else {
+  //     this.updateHotbarSlot(slotIndex, item);
+  //   }
+  // }
+
   updateHotbarSlot(slotIndex, item) {
     const slotElement = this.hotbarSlots[slotIndex];
     if (!slotElement) {
@@ -214,6 +185,31 @@ class Hud {
       quantityText.classList.add("item-quantity");
       quantityText.innerText = item.quantity;
       slotElement.appendChild(quantityText);
+    }
+  }
+
+
+  // Método para atualizar a lista de tarefas
+  updateTasks(activeQuestId, playerState) {
+    const listElement = this.taskListPanelElement.querySelector("ul");
+    listElement.innerHTML = ""; // Limpa a lista
+
+    if (!activeQuestId) {
+      listElement.innerHTML = `<li>Nenhuma tarefa no momento.</li>`;
+      return;
+    }
+
+    const quest = window.QuestList.find(q => q.id === activeQuestId);
+    if (quest) {
+      const li = document.createElement("li");
+        
+      // Pega o progresso atual do estado do jogador
+      const currentProgress = playerState.questFlags[quest.progressKey] || 0;
+        
+      // Monta o texto com o progresso
+      li.textContent = `${quest.description} (${currentProgress}/${quest.progressTarget})`;
+        
+      listElement.appendChild(li);
     }
   }
 }
