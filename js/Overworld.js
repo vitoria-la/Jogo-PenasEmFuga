@@ -53,6 +53,29 @@ class Overworld {
         console.log(`Pulou para a Quest: ${questExists.name} (${questId})`);
     }
 
+    removeItemFromHotbar(itemToRemove) {
+        let removed = false;
+        for (let i = 0; i < this.playerState.items.length; i++) {
+            const slot = this.playerState.items[i];
+            if (slot && slot.id === itemToRemove.id) {
+                if (slot.quantity > 1) {
+                    slot.quantity -= 1;
+                } else {
+                    this.playerState.items[i] = null;
+                }
+                removed = true;
+                break;
+            }
+        }
+        if (removed) {
+            this.playerState.items.forEach((item, i) => {
+                this.hud.updateHotbarSlot(i, item);
+            });
+        } else {
+            console.log("Item não encontrado na hotbar para remoção.");
+        }
+    }
+
     addItemToHotbar(itemToAdd) {
         let added = false;
         // 1. Tenta empilhar com um item existente

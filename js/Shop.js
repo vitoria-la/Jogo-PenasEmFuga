@@ -137,7 +137,6 @@ function openShop() {
                 };
                 window.overworld.addItemToHotbar(itemParaHotbar); // Adiciona o item à hotbar do jogador
                 //-----------------------------------------------------------------------
-            // Aqui você pode adicionar lógica para descontar moedas, adicionar ao inventário, etc.
             };
         img.className = "foto-item"; // Para estilizar a imagem do item    
         desc.className = "descricao-item"; // Para estilizar a descrição do item
@@ -161,11 +160,15 @@ function openShop() {
             Sellbtn.innerText = ` Vender por: (${itens_loja.find(i => i.id === item.id).price} moedas)`;
             Sellbtn.onclick = () => {
                 overworld.coins += itens_loja.find(i => i.id === item.id).price;
-                window.overworld.hud.updateCoins(overworld.coins);
-                const slotIndex = window.overworld.hud.hotbarItems.findIndex(i => i && i.id === item.id);
-            if (slotIndex !== -1) {
-                window.overworld.hud.removeHotbarSlotItem(slotIndex);
-            }
+
+                const ItemRemove = {
+                    id: item.id,
+                    name: item.name,
+                    src: item.src,
+                    quantity: item.quantity,
+                };
+                window.overworld.removeItemFromHotbar(ItemRemove);
+                window.overworld.hud.updateCoins(overworld.coins); // Atualiza a HUD com as novas moedas
             };
         img.className = "foto-item"; // Para estilizar a imagem do item    
         desc.className = "descricao-item"; //Para estilizar a descrição do item
