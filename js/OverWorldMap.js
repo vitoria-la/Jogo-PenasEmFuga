@@ -373,7 +373,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto." },
+                            { type: "textMessage", faceHero: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     }
@@ -416,7 +416,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
+                            { type: "textMessage", faceHero: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_CLOTILDE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     },
@@ -517,7 +517,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
+                            { type: "textMessage", faceHero: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     },
@@ -540,7 +540,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
+                            { type: "textMessage", faceHero: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_SEGURANCA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     },
