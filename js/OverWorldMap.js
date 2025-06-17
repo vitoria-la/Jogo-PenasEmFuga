@@ -20,6 +20,7 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         this.easterEggsFound = state.easterEggsFound || [];
         this.easterEggsFoundID = state.easterEggsFoundID || [];
         this.name = config.name; // Serve para saber em qual mapa se está
+        this.playerState = state.playerState || {};
 
         const groundDecalsConfig = config.groundDecals || {};
         Object.keys(groundDecalsConfig).forEach(key => {
@@ -129,9 +130,16 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
                     instance.isVisible = false;
                 }
             }
+
+            if (this.playerState.currentQuestId === "Q1.1" && key === "galinhaCaipiraQuestIcon") {
+                this.showQuestIcon("galinhaCaipiraQuestIcon", "galinhaCaipira");
+            }
+            if (this.playerState.currentQuestId === "Q5.1" && key === "galinhaGalinaciaQuestIcon") {
+                this.showQuestIcon("galinhaGalinaciaQuestIcon", "galinhaGalinacia");
+            }
             
             if(!this.gameObjects[key].isVisible && object.type != "PlantableSpot" && object.type != "EasterEgg") {
-                this.gameObjects[key].x = utils.withGrid(50);
+                this.gameObjects[key].y = utils.withGrid(-50);
             }
 
             instance.mount(this);
@@ -161,6 +169,41 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         })
     }
 
+    showQuestIcon(questIcon, npc) {
+        let objectNpc, questIconObj;
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos 
+            if (key === npc) {
+                objectNpc = this.gameObjects[key];
+            }
+        })
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos
+            if (key === questIcon) {
+                questIconObj = this.gameObjects[key];
+                questIconObj.isVisible = true;
+                questIconObj.x = utils.withGrid(objectNpc.x);
+                questIconObj.y = utils.withGrid(objectNpc.y) - utils.withGrid(2);
+                console.log("teste")
+            }
+        })
+    }
+
+    hideQuestIcon(questIcon, npc) {
+        let objectNpc, questIconObj;
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos 
+            if (key === npc) {
+                objectNpc = this.gameObjects[key];
+            }
+        })
+        Object.keys(this.gameObjects).forEach(key => { // Passa pelos objetos
+            if (key === questIcon) {
+                questIconObj = this.gameObjects[key];
+                questIconObj.isVisible = false;
+                questIconObj.y = utils.withGrid(-50);
+                console.log("teste")
+            }
+        })
+    }
+
     async startCutscene(events) { // método para começar uma cutscene
         this.isCutscenePlaying = true;
 
@@ -180,19 +223,33 @@ class OverworldMap { // representa um mapa específico no jogo, incluindo seus o
         //Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
     }
 
-    checkForFootstepCutscene() { // Método que percebe se o pinguim entrou na coordenada que inicia alguma cutscene
-        const hero = this.gameObjects["hero"]; // Armazena em hero o objeto do pinguim
-        const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
+    checkForFootstepCutscene() {
+    const hero = this.gameObjects["hero"];
+    const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
 
-        if (this.isCutscenePlaying === false && match) { // Se não tiver rodando nenhuma cutscene e o player estiver no lugar que inicia uma
+    if (this.isCutscenePlaying === false && match) {
+        const eventConfig = match[0].events[0];
 
-            // A cutscene começa se: Não for do tipo "foundEasterEgg" OU se ela for do tipo "foundEasterEgg" e o easterEgg encontrado já não tinha sido encontrado
-            if ((match[0].events[0].type === "foundEasterEgg" && !this.easterEggsFoundID.includes(match[0].events[0].who)) || match[0].events[0].type != "foundEasterEgg") {
+        // --- INÍCIO DA MODIFICAÇÃO ---
+
+        // Condição especial para o Easter Egg da Galinha Dourada
+        if (eventConfig.type === "foundEasterEgg" && eventConfig.who === "galinhaDouradaEG") {
+            const galinhaDourada = this.gameObjects.galinhaDosOvosDourados;
+            // Apenas ativa a cutscene se a galinha estiver visível no mapa
+            if (galinhaDourada && galinhaDourada.isVisible !== false && !this.easterEggsFoundID.includes(eventConfig.who)) {
                 this.startCutscene(match[0].events);
             }
+            return; // Impede que o código abaixo seja executado para este caso
         }
 
+        // --- FIM DA MODIFICAÇÃO ---
+
+        // Lógica original para todas as outras cutscenes
+        if ((eventConfig.type === "foundEasterEgg" && !this.easterEggsFoundID.includes(eventConfig.who)) || eventConfig.type !== "foundEasterEgg") {
+            this.startCutscene(match[0].events);
+        }
     }
+}
 
 }
 
@@ -205,13 +262,13 @@ window.OverworldMaps = {
             hero: { // personagem principal
                 type: "Person",
                 isPlayerControlled: true,
-                x: utils.withGrid(19), // 14
-                y: utils.withGrid(28), // 16
+                x: utils.withGrid(14), // 14
+                y: utils.withGrid(16), // 16
             },
             galinhaBranca: {
                 type: "Person",
-                x: utils.withGrid(19),
-                y: utils.withGrid(19),
+                x: utils.withGrid(8),
+                y: utils.withGrid(13),
                 src: "./assets/img/galinhaBranca.png",
                 haveQuestIcon: true, // Significa que essa galinha pode ter um questIcon
                 behaviorLoop: [  // é um array que vai definir o comportamento normal de um NPC
@@ -227,10 +284,29 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca" },
+                            { type: "textMessage", text: "Pó! Eu sou a primeira galinha!", faceHero: "galinhaBranca", quest: "Q1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO" }
                         ]
                     },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Uai, achei que a Caipira tinha te mandado trabalhar...", faceHero: "galinhaBranca", quest: "Q2"},
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "A não... de novo não...", faceHero: "galinhaBranca", quest: "Q5.2"},
+                            { type: "textMessage", text: "Foi a Galinácia, não foi!?", faceHero: "galinhaBranca", quest: "Q5.2"},
+                            { type: "textMessage", text: "Ela não me entende que aquilo nunca será uma galinha!", faceHero: "galinhaBranca", quest: "Q5.2"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO_FROG" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "O enigma do chefe? Hmm... 'Onde o grão descansa'... talvez seja um lugar de armazenamento, mas que leva a outro lugar?", faceHero: "galinhaBranca", quest: "Q10.1"},
+                            { type: "questProgress", flag: "TALKED_CHICKEN_1_CLUE", counter: "CHIEF_CLUES_GATHERED" }
+                        ]
+                    }
                 ] 
             },  
             galinhaBrancaQuestIcon: {
@@ -242,37 +318,69 @@ window.OverworldMaps = {
             },
             galinhaMarrom: {
                 type: "Person",
-                x: utils.withGrid(21),
-                y: utils.withGrid(14),
+                x: utils.withGrid(16),
+                y: utils.withGrid(13),
                 haveQuestIcon: true,
                 src: "./assets/img/galinhaMarrom.png",
                 behaviorLoop: [
+                    {type: "stand", direction: "up", time: 8000},  
+                    {type: "walk", direction: "right"},  
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "right"},
+                    {type: "stand", direction: "up", time: 3540},
+                    {type: "walk", direction: "right"},
+                    {type: "stand", direction: "up", time: 5240},
+                    {type: "walk", direction: "right"},  
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},  
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},  
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "up"},
+                    {type: "stand", direction: "up", time: 1240},
+                    {type: "walk", direction: "left"},
                     {type: "walk", direction: "left"},  
                     {type: "walk", direction: "left"},
-                    {type: "walk", direction: "left"}, 
-                    {type: "walk", direction: "down"},  
+                    {type: "walk", direction: "left"},
                     {type: "walk", direction: "down"},
                     {type: "walk", direction: "down"},
-                    {type: "walk", direction: "right"},
-                    {type: "walk", direction: "right"},
-                    {type: "walk", direction: "right"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},  
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
                     {type: "walk", direction: "up"},
-                    {type: "walk", direction: "up"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},  
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "stand", direction: "up", time: 1240},
+                    {type: "walk", direction: "right"},  
+                    {type: "walk", direction: "right"},
                     {type: "walk", direction: "up"},
                 ],
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1"},
                             { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO" }
+                        ]
+                    }, {
+                        events: [
+                            { type: "textMessage", text: "Ouvi a Branca falando...", faceHero: "galinhaMarrom", quest: "Q5.2"},
+                            { type: "textMessage", text: "O chefe não vai ficar nada feliz", faceHero: "galinhaMarrom", quest: "Q5.2"},
+                            { type: "textMessage", text: "Aqueles bichos ficam gritando!", faceHero: "galinhaMarrom", quest: "Q5.2"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     }
                 ]
             },
             galinhaMarromQuestIcon: {
                 type:"Person",
-                x: utils.withGrid(21),
-                y: utils.withGrid(12),
+                x: utils.withGrid(16),
+                y: utils.withGrid(11),
                 src: "./assets/img/questIcon.png",
                 isQuestIcon: true,
                 isVisible: false,
@@ -304,7 +412,7 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto." },
+                            { type: "textMessage", faceHero: "Paova", text: "O chef? Ah, ele é bem exigente... Gosta das coisas sempre no ponto.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_PAOVA_CHEF", counter: "CHEF_INFO_GATHERED" }
                         ]
                     }
@@ -347,8 +455,22 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece." },
+                            { type: "textMessage", faceHero: "Clotilde", text: "Ouvi dizer que o prato preferido do chef leva um ingrediente secreto que só ele conhece.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_CLOTILDE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Vi que já conheceu a Galinácia", faceHero: "Clotilde", quest: "Q5.2"},
+                            { type: "textMessage", text: "Os bichinhos dela ficam saltitando por aí", faceHero: "Clotilde", quest: "Q5.2"},
+                            { type: "textMessage", text: "Parece até que consigo ouvi-los...", faceHero: "Clotilde", quest: "Q5.2"},
+                            { type: "questProgress", flag: "TALKED_TO_CLOTILDE", counter: "CHICKENS_SPOKEN_TO_FROG" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Aquele enigma... 'a jornada não cessa' me soa como uma passagem. Já procurou nos cantos mais esquecidos do galinheiro?", faceHero: "Clotilde", quest: "Q10.1"},
+                            { type: "questProgress", flag: "TALKED_CHICKEN_2_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
                 ]
@@ -434,8 +556,14 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui." },
+                            { type: "textMessage", faceHero: "Bernadette", text: "Aquele chef... vive enfurnado na cozinha. Mal o vemos por aqui.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_BERNADETTE_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Meu netinho, o chefe é um pintinho muito reservado. Ele gosta de ficar perto de onde os ovos são guardados... talvez a resposta esteja lá.", faceHero: "Bernadette", quest: "Q10.1"},
+                            { type: "questProgress", flag: "TALKED_CHICKEN_3_CLUE", counter: "CHIEF_CLUES_GATHERED" }
                         ]
                     }
                 ]
@@ -451,8 +579,16 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", who: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando." },
+                            { type: "textMessage", faceHero: "galinhaSegurancaMarrom", text: "Quer saber do chef? Sei de muita coisa. Continue investigando.", quest: "Q9" },
                             { type: "questProgress", flag: "TALKED_TO_SEGURANCA_CHEF", counter: "CHEF_INFO_GATHERED" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", text: "Então você quer ver o chefe? Ha! Muitos tentam, poucos conseguem.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "textMessage", text: "Ele só recebe quem resolve seu enigma: 'Onde o grão descansa, mas a jornada não cessa'.", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "textMessage", text: "Se for esperto, talvez outras galinhas por aí possam te dar um norte. Agora, circule!", faceHero: "galinhaSegurancaMarrom", quest: "Q10"},
+                            { type: "questProgress", flag: "SPOKEN_TO_SECURITY_FOR_CHIEF", counter: "SPOKEN_TO_SECURITY_FOR_CHIEF" }
                         ]
                     }
                 ]
@@ -461,6 +597,7 @@ window.OverworldMaps = {
                 type: "Person",
                 x: utils.withGrid(25),
                 y: utils.withGrid(7),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaGalinacia.png",
                 behaviorLoop: [ 
                     {type: "stand", direction: "left", time: 5200}, // Descansa na poltrona
@@ -492,16 +629,37 @@ window.OverworldMaps = {
                                 itemId: "Milho",
                                 quantity: 20,
                                 events_if_enough: [
-                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!" },
-                                { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
+                                    { type: "textMessage", who: "galinhaGalinacia", text: "Oh, você trouxe os 20 milhos! Maravilha! Meus bebês vão adorar. Obrigada!!", quest: "Q5"},
+                                    { type: "questProgress", flag: "entregouMilho", counter: "CORN_DELIVERED" } // Flag para completar a Quest 5
                                 ],
                                 events_if_not_enough: [
                                     {type: "textMessage", who: "galinhaGalinacia", text: "Você ainda não tem milho suficiente! Traga 20 milhos para mim, por favor."}
                                 ]
                             }
                         ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Querido! Minhas queridíssimas galinhas da montanha...", quest: "Q5.1"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "S U M I R A M", quest: "Q5.1"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "São umas 3... trás elas para cá, eu te imploro!", quest: "Q5.1"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINACIA_FROGS", counter: "SPOKEN_TO_GALINACIA" }
+                        ]
+                    },
+                    {
+                        events: [
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Querido! Muito obrigado!", quest: "Q7"},
+                        ]
                     }
                 ]
+            },
+            galinhaGalinaciaQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(25),
+                y: utils.withGrid(5),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
             galinhaPenosa: {
                 type: "Person",
@@ -512,21 +670,40 @@ window.OverworldMaps = {
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
             },
+            JuninhoJunior: {
+                type: "Person",
+                x: utils.withGrid(-24),
+                y: utils.withGrid(18),
+                src: "./assets/img/chefeSemBone.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "right", time: 5200}, 
+                    {type: "stand", direction: "left", time: 5200}, 
+                ]
+            },
             galinhaDosOvosDourados: { // Trata-se do NPC dessa galinha
                 type: "Person",
                 x: utils.withGrid(0),
                 y: utils.withGrid(14),
                 src: "./assets/img/galinhaOvosDourados.png",
                 behaviorLoop: [ 
-                    //{type: "stand", direction: "bottom", time: 5200}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "up"}, 
+                    {type: "stand", direction: "up", time: 5000}, 
+                    {type: "walk", direction: "right"},
+                    {type: "stand", direction: "up", time: 3000},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "left"},
+                    {type: "stand", direction: "down", time: 9000},
                 ],
                 talking: [
-                    {
-                        events: [
-                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom" },
+                    {events: [ 
+                            { type: "textMessage", text: "Cocorocó! Eu sou a segunda!", faceHero: "galinhaMarrom", quest: "Q1" },
                             { type: "questProgress", flag: "TALKED_TO_GALINHA__OVOS_DOURADOS", counter: "CHICKENS_SPOKEN_TO" }
                         ]
-                    }
+                    },
                 ]
             },
             frog1: {  // Sapo da sala de costura
@@ -603,6 +780,16 @@ window.OverworldMaps = {
                 type: "EasterEgg",
                 isEasterEgg: true,
                 name: "Balde de penas",
+                description: "Não sabia que era possível costurar com penas",
+                mapName: "Galinheiro",
+                x: utils.withGrid(50),
+                y: utils.withGrid(0),
+                src: "./assets/img/galinhaOvosDourados.png", // É genérico, já que não vai aparecer
+            },
+            galinhaDaMontanha: { 
+                type: "EasterEgg",
+                isEasterEgg: true,
+                name: "Galinha da Montanha",
                 description: "Não sabia que era possível costurar com penas",
                 mapName: "Galinheiro",
                 x: utils.withGrid(50),
@@ -1170,6 +1357,9 @@ window.OverworldMaps = {
             [utils.asGridCoord(31,17)] : [
                 {events: [{type: "changeMap", map: "Fazenda"},]}
             ],
+            [utils.asGridCoord(-3,32)] : [
+                {events: [{type: "changeMap", map: "SalaChefe"},]}
+            ],
             [utils.asGridCoord(-15,17)] : [ // Espaço acima do sapo da sala de costura
                 {events: [{type: "foundFrog", who: "frog1", x: -15, y: 17},]}
             ],
@@ -1214,6 +1404,20 @@ window.OverworldMaps = {
             [utils.asGridCoord(11,16)] : [ // 
                 {events: [{type: "pinguimZoom", who: "./assets/img/easterEggs/gifs/zoomTeste.gif"},]}
             ],
+            [utils.asGridCoord(-1, 27)]: [
+                {
+                    events: [
+                        { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
+                    ]
+                }
+            ],
+            [utils.asGridCoord(-1, 28)]: [
+                {
+                    events: [
+                        { type: "questProgress", flag: "FOUND_CHIEF_ROOM" }
+                    ]
+                }
+            ],
         }
     },
     // Mapa da parte da fazenda
@@ -1250,8 +1454,9 @@ window.OverworldMaps = {
             },
             galinhaCaipira: {
                 type: "Person",
-                x: utils.withGrid(0),
-                y: utils.withGrid(0),
+                x: utils.withGrid(-20),
+                y: utils.withGrid(23),
+                haveQuestIcon: true,
                 src: "./assets/img/galinhaCaipira.png",
                 behaviorLoop: [
                     {type: "walk", direction: "left"},  
@@ -1266,7 +1471,23 @@ window.OverworldMaps = {
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
                     {type: "walk", direction: "up"},
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Guri, preciso de ajuda. Plante 9 trigos para a Paova assar os pães do cafézin", faceHero: "galinhaCaipira", quest: "Q1.1"},
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_CAIPIRA", counter: "SPOKEN_TO_CAIPIRA" }
+                        ]
+                    }
                 ]
+            },
+            galinhaCaipiraQuestIcon: {
+                type:"Person",
+                x: utils.withGrid(-20),
+                y: utils.withGrid(21),
+                src: "./assets/img/questIcon.png",
+                isQuestIcon: true,
+                isVisible: false,
             },
             cavalo: {
                 type: "Person",
@@ -1354,5 +1575,80 @@ window.OverworldMaps = {
             ],
 
     }    
-}
+},
+    SalaChefe: {
+            name: "SalaChefe",
+            lowerSrc: "./assets/img/salaChefeMapa.png",
+            upperSrc: "./assets/img/salaChefeMapaUpper.png",
+            configObjects: {
+                hero: {
+                    type: "Person",
+                    isPlayerControlled: true,
+                    x: utils.withGrid(0),
+                    y: utils.withGrid(31),
+                },
+                lukeEggwalker: {
+                    type: "Person",
+                    x: utils.withGrid(2),
+                    y: utils.withGrid(20),
+                    src: "./assets/img/galinhaSegurancaMarrom.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+                JuninhoJuniorOChefe: {
+                    type: "Person",
+                    x: utils.withGrid(0),
+                    y: utils.withGrid(12),
+                    src: "./assets/img/juninhoJrChefe.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+                chickenNorris: {
+                    type: "Person",
+                    x: utils.withGrid(2),
+                    y: utils.withGrid(11),
+                    src: "./assets/img/galinhaSegurancaMarrom.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+                galinhaSegurancaGenérica: {
+                    type: "Person",
+                    x: utils.withGrid(-2),
+                    y: utils.withGrid(11),
+                    src: "./assets/img/galinhaSegurancaMarrom.png",
+                    behaviorLoop: [  
+                        {type: "stand", direction: "down", time: 2800},
+                    ],
+                    talking: [
+
+                    ]
+                },
+            },
+            // ...restante do mapa...
+                walls: {
+                    //define as coordenadas das colisoes do mapa
+                },
+                // Espaços em que acontece cutscenes
+                cutsceneSpaces: {
+                    [utils.asGridCoord(0,33)] : [
+                        {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+                    [utils.asGridCoord(-1,33)] : [
+                        {events: [{type: "changeMap", map: "Galinheiro"},]}
+                    ],
+
+            }    
+        }
 }

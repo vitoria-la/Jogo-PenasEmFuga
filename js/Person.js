@@ -117,6 +117,7 @@ class Person extends GameObject {
         }
         this.sprite.setAnimation("idle-" + this.direction);
     }    // Sistema unificado de interação para NPCs e pontos de plantação
+    
     checkForNpcInteraction(state) {
         // Obtém todos os objetos interativos do mapa (NPCs e PlantableSpots)
         // Isso permite que o mesmo sistema de interação funcione para ambos os tipos

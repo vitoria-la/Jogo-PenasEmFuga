@@ -5,7 +5,7 @@
   position: absolute;
   background: #000000;
   color: white;
-  font-size: 35px;
+  font-size: 45px;
   padding: 8px 14px;
   border-radius: 100%;
   font-weight: bold;
@@ -39,13 +39,14 @@
 .text-message-name {
   background: #000000;
   color: white;
-  font-size: 60px;
+  font-family: 'Press Start 2P';
+  font-size: 45px;
   font-weight: bold;
   padding: 12px 8px;
   border: 2px solid #333333;
   display: inline-block;
   margin-bottom: -2px; /* Para sobrepor a borda com a caixa de diálogo */
-  z-index: 21;
+  /* z-index: 21; */
   /* Largura dinâmica baseada no conteúdo */
   width: auto;
   min-width: 60px;
@@ -54,19 +55,19 @@
 /* Seção do diálogo - retângulo cinza */
 .text-message-dialog-section {
   position: relative;
-  width: 600px;
+  width: 1250px;  
   background: rgba(70, 70, 70, 0.9);
-  padding: 12px;
+  padding: 16px;
   border: 3px solid #333333;
 }
 
 .text-message-content {
   margin: 0;
-  font-family: Impact;
-  font-size: 50px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 30px;
   line-height: 1.2;
-  /* word-wrap: break-word;
-  overflow-wrap: break-word; */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: normal;
   color: white;
 }
