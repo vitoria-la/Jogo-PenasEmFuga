@@ -43,15 +43,6 @@ const itens_loja = [
         Image: "./../assets/img/linha.png",
         quantity: 0,
         itemPorCompra: 1,
-    },
-    {
-        id: 6,
-        name: "Passe de Saída",
-        price: 100,
-        description: "Um passe especial que permite a saída do galinheiro!",
-        Image: "./../assets/img/linha.png",
-        quantity: 0,
-        itemPorCompra: 1,
     }
 ];
 
