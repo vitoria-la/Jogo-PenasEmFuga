@@ -631,13 +631,33 @@ window.OverworldMaps = {
                     //{type: "stand", direction: "bottom", time: 5200}, 
                 ]
             },
+            JuninhoJunior: {
+                type: "Person",
+                x: utils.withGrid(-24),
+                y: utils.withGrid(18),
+                src: "./assets/img/chefeSemBone.png",
+                behaviorLoop: [ 
+                    {type: "stand", direction: "right", time: 5200}, 
+                    {type: "stand", direction: "left", time: 5200}, 
+                ]
+            },
             galinhaDosOvosDourados: { // Trata-se do NPC dessa galinha
                 type: "Person",
                 x: utils.withGrid(0),
                 y: utils.withGrid(14),
                 src: "./assets/img/galinhaOvosDourados.png",
                 behaviorLoop: [ 
-                    //{type: "stand", direction: "bottom", time: 5200}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "right"}, 
+                    {type: "walk", direction: "up"}, 
+                    {type: "stand", direction: "up", time: 5000}, 
+                    {type: "walk", direction: "right"},
+                    {type: "stand", direction: "up", time: 3000},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "left"},
+                    {type: "walk", direction: "down"},
+                    {type: "walk", direction: "left"},
+                    {type: "stand", direction: "down", time: 9000},
                 ],
                 talking: [
                     {events: [ 
