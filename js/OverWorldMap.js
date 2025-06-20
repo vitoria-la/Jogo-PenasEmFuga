@@ -313,7 +313,7 @@ window.OverworldMaps = {
                             { type: "textMessage", text: "A não... de novo não...", faceHero: "galinhaBranca", quest: "Q5.2"},
                             { type: "textMessage", text: "Foi a Galinácia, não foi!?", faceHero: "galinhaBranca", quest: "Q5.2"},
                             { type: "textMessage", text: "Ela não me entende que aquilo nunca será uma galinha!", faceHero: "galinhaBranca", quest: "Q5.2"},
-                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA", counter: "CHICKENS_SPOKEN_TO_FROG" }
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_BRANCA_FROG", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     },
                     {
@@ -390,7 +390,7 @@ window.OverworldMaps = {
                             { type: "textMessage", text: "Ouvi a Branca falando...", faceHero: "galinhaMarrom", quest: "Q5.2"},
                             { type: "textMessage", text: "O chefe não vai ficar nada feliz", faceHero: "galinhaMarrom", quest: "Q5.2"},
                             { type: "textMessage", text: "Aqueles bichos ficam gritando!", faceHero: "galinhaMarrom", quest: "Q5.2"},
-                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM", counter: "CHICKENS_SPOKEN_TO_FROG" }
+                            { type: "questProgress", flag: "TALKED_TO_GALINHA_MARROM_FROG", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     }
                 ]
@@ -503,7 +503,7 @@ window.OverworldMaps = {
                             { type: "textMessage", text: "Vi que já conheceu a Galinácia", faceHero: "Clotilde", quest: "Q5.2"},
                             { type: "textMessage", text: "Os bichinhos dela ficam saltitando por aí", faceHero: "Clotilde", quest: "Q5.2"},
                             { type: "textMessage", text: "Parece até que consigo ouvi-los...", faceHero: "Clotilde", quest: "Q5.2"},
-                            { type: "questProgress", flag: "TALKED_TO_CLOTILDE", counter: "CHICKENS_SPOKEN_TO_FROG" }
+                            { type: "questProgress", flag: "TALKED_TO_CLOTILDE_FROG", counter: "CHICKENS_SPOKEN_TO_FROG" }
                         ]
                     },
                     {
@@ -802,7 +802,7 @@ window.OverworldMaps = {
                     },
                     {
                         events: [
-                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Querido! Muito obrigado!", quest: "Q7"},
+                            { type: "textMessage", faceHero: "galinhaGalinacia", text: "Querido! Muito obrigado!", quest: "Q6"},
                         ]
                     }
                 ]
